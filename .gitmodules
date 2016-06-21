@@ -1,0 +1,3 @@
+[submodule "vlfeat"]
+	path = vlfeat
+	url = https://github.com/lenck/vlfeat
