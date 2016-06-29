@@ -1,14 +1,22 @@
-function [ rep, ndet, info ] = vlb_thr_repeatability( matchFrames, fa, fsca, fb, fscb, varargin )
+function [ rep, nmatches, info ] = vlb_thr_repeatability( matchFrames, fa, fsca, fb, fscb, varargin )
 % VLB_THR_REPEATABILITY Compute a repetability over a set of thresholds
-opts.normFactor = 'minab';
+opts.normFactor = 'b';
 opts = vl_argparse(opts, varargin);
 
 rep = []; ndet = []; info = struct('geomMatches', zeros(2, 0));
 if isempty(fa) || isempty(fb), return; end
-if ~iscell(fa)
-  fa = {fa}; fsca = {fsca}; fb = {fb}; fscb = {fscb};
-  matchFrames = {matchFrames};
-end
+if ~iscell(fa), fa = {fa}; end; if ~iscell(fsca), fsca = {fsca}; end;
+if ~iscell(fb), fb = {fb}; end; if ~iscell(fscb), fscb = {fscb}; end
+if ~iscell(matchFrames), matchFrames = {matchFrames}; end;
+
+if numel(fa) == 1 && numel(fb) > 1
+  fa = repmat(fa, 1, numel(fb)); 
+  fsca = repmat(fsca, 1, numel(fb));
+end;
+assert(numel(matchFrames) == numel(fb));
+assert(numel(fa) == numel(fb));
+assert(numel(fsca) == numel(fb));
+assert(numel(fscb) == numel(fb));
 
 arr = cell(1, numel(fa)); info = cell(1, numel(fa));
 for ci = 1:numel(fa)
@@ -16,7 +24,7 @@ for ci = 1:numel(fa)
   info{ci}.tcorr = tcorr; info{ci}.corr_score = tcorr_score;
   fa_num = sum(info{ci}.fa_valid); 
   fb_num = sum(info{ci}.fb_valid);
-  if isempty(tcorr), return; end;
+  %if isempty(tcorr), return; end;
   fsca{ci} = fsca{ci}(:, info{ci}.fa_valid);
   fscb{ci} = fscb{ci}(:, info{ci}.fb_valid);
   tcorr_fsc = min([fsca{ci}(tcorr(1, :)); fscb{ci}(tcorr(2, :))], [], 1);
@@ -47,5 +55,6 @@ end
 arr = cell2mat(arr); info = cell2mat(info);
 [~, perm] = sort(arr(3, :), 'descend');
 arr = arr(:, perm);
-ndet = cumsum(arr(2, :)); nmatches = cumsum(arr(1, :));
+nmatches = cumsum(arr(1, :));
+ndet = cumsum(arr(2, :));
 rep = nmatches ./ ndet;
