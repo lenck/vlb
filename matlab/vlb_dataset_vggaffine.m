@@ -57,7 +57,7 @@ dset = datasets(catIdx);
 dsetDir = fileparts(getImPath(dset, 1));
 if ~exist(getImPath(dset, 1), 'file')
   vl_xmkdir(dsetDir);
-  fprintf('Downloading `%` to %s.\n', dset.name, dsetDir);
+  fprintf('Downloading `%s` to %s.\n', dset.name, dsetDir);
   untar(getDsetUrl(dset), dsetDir);
 end
 
@@ -86,5 +86,9 @@ imdb.images.geometry = cell2mat(imdb.images.geometry);
 % Set up the common properties
 imdb.meta.category = category;
 imdb.meta.description = dset.description;
+
+imdb.getGsImage = @(imid) ...
+  utls.imread_grayscale(fullfile(imdb.imageDir, imdb.images.name{imid}));
+imdb.getGeom = @(imid) imdb.images.geometry(imid);
 end
 

@@ -1,11 +1,7 @@
 function [ rep, nm, info ] = vlb_repeatability( matchFrames, fa, fb, varargin )
 % VLB_REPEATABILITY Compute repeatability of given image features
-%   [SCORE NUM_MATCHES] = VLB_REPEATABILITY(TF, IMAGE_A_SIZE,
-%   IMAGE_B_SIZE, FRAMES_A, FRAMES_B, DESCS_A, DESCS_B) Compute
-%   matching score SCORE between frames FRAMES_A and FRAMES_B
-%   and their descriptors DESCS_A and DESCS_B which were
-%   extracted from pair of images with sizes IMAGE_A_SIZE and
-%   IMAGE_B_SIZE which geometry is related by homography TF.
+%   [SCORE NUM_MATCHES] = VLB_REPEATABILITY(MATCH, FRAMES_A, FRAMES_B)
+%   Computes the repeatability between frames FRAMES_A and FRAMES_B
 %   NUM_MATHCES is number of matches which is calcuated
 %   according to object settings.
 %

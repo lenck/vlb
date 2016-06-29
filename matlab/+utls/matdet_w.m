@@ -1,5 +1,5 @@
-function [ frames, info ] = mfp_to_frame( fp )
-
+function [ frames, descs, info ] = matdet_w( fp )
+descs = [];
 info = struct();
 frames = double(fp.Location');
 if isprop(fp, 'Scale'), frames = [frames; fp.Scale']; end
