@@ -1,7 +1,6 @@
 function [results, info] = vgg_desc_benchmark(geom, ...
   ima_p, fa, da, imb_p, fb, db, varargin)
 %VGG_DESC_BENCHMARK Summary of this function goes here
-
 opts.maxOverlapError = 0.5;
 opts = vl_argparse(opts, varargin);
 
@@ -13,6 +12,9 @@ if ~exist(fullfile(BIN_DIR, 'repeatability.m'), 'file')
 end
 if ~exist(fullfile(BIN_DIR, ['descdist.', mexext]), 'file')
   mex(fullfile(BIN_DIR, 'descdist.cxx'), '-outdir', BIN_DIR);
+end
+if ~exist(fullfile(BIN_DIR, ['c_eoverlap.', mexext]), 'file')
+  mex(fullfile(BIN_DIR, 'c_eoverlap.cxx'), '-outdir', BIN_DIR);
 end
 assert(size(fa, 2) == size(da, 2), 'Invalid number of frames/descriptors');
 assert(size(fb, 2) == size(db, 2), 'Invalid number of frames/descriptors');
@@ -39,16 +41,18 @@ rmpath(BIN_DIR);
 delete(ella_p); delete(ellb_p); delete(tmpH_p);
 
 results = struct();
-results.nn.recall = corrMatchNn / nc;
-results.nn.precision = corrMatchNn ./ totMatchNn;
 
 results.threshold.recall = corrMatchSim / sum(twi(:));
 results.threshold.precision = corrMatchSim ./ totMatchSim;
 
+results.nn.recall = corrMatchNn / nc;
+results.nn.precision = corrMatchNn ./ totMatchNn;
+
 results.nndistratio.recall = corrMatchRn / nc;
 results.nndistratio.precision = corrMatchRn ./ totMatchRn;
 
-info = struct('repScore',rep_sc, 'numCorresp', nc, 'matchScore', ms, ...
+info = struct('repScore',rep_sc, 'numCorresp', nc, ...
+  'numSimCorresp', sum(twi(:)), 'matchScore', ms, ...
   'numMatches', numMatches);
 end
 

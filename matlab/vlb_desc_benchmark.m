@@ -4,6 +4,12 @@ function [ precision, recall, info ] = vlb_desc_benchmark( matchFrames, ...
 %
 % Options:
 %
+%   MatchingStrategy:: 'threshold'
+%    A matching strategy, available options are:
+%      'threshold'
+%      'nn'
+%      'nndistratio'
+%
 %   OverlapError:: 0.5
 %     Maximal overlap error of two frames to be considered as a valid
 %     correspondence.

@@ -13,6 +13,15 @@ function vlb_greedy_matching()
 %   Algorithm basically goes sequentially through the EDGES and 
 %   matches all vertices which has not been matched yet. Therefore
 %   the ranked list of EDGES represents edge weighting.
+%
+%   M is of size [2, NUM_A_NODES]. The first row contains the index of a
+%   matched B node (\int [1, NUM_B_NODES]) and the second row contains the
+%   index of the edge from EDGES which was used to create this match.
+%
+%   [M, SC] = VLB_GREEDY_MATCHING(NUM_A_NODES,NUM_B_NODES,EDGES) returns
+%   the array SC of same size as M. First row of SC contains the index of
+%   second closest B_NODE and second row the edge used to create the second
+%   closest match.
 
 % Copyright (C) 2011-16 Karel Lenc
 % All rights reserved.
