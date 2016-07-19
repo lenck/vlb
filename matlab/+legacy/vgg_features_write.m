@@ -38,7 +38,7 @@ end
 % Write header
 fprintf(g,'%d\n%d\n', descrLen, numFrames);
 % Record format: x, y, a, b, c such that x' [a b ; b c] x = 1
-frames  = utls.frame_to_ellipse(frames);
+frames  = utls.frame2ellipse(frames);
 frames(1:2,:) = frames(1:2,:) - 1 ; % change from matlab origin
 frames(3:5,:) = inv2x2(frames(3:5,:)) ; % Inverse the shape matrix
 if descrLen == 0

@@ -1,6 +1,6 @@
-function vggEll = ellipse_to_vggformat(ell, eigVal, eigVec)
-% ELLTOVGG Transforms the ellipse into mexComputeEllipseOverlap function
-%   VGG_ELL = ELLTOVGG(F, EIG, EIGVEC) Converts ellipse frame F with
+function vggEll = ellipse2vggformat(ell, eigVal, eigVec)
+% ELLIPSE2VGGFORMAT Transforms the ellipse into mexComputeEllipseOverlap function
+%   VGG_ELL = ellipse2vggformat(F, EIG, EIGVEC) Converts ellipse frame F with
 %   eigen values EIG and eigen vectors EIGVEC of the frame ellipse 
 %   matrix (see `help ellipseEigen`) to KM frame defined as:
 %

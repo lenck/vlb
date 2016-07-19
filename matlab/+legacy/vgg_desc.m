@@ -60,7 +60,7 @@ tmpImgPath = [tempname(), '.png'];
 if ischar(img) && exist(img, 'file'), img = imread(img); end;
 imwrite(img, tmpImgPath);
 
-frames = utls.frame_to_ellipse(frames);
+frames = utls.frame2ellipse(frames);
 if opts.cropFrames
   imgbox = [1 1 size(img, 2)+1 size(img, 1)+1];
   magFrames = [frames(1:2, :) ; frames(3:5, :) .* opts.magnification^2];

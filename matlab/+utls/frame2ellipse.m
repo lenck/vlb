@@ -1,6 +1,6 @@
-function g = frame_to_ellipse(f)
-% FRAME_TO_ELLIPSE converts frames to ellpises
-%   ELL = FRAME_TO_ELLIPSE(F) converts the specified frames F to unoriented
+function g = frame2ellipse(f)
+% FRAME2ELLIPSE converts frames to ellpises
+%   ELL = FRAME2ELLIPSE(F) converts the specified frames F to unoriented
 %   ellipses ELL. If the frame is already an ellipse does not do anything
 %   and in case of an oriented ellipse converts into unoriented.
 

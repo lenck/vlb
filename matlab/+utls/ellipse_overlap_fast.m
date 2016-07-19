@@ -48,8 +48,8 @@ opts = vl_argparse(opts, varargin) ;
 [e1,eigVec1] = utls.ellipse_eigen(f1) ;
 [e2,eigVec2] = utls.ellipse_eigen(f2) ;
 
-vggEll1 = utls.ellipse_to_vggformat(f1, e1, eigVec1);
-vggEll2 = utls.ellipse_to_vggformat(f2, e2, eigVec2);
+vggEll1 = utls.ellipse2vggformat(f1, e1, eigVec1);
+vggEll2 = utls.ellipse2vggformat(f2, e2, eigVec2);
 
 % areas
 a1 = pi * sqrt(prod(e1, 1)) ;

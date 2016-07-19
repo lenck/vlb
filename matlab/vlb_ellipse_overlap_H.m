@@ -59,8 +59,8 @@ overlapThresh = 1 - opts.maxOverlapError;
 
 % convert frames from any supported format to unortiented
 % ellipses for uniformity
-ella = utls.frame_to_ellipse(fa) ;
-ellb = utls.frame_to_ellipse(fb) ;
+ella = utls.frame2ellipse(fa) ;
+ellb = utls.frame2ellipse(fb) ;
 
 % map frames from image A to image B and viceversa
 ella_rep = utls.ellipse_warp(geom.H, ella, 'Method', opts.warpMethod);

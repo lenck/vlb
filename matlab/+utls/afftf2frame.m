@@ -1,4 +1,4 @@
-function frm = afftf_to_frame( tf )
+function frm = afftf2frame( tf )
 % Make sure it is an affine transformation
 assert(all(tf(3, 3, :) == 1));
 assert(all(all(tf(3, 1:2, :) == 0)));

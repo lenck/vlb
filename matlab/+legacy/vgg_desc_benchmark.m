@@ -21,7 +21,7 @@ assert(size(fb, 2) == size(db, 2), 'Invalid number of frames/descriptors');
 
 tmpFile = tempname;
 ella_p = [tmpFile, 'ellA.txt']; ellb_p = [tmpFile, 'ellB.txt'];
-ella_f = utls.frame_to_ellipse(fa); ellb_f = utls.frame_to_ellipse(fb);
+ella_f = utls.frame2ellipse(fa); ellb_f = utls.frame_to_ellipse(fb);
 legacy.vgg_features_write(ella_p, ella_f, da);
 legacy.vgg_features_write(ellb_p, ellb_f, db);
 tmpH_p = [tmpFile, 'H.txt']; H = geom.H; save(tmpH_p, 'H','-ASCII');
