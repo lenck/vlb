@@ -1,0 +1,9 @@
+function frm = afftf_to_frame( tf )
+% Make sure it is an affine transformation
+assert(all(tf(3, 3, :) == 1));
+assert(all(all(tf(3, 1:2, :) == 0)));
+frm = [...
+  reshape(tf(1:2, 3, :), 2, []); ...
+  reshape(tf(1:2, 1, :), 2, []); ...
+  reshape(tf(1:2, 2, :), 2, [])];
+end
