@@ -22,7 +22,7 @@ function [ imdb ] = vlb_dataset_vggaffine( category, varargin )
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-opts.rootDir = fullfile(vlb_root(), 'data', 'dataset_vggaffine');
+opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-vggaffine');
 opts = vl_argparse(opts, varargin);
 
 % Meta about all datasets
@@ -76,8 +76,7 @@ for imi = 1:6
   imSize =  utls.get_image_size(imPath);
   tfs = eye(3);
   if imi > 1
-    [tfs(:,1), tfs(:,2), tfs(:,3)] = textread( ...
-      fullfile(dsetDir, sprintf('H1to%dp', imi)), '%f %f %f%*[^\n]');
+    tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi)));
   end
   imdb.images.geometry{imi} = struct('H', tfs, 'imsize', imSize, ...
     'refimsize', imSize);
