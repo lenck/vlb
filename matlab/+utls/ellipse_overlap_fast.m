@@ -42,7 +42,11 @@ function [ellipsePairs, scores] = ellipse_overlap_fast(f1, f2, varargin)
 opts.normaliseFrames = true ;
 opts.normalisedScale = 30 ;
 opts.minAreaRatio = 0.3;
+opts.frame2frame = false;
 opts = vl_argparse(opts, varargin) ;
+
+f1 = utls.frame2ellipse(f1);
+f2 = utls.frame2ellipse(f2);
 
 % eigenvalues (radii squared)
 [e1,eigVec1] = utls.ellipse_eigen(f1) ;
@@ -73,11 +77,16 @@ for i2 = 1:N2
   
   % Constant 4 is here because it is the maximal elongation of the
   % ellipse in baumberg iteration generally implemnted
-  canOverlap = sqrt(vl_alldist2(single(f2(1:2, i2)), single(f1(1:2, :)))) < 4 * sqrt(a2(i2) / pi);
-  maxOverlap = min(a2(i2), a1) ./ max(a2(i2), a1) .* canOverlap ;
-  ellipsePairs{i2} = find(maxOverlap > opts.minAreaRatio);
-  ellipsePairs{i2} = [repmat(i2, 1, numel(ellipsePairs{i2}));
-    ellipsePairs{i2}];
+  if opts.frame2frame
+    ellipsePairs{i2} = [i2, i2]';
+  else
+    canOverlap = sqrt(vl_alldist2(single(f2(1:2, i2)), single(f1(1:2, :)))) < 4 * sqrt(a2(i2) / pi);
+    maxOverlap = min(a2(i2), a1) ./ max(a2(i2), a1) .* canOverlap ;
+    ellipsePairs{i2} = find(maxOverlap > opts.minAreaRatio);
+    ellipsePairs{i2} = [repmat(i2, 1, numel(ellipsePairs{i2}));
+      ellipsePairs{i2}];
+  end
+
   
   if isempty(ellipsePairs{i2})
     ellipsePairs{i2} = zeros(2, 0);
@@ -94,6 +103,7 @@ for i2 = 1:N2
   end
   [~, tw, ~, ~] = vgg_compute_ellipse_overlap(lhsEllipse, rhsEllipse, -1);
   scores{i2} = (1 - tw / 100)' ;
+  
 end
 
 % Convert to a matrix
