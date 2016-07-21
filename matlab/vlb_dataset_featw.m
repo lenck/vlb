@@ -28,13 +28,15 @@ imdb.images.category = zeros(1, numImages);
 imdb.images.sequence = zeros(1, numImages);
 imdb.images.num = zeros(1, numImages);
 imdb.images.refim_id = [];
-imdb.images.geometry = cell(1, numImages);
+imdb.images.geometry = cell(1, 1, numImages);
 
 for si = 1:numel(sequences.name)
   category = categories{sequences.category(si)};
   path = fullfile(category, sequences.name{si});
   imfiles = dir(fullfile(opts.rootDir, path, sprintf('*.%s', IMEXT)));
   assert(numel(imfiles) == SEQ_NUMIM);
+  
+  % TODO add check if image files do exist
   
   si_si = (si-1)*SEQ_NUMIM + 1;
   si_ei = si*SEQ_NUMIM;
@@ -49,7 +51,7 @@ for si = 1:numel(sequences.name)
   imdb.images.geometry(si_si+1:si_ei) = ...
     arrayfun(@(i) utls.read_vgg_homography(...
       fullfile(opts.rootDir, path, sprintf('H_1_%d', i))), ...
-    2:SEQ_NUMIM, 'UniformOutput', false);
+    2:SEQ_NUMIM, 'UniformOutput', false); 
 end
 
 imdb.images.geometry = cell2mat(imdb.images.geometry);
@@ -60,13 +62,21 @@ imdb.meta.sequences = sequences;
 % Methods
 imdb.getImagePath = @(imid) fullfile(imdb.imageDir, imdb.images.name{imid});
 imdb.getGsImage = @(imid) utls.imread_grayscale(imdb.getImagePath(imid));
-imdb.getGeom = @(imid) imdb.images.geometry(imid);
+imdb.getGeom = @(imid) imdb.images.geometry(:,:,imid);
 imdb.findImageId = @(varargin) findImageId(imdb, varargin{:});
 end
 
 function imid = findImageId(imdb, category, sequence, num)
  if nargin == 1 && numel(category) == 3
    sequence = category(2); num = category(3); category = category(1);
+ end
+ if ischar(category)
+   [found, category] = ismember(category, imdb.meta.categories);
+   if ~found, error('Category %s not found.', category); end;
+ end
+ if ischar(sequence)
+   [found, sequence] = ismember(sequence, imdb.meta.sequences.name);
+   if ~found, error('Sequence %s not found.', sequence); end;
  end
  imid = imdb.images.id(...
    imdb.images.category == category &...
