@@ -1,4 +1,4 @@
-function [ tfframes ] = warpframe( frames, tf, method )
+function [ tfframes ] = oell_warp( frames, tf, varargin )
 % WARPFRAME Warp a local feature frame with a homogprahy
 %   WF = WARPFRAME(F, H) Warps frames F by homography H to generate warped
 %     frames WF.
@@ -6,13 +6,15 @@ function [ tfframes ] = warpframe( frames, tf, method )
 %     location is estimated using the second order Taylor polynom.
 %
 %   The Taylor expansion code - copyright K. Mikolajczyk.
-if nargin < 3
-  method = 'pre';
-end
 
+opts.method = 'pre';
+opts.ignoreLocation = false;
+opts = vl_argparse(opts, varargin, 'nonrecursive');
+
+method = opts.method;
 assert(all(size(tf) == [3, 3]));
 frames = vl_frame2oell(frames);
-ftf = helpers.frame2tf(frames);
+ftf = utls.frame2afftf(frames);
 tfs = zeros(size(ftf), 'like', ftf);
 tfs(3, 3, :) = 1;
 
@@ -38,7 +40,7 @@ for i = 1:size(frames, 2)
         C=H*[0;0;1]; C=C./C(3);
         tfs(1:2, 1:2, i) = ftf(1:2,1:2,i) * Aff;
     end
-    tfs(1:2, 3, i) = C(1:2);
+    if ~opts.ignoreLocation, tfs(1:2, 3, i) = C(1:2); end
   else
     switch method
       case 'pre'
@@ -46,9 +48,10 @@ for i = 1:size(frames, 2)
       case 'post'
         tfs(:,:, i) = ftf(:,:,i) * H;
     end
+    if opts.ignoreLocation, tfs(1:2,3, i) = ftf(1:2,3,i); end
   end
 end
-tfframes = helpers.tf2frame(tfs);
+tfframes = utls.afftf2frame(tfs);
 
 end
 
