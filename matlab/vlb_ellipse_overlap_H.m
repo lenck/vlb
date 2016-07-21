@@ -84,12 +84,13 @@ if opts.cropFrames
   if isempty(ella) || isempty(ellb), return; end
 end
 
-info.fa = fa;
-info.fb = fb;
 info.fa_valid = fa_valid;
 info.fb_valid = fb_valid;
-info.ella_rep = ella_rep;
-info.ellb_rep = ellb_rep;
+
+info.ella = ella(:, fa_valid);
+info.ellb = ellb(:, fb_valid);
+info.ella_rep = ella_rep(:, fa_valid);
+info.ellb_rep = ellb_rep(:, fb_valid);
 
 if ~opts.normaliseFrames
   % When frames are not normalised, account the descriptor region
