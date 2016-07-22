@@ -47,11 +47,19 @@ for si = 1:numel(sequences.name)
   imdb.images.sequence(si_si:si_ei) = si;
   imdb.images.num(si_si:si_ei) = 1:SEQ_NUMIM;
   imdb.images.refim_id(si_si:si_ei) = si_si;
-  imdb.images.geometry{si_si} = eye(3);
-  imdb.images.geometry(si_si+1:si_ei) = ...
-    arrayfun(@(i) utls.read_vgg_homography(...
-      fullfile(opts.rootDir, path, sprintf('H_1_%d', i))), ...
-    2:SEQ_NUMIM, 'UniformOutput', false); 
+  
+  imdb.images.geometry{si_si}.H = eye(3);
+  imdb.images.geometry{si_si}.imsize = ...
+    utls.get_image_size(fullfile(imdb.imageDir, imdb.images.name{si_si}));
+  imdb.images.geometry{si_si}.refimsize = imdb.images.geometry{si_si}.imsize;
+  
+  for imi = 2:SEQ_NUMIM
+    imdb.images.geometry{si_si+imi-1}.H = utls.read_vgg_homography(...
+        fullfile(opts.rootDir, path, sprintf('H_1_%d', imi)));
+    imdb.images.geometry{si_si+imi-1}.imsize = ...
+      utls.get_image_size(fullfile(imdb.imageDir, imdb.images.name{si_si+imi-1}));
+    imdb.images.geometry{si_si+imi-1}.refimsize = imdb.images.geometry{si_si}.imsize;
+  end
 end
 
 imdb.images.geometry = cell2mat(imdb.images.geometry);
