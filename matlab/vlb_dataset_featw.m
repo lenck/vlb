@@ -9,15 +9,20 @@ function [ imdb ] = vlb_dataset_featw( varargin )
 IMEXT = 'ppm';
 SEQ_NUMIM = 6;
 
-opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-featw');
+opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-featw', 'dataset_release');
 opts = vl_argparse(opts, varargin);
 
-categories = listdir(opts.rootDir);
-sequences = struct('name', {{}}, 'category', []);
-for ci = 1:numel(categories)
-  seq =  listdir(fullfile(opts.rootDir, categories{ci}));
-  sequences.name = [sequences.name, seq];
-  sequences.category = [sequences.category, ones(1, numel(seq))*ci];
+categories = {'illum', 'viewpoint'};
+sequences.name = listdir(opts.rootDir);
+sequences.category_id  = zeros(1, numel(sequences.name));
+for si = 1:numel(sequences)
+  if strcmp(sequences.name{si}(1:2), 'i_')
+    sequences.category_id(si) = 1;
+  elseif strcmp(sequences.name{si}(1:2), 'v_')
+    sequences.category_id(si) = 2;
+  else
+    error('Invalid category');
+  end
 end
 
 numImages = numel(sequences.name) * SEQ_NUMIM;
@@ -31,8 +36,7 @@ imdb.images.refim_id = [];
 imdb.images.geometry = cell(1, 1, numImages);
 
 for si = 1:numel(sequences.name)
-  category = categories{sequences.category(si)};
-  path = fullfile(category, sequences.name{si});
+  path = fullfile(sequences.name{si});
   imfiles = dir(fullfile(opts.rootDir, path, sprintf('*.%s', IMEXT)));
   assert(numel(imfiles) == SEQ_NUMIM);
   
@@ -43,7 +47,7 @@ for si = 1:numel(sequences.name)
   imdb.images.name(si_si:si_ei) = ...
     arrayfun(@(i) fullfile(path, sprintf('%d.%s', i, IMEXT)), ...
     1:SEQ_NUMIM, 'UniformOutput', false);
-  imdb.images.category(si_si:si_ei) = sequences.category(si);
+  imdb.images.category(si_si:si_ei) = sequences.category_id(si);
   imdb.images.sequence(si_si:si_ei) = si;
   imdb.images.num(si_si:si_ei) = 1:SEQ_NUMIM;
   imdb.images.refim_id(si_si:si_ei) = si_si;
@@ -74,21 +78,15 @@ imdb.getGeom = @(imid) imdb.images.geometry(:,:,imid);
 imdb.findImageId = @(varargin) findImageId(imdb, varargin{:});
 end
 
-function imid = findImageId(imdb, category, sequence, num)
- if nargin == 1 && numel(category) == 3
-   sequence = category(2); num = category(3); category = category(1);
- end
- if ischar(category)
-   [found, category] = ismember(category, imdb.meta.categories);
-   if ~found, error('Category %s not found.', category); end;
+function imid = findImageId(imdb, sequence, num)
+ if nargin == 1 && numel(sequence) == 2
+   num = sequence(2); sequence = sequence(1);
  end
  if ischar(sequence)
    [found, sequence] = ismember(sequence, imdb.meta.sequences.name);
    if ~found, error('Sequence %s not found.', sequence); end;
  end
- imid = imdb.images.id(...
-   imdb.images.category == category &...
-   imdb.images.sequence == sequence &...
+ imid = imdb.images.id(imdb.images.sequence == sequence &...
    imdb.images.num == num);
 end
 
