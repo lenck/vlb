@@ -13,7 +13,7 @@ opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-featw', 'dataset_release');
 opts = vl_argparse(opts, varargin);
 
 categories = {'illum', 'viewpoint'};
-sequences.name = listdir(opts.rootDir);
+sequences.name = utls.listdirs(opts.rootDir);
 sequences.category_id  = zeros(1, numel(sequences.name));
 for si = 1:numel(sequences)
   if strcmp(sequences.name{si}(1:2), 'i_')
@@ -88,11 +88,4 @@ function imid = findImageId(imdb, sequence, num)
  end
  imid = imdb.images.id(imdb.images.sequence == sequence &...
    imdb.images.num == num);
-end
-
-function dirs = listdir(path)
-dirs = dir(path);
-is_valid = [dirs.isdir] & arrayfun(@(d) d.name(1)~='.', dirs)';
-dirs = {dirs.name};
-dirs = dirs(is_valid);
 end
