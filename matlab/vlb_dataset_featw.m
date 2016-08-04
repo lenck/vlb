@@ -15,7 +15,7 @@ opts = vl_argparse(opts, varargin);
 categories = {'illum', 'viewpoint'};
 sequences.name = utls.listdirs(opts.rootDir);
 sequences.category_id  = zeros(1, numel(sequences.name));
-for si = 1:numel(sequences)
+for si = 1:numel(sequences.name)
   if strcmp(sequences.name{si}(1:2), 'i_')
     sequences.category_id(si) = 1;
   elseif strcmp(sequences.name{si}(1:2), 'v_')
@@ -74,8 +74,17 @@ imdb.meta.sequences = sequences;
 % Methods
 imdb.getImagePath = @(imid) fullfile(imdb.imageDir, imdb.images.name{imid});
 imdb.getGsImage = @(imid) utls.imread_grayscale(imdb.getImagePath(imid));
-imdb.getGeom = @(imid) imdb.images.geometry(:,:,imid);
+imdb.getGeom = @(varargin) getGeom(imdb, varargin{:});
 imdb.findImageId = @(varargin) findImageId(imdb, varargin{:});
+end
+
+function geom = getGeom(imdb, ia, ib)
+geom_ref2a = imdb.images.geometry(:,:,ia);
+if nargin < 3, geom = geom_ref2a; return; end
+% Compose the homographies
+geom_ref2b = imdb.images.geometry(:,:,ib);
+geom = struct('H', geom_ref2b.H / geom_ref2a.H, ...
+  'refimsize', geom_ref2a.imsize, 'imsize', geom_ref2b.imsize);
 end
 
 function imid = findImageId(imdb, sequence, num)
