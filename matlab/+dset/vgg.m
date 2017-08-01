@@ -1,4 +1,4 @@
-function [ imdb ] = vlb_dataset_vggaffine( category, varargin )
+function [ imdb ] = vgg( varargin )
 %VLB_DATASET_VGGAFFINE Wrapper around the vgg affine datasets
 %   datasets.VggAffineDataset('Option','OptionValue',...) Constructs
 %   an object which implements access to VGG Affine dataset used for
@@ -9,20 +9,15 @@ function [ imdb ] = vlb_dataset_vggaffine( category, varargin )
 %
 %   This class perform automatic installation when the dataset data
 %   are not available.
-%
-%   Following options are supported:
-%
-%   Category :: ['graf']
-%     The category within the VGG dataset, has to be one of
-%     'bikes', 'trees', 'graf', 'wall', 'bark', 'boat', 'leuven', 'ubc'
 
-% Copyright (C) 2011-16 Karel Lenc, Varun Gulshan
+% Copyright (C) 2011-17 Karel Lenc, Varun Gulshan
 % All rights reserved.
 %
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-vggaffine');
+opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-vggaffine');
+opts.defGeom = @geom.ellipse_overlap_H;
 opts = vl_argparse(opts, varargin);
 
 % Meta about all datasets
@@ -50,44 +45,50 @@ getDsetUrl = @(dset) [rootUrl, dset.name, '.tar.gz'];
 getImPath = @(dset, imid) fullfile(opts.rootDir, dset.name, ...
   sprintf('img%d.%s', imid, dset.imext));
 
-[catFound, catIdx] = ismember(category, {datasets.name});
-assert(catFound, 'Invalid category');
-
-dset = datasets(catIdx);
-dsetDir = fileparts(getImPath(dset, 1));
-if ~exist(getImPath(dset, 1), 'file')
-  vl_xmkdir(dsetDir);
-  fprintf('Downloading `%s` to %s.\n', dset.name, dsetDir);
-  untar(getDsetUrl(dset), dsetDir);
+% Download the datasets
+for catIdx = 1:numel(datasets)
+  dset = datasets(catIdx);
+  dsetDir = fileparts(getImPath(dset, 1));
+  if ~exist(getImPath(dset, 1), 'file')
+    vl_xmkdir(dsetDir);
+    fprintf('Downloading `%s` to %s.\n\tIt may take some time.\n', ...
+      dset.name, dsetDir);
+    untar(getDsetUrl(dset), dsetDir);
+  end
 end
 
-imdb.imageDir = dsetDir;
-imdb.images.id = 1:6;
-imdb.images.name = cell(1, 6);
-imdb.images.geometry = cell(1, 6);
-imdb.images.label = dset.labels;
+numImages = 6*numel(datasets);
+imdb.images = cell(1, numImages);
+imdb.tasks = {};
 
 % Read the image information
-for imi = 1:6
-  imPath = getImPath(dset, imi);
-  assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
-  [~, imName, imExt] = fileparts(imPath);
-  imdb.images.name{imi} = [imName, imExt];
-  imSize =  utls.get_image_size(imPath);
-  tfs = eye(3);
-  if imi > 1
-    tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi)));
+imi = 1;
+for catIdx = 1:numel(datasets)
+  dset = datasets(catIdx);
+  refim = imi;
+  for imi_l = 1:6
+    imPath = getImPath(dset, imi_l);
+    assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
+    imdb.images{imi}.id = imi;
+    imdb.images{imi}.name = sprintf('%s-%d', dset.name, imi_l);
+    imdb.images{imi}.path = imPath;
+    imdb.images{imi}.seqnum = imi_l;
+    imdb.images{imi}.category = dset.name;
+    if imi_l == 1, imi = imi + 1; continue; end;
+    imSize =  utls.get_image_size(imPath);
+    tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi_l)));
+    imdb.tasks{end+1} = struct('ima', imdb.images{refim}.name, ...
+      'imb', imdb.images{imi}.name, 'H', tfs, ...
+      'ima_size', imSize, 'imb_size', imSize, ...
+      'description', struct('category', dset.name, 'impair', [1, imi_l], ...
+      'name', dset.description, 'value', dset.labels{imi_l}));
+    imi = imi + 1;
   end
-  imdb.images.geometry{imi} = struct('H', tfs, 'imsize', imSize, ...
-    'refimsize', imSize);
 end
-imdb.images.geometry = cell2mat(imdb.images.geometry);
-% Set up the common properties
-imdb.meta.category = category;
-imdb.meta.description = dset.description;
-
-imdb.getGsImage = @(imid) ...
-  utls.imread_grayscale(fullfile(imdb.imageDir, imdb.images.name{imid}));
-imdb.getGeom = @(imid) imdb.images.geometry(imid);
+imdb.images = cell2mat(imdb.images);
+imdb.tasks = cell2mat(imdb.tasks);
+imdb.name = 'vgg';
+imdb.defGeom = opts.defGeom;
+imdb.rootdir = opts.rootDir;
 end
 

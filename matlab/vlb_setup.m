@@ -8,7 +8,7 @@ function vlb_setup()
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-root = vlb_root() ;
+root = vlb_path() ;
 addpath(fullfile(root, 'matlab')) ;
 addpath(fullfile(root, 'matlab', 'mex')) ;
 addpath(fullfile(root, 'examples')) ;

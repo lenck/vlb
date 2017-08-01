@@ -41,7 +41,7 @@ opts = vl_argparse(opts, varargin);
 % Constants
 VALID_DESCRIPTORS = {'sift', 'jla', 'gloh', 'mom', 'koen', 'cf', 'sc', ...
   'spin', 'pca', 'cc'};
-BIN_DIR = fullfile(vlb_root(), 'data','vgg_desc');
+BIN_DIR = fullfile(vlb_path(), 'data','vgg_desc');
 BIN_PATH = fullfile(BIN_DIR, 'compute_descriptors.ln');
 BIN_URL = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/compute_descriptors.ln.gz';
 BUILTIN_MAGNIF = 3;

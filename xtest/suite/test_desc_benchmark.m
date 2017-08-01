@@ -27,7 +27,7 @@ classdef test_desc_benchmark < matlab.unittest.TestCase
           vlb_desc_benchmark(matchFrames, fa, da, fb, db, ...
           'matchingStrategy', methods{mi});
       end
-      if 0
+      if 1
         figure(1); clf;
         colors = lines(numel(methods));
         for mi = 1:numel(methods)

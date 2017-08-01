@@ -1,4 +1,4 @@
-function [ frames ] = vgg_aff( img, varargin )
+function [ frames, name ] = vggaff( img, varargin )
 %VGG_AFF Detect frames using VGG Affine co-variant detector
 %  FRAMES = VGG_AFF(IMG) Detects FRAMES from image IMG.
 %  Only supported architectures are GLNX86 and GLNXA64 as for these the
@@ -21,10 +21,12 @@ function [ frames ] = vgg_aff( img, varargin )
 opts.detector = 'hesaff';
 opts.threshold = -1;
 opts = vl_argparse(opts, varargin);
+name = sprintf('vggaff-%s', opts.detector);
+if isempty(img), frames = []; return; end;
 
 % Constants
 VALID_DETECTORS = {'hesaff', 'haraff', 'heslap', 'harlap', 'har'};
-BIN_DIR = fullfile(vlb_root(), 'data','vgg_aff');
+BIN_DIR = fullfile(vlb_path(), 'data','vgg_aff');
 BIN_PATH = fullfile(BIN_DIR, 'h_affine.ln');
 BIN_URL = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/h_affine.ln.gz';
 

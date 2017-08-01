@@ -1,4 +1,4 @@
-function [tcorr, corr_score, info] = vlb_ellipse_overlap_H(geom, fa, fb, varargin)
+function [tcorr, corr_score, info] = ellipse_overlap_H(geom, fa, fb, varargin)
 %VLB_ELLIPSE_OVERLAP_H Get overlapping ellipses 
 %
 %   maxOverlapError:: 0.4
@@ -72,8 +72,8 @@ fa_valid = true(1, size(fa, 2));
 fb_valid = true(1, size(fb, 2));
 if opts.cropFrames
   % find frames fully visible in both images
-  bba = [1 1 geom.refimsize(2)+1 geom.refimsize(1)+1] ;
-  bbb = [1 1 geom.imsize(2)+1 geom.imsize(1)+1] ;
+  bba = [1 1 geom.ima_size(2)+1 geom.ima_size(1)+1] ;
+  bbb = [1 1 geom.imb_size(2)+1 geom.imb_size(1)+1] ;
   if ~isempty(opts.cropFramesSafetyEdge)
     ser = opts.cropFramesSafetyEdge;
     bba = bba + [geom.refimsize(1:2).*ser, -geom.refimsize(1:2).*ser];

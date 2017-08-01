@@ -7,7 +7,7 @@ dset = vlb_dataset_vggaffine('graf');
 det = @(im) legacy.vgg_aff(im, 'detector', 'hesaff');
 desc = @(im, det) legacy.vgg_desc(im, det(im), 'descriptor', 'sift');
 
-imb_i = 4;
+imb_i = 2;
 ima = dset.getGsImage(1); imb = dset.getGsImage(imb_i);
 match_geom = @(fa, fb) vlb_ellipse_overlap_H(dset.getGeom(imb_i), fa, fb, ...
   'mode', 'descriptors');
@@ -19,15 +19,16 @@ subplot(1,2,1); imshow(ima); subplot(1,2,2); imshow(imb);
 %%
 fprintf('Computing features.\n');
 [fa, da] = desc(ima, det); [fb, db] = desc(imb, det);
+da = rootsift_a(da); db = rootsift_a(db);
 
-%%
 figure(1); clf; fprintf('Matching...\n');
-
 [prec, recall, info] = vlb_desc_benchmark(match_geom, fa, da, fb, db, ...
   'MatchingStrategy', 'threshold');
 subplot(1,3,1); plot(1-prec, recall);
 axis square; set(gca, 'ylim', [0, 1]); title('THR');
 xlabel('1-precision'); ylabel(sprintf('#correct/%d', info.numCorresp));
+title(sprintf('AP %.2f', info.ap));
+%%
 
 [prec, recall, info] = vlb_desc_benchmark(match_geom, fa, da, fb, db, ...
   'MatchingStrategy', 'nn');

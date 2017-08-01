@@ -5,7 +5,7 @@ opts.maxOverlapError = 0.5;
 opts = vl_argparse(opts, varargin);
 
 BIN_URL = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/repeatability.tar.gz';
-BIN_DIR = fullfile(vlb_root(), 'data', 'km_frames_benchmark');
+BIN_DIR = fullfile(vlb_path(), 'data', 'km_frames_benchmark');
 % Make sure all supplementary files are present
 if ~exist(fullfile(BIN_DIR, 'repeatability.m'), 'file')
   untar(BIN_URL, BIN_DIR);
@@ -21,7 +21,7 @@ assert(size(fb, 2) == size(db, 2), 'Invalid number of frames/descriptors');
 
 tmpFile = tempname;
 ella_p = [tmpFile, 'ellA.txt']; ellb_p = [tmpFile, 'ellB.txt'];
-ella_f = utls.frame2ellipse(fa); ellb_f = utls.frame_to_ellipse(fb);
+ella_f = utls.frame2ellipse(fa); ellb_f = utls.frame2ellipse(fb);
 legacy.vgg_features_write(ella_p, ella_f, da);
 legacy.vgg_features_write(ellb_p, ellb_f, db);
 tmpH_p = [tmpFile, 'H.txt']; H = geom.H; save(tmpH_p, 'H','-ASCII');

@@ -18,7 +18,7 @@ opts = vl_argparse(opts, varargin);
 
 % Constants
 BIN_URL = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/repeatability.tar.gz';
-BIN_DIR = fullfile(vlb_root(), 'data', 'km_frames_benchmark');
+BIN_DIR = fullfile(vlb_path(), 'data', 'km_frames_benchmark');
 % Make sure all supplementary files are present
 if ~exist(fullfile(BIN_DIR, 'repeatability.m'), 'file')
   untar(BIN_URL, BIN_DIR);
@@ -26,7 +26,7 @@ end
 if exist(fullfile(BIN_DIR, ['c_eoverlap', mexext]), 'file')
   vlb_compile();
   copyfile(...
-    fullfile(vlb_root(), 'matlab', 'mex', ['vgg_compute_ellipse_overlap.', mexext]), ...
+    fullfile(vlb_path(), 'matlab', 'mex', ['vgg_compute_ellipse_overlap.', mexext]), ...
     fullfile(BIN_DIR, ['c_eoverlap.', mexext]));
 end
 

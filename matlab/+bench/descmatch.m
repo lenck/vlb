@@ -1,5 +1,4 @@
-function [ precision, recall, info ] = vlb_desc_benchmark( matchFrames, ...
-  fa, da, fb, db, varargin )
+function [ scores, info ] = descmatch( mFrames, fa, da, fb, db, varargin )
 % VLB_DESC_BENCHMARK Descriptors matching PR curves
 %
 % Options:
@@ -33,22 +32,24 @@ function [ precision, recall, info ] = vlb_desc_benchmark( matchFrames, ...
 %   [1] K. Mikolajczyk, C. Schmid. A performace Evaluation of Local
 %       Descriptors. IEEE PAM, 2005.
 
-opts.matchingStrategy = 'threshold';
+opts.matchingStrategy = 'nn';
 opts.metric = 'L2';
-opts.numPrPoints = inf;
+opts.numPrPoints = 1e3;
+opts.compactInfo = true;
 opts = vl_argparse(opts, varargin);
 
 MATCH_STRATEGIES = {'threshold', 'nn', 'nndistratio'};
 assert(ismember(opts.matchingStrategy, MATCH_STRATEGIES), ...
   'Invalid matching strategy.');
 
-info = struct(); precision = []; recall = [];
+info = struct(); scores = struct('ap', 0, 'auc', 0, ...
+  'numCorresp', 0, 'numCorrectMatches', 0);
 if isempty(fa) || isempty(fb), return; end
 if size(fa,2) ~= size(da,2) || size(fb,2) ~= size(db,2)
   error('Number of frames and descriptors must be the same.');
 end
 
-[tcorr, corr_score, info] = matchFrames(fa, fb);
+[tcorr, corr_score, info] = mFrames(fa, fb);
 if isempty(tcorr), return; end;
 da = da(:, info.fa_valid); db = db(:, info.fb_valid);
 
@@ -107,21 +108,31 @@ numCorrectMatches = sum(labels > 0);
 info = vl_override(info, info_pr);
 info.numCorresp = nc;
 info.numCorrectMatches = numCorrectMatches;
-info.descMatches = matches;
-info.descDists = dists;
 
 if ~isinf(opts.numPrPoints)
   numValues = numel(recall);
   switch opts.matchingStrategy
     case 'threshold'
-      samples = round(logspace(0,log10(numValues), opts.prPointsNum));
+      samples = round(logspace(0,log10(numValues), opts.numPrPoints));
     case {'nn','nndistratio'}
-      samples = round(linspace(1, numValues, opts.prPointsNum));
+      samples = round(linspace(1, numValues, opts.numPrPoints));
   end
-  info.recall_all = recall;
-  info.precision_all = precision;
+  if ~opts.compactInfo
+    info.recall_all = recall;
+    info.precision_all = precision;
+  end
   recall = recall(samples);
   precision = precision(samples);
 end
-info.matches = matches; info.labels = labels; info.distances = dists;
+if ~opts.compactInfo
+  info.descMatches = matches;
+  info.descDists = dists;
+  info.matches = matches;
+  info.labels = labels;
+  info.distances = dists;
+end
+info.precision = single(precision);
+info.recall = single(recall);
 
+scores = struct('ap', info.ap, 'auc', info.auc, ...
+  'numCorresp', nc, 'numCorrectMatches', numCorrectMatches);

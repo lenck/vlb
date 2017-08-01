@@ -1,6 +1,6 @@
-function [ rep, nm, info ] = vlb_repeatability( matchFrames, fa, fb, varargin )
+function [ scores, info ] = detrep( matchFrames, fa, fb, varargin )
 % VLB_REPEATABILITY Compute repeatability of given image features
-%   [SCORE NUM_MATCHES] = VLB_REPEATABILITY(MATCH, FRAMES_A, FRAMES_B)
+%   [SCORES] = VLB_REPEATABILITY(MATCH, FRAMES_A, FRAMES_B)
 %   Computes the repeatability between frames FRAMES_A and FRAMES_B
 %   NUM_MATHCES is number of matches which is calcuated
 %   according to object settings.
@@ -23,11 +23,13 @@ function [ rep, nm, info ] = vlb_repeatability( matchFrames, fa, fb, varargin )
 opts.normFactor = 'minab';
 opts = vl_argparse(opts, varargin);
 
-rep = 0; nm = 0; info = struct('geomMatches', zeros(2, 0));
+info = struct('geomMatches', zeros(2, 0)); 
+scores = struct('repeatability', 0, 'numCorresp', 0);
 if isempty(fa) || isempty(fb), return; end
 [tcorr, corr_score, info] = matchFrames(fa, fb);
 fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
-info.tcorr = tcorr; info.corr_score = corr_score;
+info.tcorr = tcorr; 
+info.corr_score = corr_score;
 info.geomMatches = zeros(2, 0);
 if isempty(tcorr), return; end;
 
@@ -40,14 +42,16 @@ matches = matches(1, :);
 info.geomMatches = matches;
 
 % Compute the score
-nm = sum(matches ~= 0);
+nc = sum(matches ~= 0);
 switch opts.normFactor
   case 'minab'
-    rep = nm / min(fa_num, fb_num);
+    rep = nc / min(fa_num, fb_num);
   case 'a'
-    rep = nm / fa_num;
+    rep = nc / fa_num;
   case 'b'
-    rep = nm / fb_num;
+    rep = nc / fb_num;
   otherwise
     error('Invalid `normFactor`.');
 end
+info.repeatability = rep; info.numCorresp = nc;
+scores = struct('repeatability', rep, 'numCorresp', nc);

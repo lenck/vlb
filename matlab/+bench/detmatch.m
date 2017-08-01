@@ -1,6 +1,6 @@
-function [ms, nm, info] = vlb_matchingscore(matchFrames, fa, da, fb, db, varargin)
-% testFeatures Compute repeatability of given image features
-%   [SCORE NUM_MATCHES] = obj.testFeatures(TF, IMAGE_A_SIZE,
+function [scores, info] = detmatch(matchGeom, fa, da, fb, db, varargin)
+% DETMATCH Compute matching score of given image features
+%   [SCORES] = obj.testFeatures(TF, IMAGE_A_SIZE,
 %   IMAGE_B_SIZE, FRAMES_A, FRAMES_B, DESCS_A, DESCS_B) Compute
 %   matching score SCORE between frames FRAMES_A and FRAMES_B
 %   and their descriptors DESCS_A and DESCS_B which were
@@ -27,9 +27,15 @@ function [ms, nm, info] = vlb_matchingscore(matchFrames, fa, da, fb, db, varargi
 opts.normFactor = 'minab';
 opts.matchGeometry = true;
 opts.matchDescriptors = @utls.match_greedy; 
+opts.geomMode = 'descriptors';
 opts = vl_argparse(opts, varargin);
 
-ms = 0; nm = 0; info = struct();
+% Switch the match frames to descriptor mode
+matchG = @(varargin) matchGeom(varargin{:}, 'mode', opts.geomMode);
+
+info = struct(); 
+scores = struct('matchingScore', 0, 'numMatches', 0, ...
+  'repeatability', 0, 'numCorresp', 0);
 
 if isempty(fa) || isempty(fb), return; end;
 if isempty(da) || isempty(db), return; end;
@@ -37,7 +43,7 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[ ~, ~, info ] = vlb_repeatability(matchFrames, fa, fb);
+[scores, info ] = bench.detrep(matchG, fa, fb);
 if isempty(info.geomMatches), return; end;
 fa = fa(:, info.fa_valid); da = da(:, info.fa_valid);
 fb = fb(:, info.fb_valid); db = db(:, info.fb_valid);
@@ -77,3 +83,5 @@ switch opts.normFactor
   otherwise
     error('Invalid `normFactor`.');
 end
+scores.matchingScore = ms; scores.numMatches = nm;
+scores.numCorresp = info.numCorresp;

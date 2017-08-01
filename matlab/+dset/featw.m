@@ -9,7 +9,7 @@ function [ imdb ] = vlb_dataset_featw( varargin )
 IMEXT = 'ppm';
 SEQ_NUMIM = 6;
 
-opts.rootDir = fullfile(vlb_root(), 'data', 'dataset-featw', 'dataset_release');
+opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-featw', 'dataset_release');
 opts = vl_argparse(opts, varargin);
 
 categories = {'illum', 'viewpoint'};
