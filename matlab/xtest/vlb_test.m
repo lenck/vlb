@@ -21,6 +21,7 @@ function vlb_test(varargin)
 %
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
+vlb_setup();
 
 opts.command = 'test' ;
 opts.break = false ;

@@ -9,9 +9,9 @@ opts.scalingFactor = 1;
 args = utls.struct2argscell(opts);
 args = args(1:end-2);
 
+if isempty(ima) || isempty(fms),patches = []; return; end;
 is_uint = isa(ima, 'uint8');
-if is_uint, ima = single(ima) ./ 255; end
-if size(ima, 3) == 3, ima = rgb2gray(ima); end;
+ima = utls.covdet_preprocessim(ima);
 
 [~, patches] = vl_covdet(ima, 'frames', fms, 'Descriptor', 'patch', ...
   'PatchRelativeExtent', opts.scalingFactor, args{:});

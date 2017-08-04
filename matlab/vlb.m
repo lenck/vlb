@@ -10,9 +10,10 @@ usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb');
 
 cmds = struct();
 cmds.view = struct('fun', @vlb_view, 'help', '');
-cmds.detect = struct('fun', @vlb_detect, 'help', '');
+cmds.det = struct('fun', @vlb_det, 'help', '');
 cmds.extract = struct('fun', @vlb_extract, 'help', '');
-cmds.describe = struct('fun', @vlb_describe, 'help', '');
+cmds.desc = struct('fun', @vlb_desc, 'help', '');
+cmds.detdesc = struct('fun', @vlb_detdesc, 'help', '');
 cmds.descmatch = struct('fun', @(varargin) vlb_desceval(varargin{:}, ...
   'benchFun', @bench.descmatch), 'help', '');
 cmds.detmatch = struct('fun', @(varargin) vlb_desceval(varargin{:}, ...

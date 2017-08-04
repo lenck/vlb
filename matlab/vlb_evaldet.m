@@ -1,4 +1,4 @@
-function [scores, info] = vlb_deteval( imdb, detector, varargin )
+function [scores, info] = vlb_evaldet( imdb, detector, varargin )
 
 
 % Copyright (C) 2017 Karel Lenc
@@ -40,10 +40,12 @@ for ti = 1:numel(imdb.tasks)
   task = imdb.tasks(ti);
   fa = getfeats('dets', task.ima); fb = getfeats('dets', task.imb);
   matchGeom = @(varargin) imdb.defGeom(task, varargin{:});
-  [scores{ti}, info{ti}] = opts.benchFun(matchGeom, fa, fb, varargin{:});
+  [score, info{ti}] = opts.benchFun(matchGeom, fa, fb, varargin{:});
   scores{ti}.dataset = imdb.name;
   scores{ti}.detector = detector.name;
   scores{ti}.ima = task.ima; scores{ti}.imb = task.imb;
+  scores{ti} = vl_override(scores{ti}, task.description);
+  scores{ti} = vl_override(scores{ti}, score);
   status(ti);
 end
 

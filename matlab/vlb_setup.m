@@ -12,5 +12,5 @@ root = vlb_path() ;
 addpath(fullfile(root, 'matlab')) ;
 addpath(fullfile(root, 'matlab', 'mex')) ;
 addpath(fullfile(root, 'examples')) ;
-addpath(fullfile(root, 'xtest')) ;
+addpath(fullfile(root, 'matlab', 'xtest')) ;
 run(fullfile(root, 'vlfeat', 'toolbox', 'vl_setup'));

@@ -9,13 +9,12 @@ opts.extractPatchesFun = @utls.patches_extract_covdet;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.dsetfactory(imdb);
-detector = det.detfactory(detector, varargin{:});
+detector = features.factory('det', detector, varargin{:});
 
 dets_path = vlb_path('dets', imdb, detector);
 assert(isdir(dets_path), 'Cannot find detections for %s - %s', ...
   imdb.name, detector.name);
-detf = dir(fullfile(dets_path, '*.csv'));
-detf = arrayfun(@(a) fullfile(dets_path, a.name), detf, 'Uni', false);
+detf = utls.listfilesdir(fullfile(dets_path, '*.csv'));
 
 patches_dir = vlb_path('patches', imdb, detector);
 vl_xmkdir(patches_dir);

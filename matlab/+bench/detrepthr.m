@@ -1,4 +1,4 @@
-function [ rep, nmatches, info ] = vlb_thr_repeatability( matchFrames, fa, fsca, fb, fscb, varargin )
+function [ rep, nmatches, info ] = detrepthr( matchFrames, fa, fsca, fb, fscb, varargin )
 % VLB_THR_REPEATABILITY Compute a repetability over a set of thresholds
 opts.normFactor = 'b';
 opts = vl_argparse(opts, varargin);

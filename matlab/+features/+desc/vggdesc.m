@@ -1,4 +1,4 @@
-function [ frames, descs ] = vgg_desc( img, frames, varargin )
+function [ frames, descs, info ] = vggdesc( img, frames, varargin )
 %VGG_DESC Describe frames using the VGG binary
 %   [FRAMES, DESCS] = VGG_DESC(IMG, FRAMES) computes the descriptors DESCS
 %   of frames FRAMES on image IMG.
@@ -37,6 +37,9 @@ opts.descriptor = 'sift';
 opts.magnification = 3;
 opts.cropFrames = true;
 opts = vl_argparse(opts, varargin);
+info = struct('name', sprintf('vggdesc-%s', opts.descriptor), ...
+  'describes', 'frames');
+if isempty(img), frames = zeros(5, 0); descs = []; return; end;
 
 % Constants
 VALID_DESCRIPTORS = {'sift', 'jla', 'gloh', 'mom', 'koen', 'cf', 'sc', ...

@@ -1,6 +1,7 @@
-function x = resize(patches, varargin)
+function [x, info] = resize(patches, varargin)
 opts.numbins = 4;
 opts = vl_argparse(opts, varargin);
+info = struct('name', mfilename, 'describes', 'patches');
 
 patches = single(squeeze(patches));
 meanVal = reshape(mean(mean(patches, 1), 2), 1, 1, []);

@@ -1,4 +1,4 @@
-function [scores, info] = vlb_desceval( imdb, detector, descriptor, varargin )
+function [scores, info] = vlb_evaldesc( imdb, detector, descriptor, varargin )
 
 
 % Copyright (C) 2017 Karel Lenc

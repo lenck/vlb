@@ -1,9 +1,11 @@
-function vlb_detect(imdb, detector, varargin)
+function vlb_det(imdb, detector, varargin)
+import features.*;
+
 opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.dsetfactory(imdb);
-detector = det.detfactory(detector, varargin{:});
+detector = features.factory('det', detector, varargin{:});
 
 impaths = {imdb.images.path};
 imnames = {imdb.images.name};
@@ -18,14 +20,16 @@ for si = 1:numel(impaths)
   impath = impaths{si};
   imname = imnames{si};
   det_path = fullfile(dest_dir, [imname, '.csv']);
-  if exist(det_path, 'file') == 2 && ~opts.override
-    status(numel(impaths));
-    continue;
+  det_info_path = fullfile(dest_dir, [imname, '.mat']);
+  if exist(det_path, 'file') == 2 && ...
+      exist(det_info_path, 'file') == 2 && ~opts.override
+    status(numel(impaths)); continue;
   end
   im = imread(impath);
-  frames = detector.fun(im);
+  [frames, info] = detector.fun(im);
   frames = vl_frame2oell(frames);
   dlmwrite(det_path, frames', ';');
+  save(det_info_path, 'info');
   status(si);
 end
 
