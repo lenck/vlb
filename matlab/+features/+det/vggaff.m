@@ -1,4 +1,4 @@
-function [ frames, info ] = vggaff( img, varargin )
+function [ res ] = vggaff( img, varargin )
 %VGG_AFF Detect frames using VGG Affine co-variant detector
 %  FRAMES = VGG_AFF(IMG) Detects FRAMES from image IMG.
 %  Only supported architectures are GLNX86 and GLNXA64 as for these the
@@ -21,8 +21,8 @@ function [ frames, info ] = vggaff( img, varargin )
 opts.detector = 'hesaff';
 opts.threshold = -1;
 opts = vl_argparse(opts, varargin);
-info.name = sprintf('vggaff-%s', opts.detector);
-if isempty(img), frames = zeros(5, 0); return; end;
+res.detName = sprintf('vggaff-%s', opts.detector); res.args = opts;
+if isempty(img), res.frames = zeros(5, 0); return; end;
 
 % Constants
 VALID_DETECTORS = {'hesaff', 'haraff', 'heslap', 'harlap', 'har'};
@@ -56,3 +56,4 @@ end
 frames = legacy.vgg_frames_read(framesFile);
 if strcmp(opts.detector, 'har'), frames([3, 5], :) = 3.5^2; end
 delete(framesFile); delete(tmpImgName);
+res.frames = frames;

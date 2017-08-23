@@ -1,7 +1,7 @@
-function [x, info] = resize(patches, varargin)
+function [ res ] = resize(patches, varargin)
 opts.numbins = 4;
 opts = vl_argparse(opts, varargin);
-info = struct('name', mfilename, 'describes', 'patches');
+res = struct('descName', mfilename, 'describes', 'patches', 'args', opts);
 
 patches = single(squeeze(patches));
 meanVal = reshape(mean(mean(patches, 1), 2), 1, 1, []);
@@ -19,6 +19,8 @@ end
 l = sqrt(sum(x.^2, 1));
 x = bsxfun(@rdivide, x, l);
 
-x(isnan(x)) = 0; x(isinf(x)) = 0;
+x(isnan(x)) = 0;
+x(isinf(x)) = 0;
+res.descs = x;
 
 end

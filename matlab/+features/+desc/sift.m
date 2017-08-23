@@ -1,6 +1,6 @@
-function [x, info] = sift( patches )
-info = struct('name', mfilename, 'describes', 'patches');
-if isempty(patches), x = []; return; end;
+function [ res ] = sift( patches )
+res = struct('descName', mfilename, 'describes', 'patches', 'descs', []);
+if isempty(patches), return; end;
 
 psz = [size(patches, 1), size(patches, 2)];
 frm = [(psz(1) ./ 2 + 0.5) * ones(2, 1) ; psz(1) ./ 2; 0];
@@ -17,6 +17,6 @@ for pi = 1:size(patches, 4)
   end
   x(:, pi) = d;
 end
-
+res.descs = x;
 end
 

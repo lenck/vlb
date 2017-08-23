@@ -1,4 +1,4 @@
-function [ frames, descs, info ] = vggdesc( img, frames, varargin )
+function [ res ] = vggdesc( img, feats, varargin )
 %VGG_DESC Describe frames using the VGG binary
 %   [FRAMES, DESCS] = VGG_DESC(IMG, FRAMES) computes the descriptors DESCS
 %   of frames FRAMES on image IMG.
@@ -37,9 +37,10 @@ opts.descriptor = 'sift';
 opts.magnification = 3;
 opts.cropFrames = true;
 opts = vl_argparse(opts, varargin);
-info = struct('name', sprintf('vggdesc-%s', opts.descriptor), ...
-  'describes', 'frames');
-if isempty(img), frames = zeros(5, 0); descs = []; return; end;
+res = struct('descName', sprintf('vggdesc-%s', opts.descriptor), ...
+  'describes', 'frames', 'descs', [], 'frames', zeros(5, 0), ...
+  'scalingFactor', opts.magnification, 'args', opts);
+if isempty(img), return; end;
 
 % Constants
 VALID_DESCRIPTORS = {'sift', 'jla', 'gloh', 'mom', 'koen', 'cf', 'sc', ...
@@ -63,6 +64,7 @@ tmpImgPath = [tempname(), '.png'];
 if ischar(img) && exist(img, 'file'), img = imread(img); end;
 imwrite(img, tmpImgPath);
 
+frames = feats.frames;
 frames = utls.frame2ellipse(frames);
 if opts.cropFrames
   imgbox = [1 1 size(img, 2)+1 size(img, 1)+1];
@@ -70,7 +72,7 @@ if opts.cropFrames
   isVisible = utls.ellipse_in_bbox(magFrames, imgbox);
   frames = frames(:, isVisible);
 end
-if isempty(frames), descs = []; delete(tmpImgPath); return; end;
+if isempty(frames), delete(tmpImgPath); return; end;
 if opts.magnification ~= BUILTIN_MAGNIF
   % Magnify the frames accordnig to set magnif. factor
   magFactor = opts.magnification / BUILTIN_MAGNIF;
@@ -103,4 +105,5 @@ end
 if opts.magnification ~= BUILTIN_MAGNIF
   frames(3:5, :) = frames(3:5, :) ./ magFactor^2;
 end
-
+res.frames = frames; 
+res.descs = descs;

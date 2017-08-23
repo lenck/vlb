@@ -1,4 +1,4 @@
-function [ frames, info ] = vggmser( img, varargin )
+function [ res ] = vggmser( img, varargin )
 %VGG_MSER Detect frames using the MSER detector
 %  FRAMES = VGG_MSER(IMG) Computes the MSER features using the
 %   implementation by [1].
@@ -31,8 +31,8 @@ opts.per = -1;
 opts.ms = -1;
 opts.mm = -1;
 opts = vl_argparse(opts, varargin);
-info.name = 'vggmser';
-if isempty(img), frames = zeros(5, 0); return; end;
+res.detName = 'vggmser'; res.args = opts;
+if isempty(img), res.frames = zeros(5, 0); return; end;
 
 % Constants
 BIN_DIR = fullfile(vlb_path(), 'data','vgg_mser');
@@ -68,3 +68,4 @@ if status, error('Error running VGG_MSER: %s: %s', cmd, msg) ; end
 frames = legacy.vgg_frames_read(framesFile);
 if ~strcmp(img, tmpImgName), delete(tmpImgName); end;
 delete(framesFile);
+res.frames = frames;

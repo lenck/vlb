@@ -1,4 +1,4 @@
-function [ frames, info ] = random( img, varargin )
+function [ res ] = random( img, varargin )
 %RANDOM Summary of this function goes here
 %   Detailed explanation goes here
 opts.featuresDensity = 2e-3;
@@ -6,8 +6,8 @@ opts.frameType = 'disc';
 opts.maxScale = 30;
 opts.minScale = 0.1;
 opts = vl_argparse(opts, varargin);
-info.name = sprintf('random-%s', opts.frameType);
-if isempty(img), frames = zeros(5, 0); return; end;
+res.detName = sprintf('random-%s', opts.frameType); res.args = opts;
+if isempty(img), res.frames = zeros(5, 0); return; end;
 
 
 imgSize = size(img);
@@ -25,9 +25,9 @@ angles = rand(1,numFeatures) * 2*pi;
 
 switch opts.frameType
   case 'disc'
-    frames = [locations; scales(1,:)];
+    res.frames = [locations; scales(1,:)];
   case 'oriented_disc'
-    frames = [locations; scales(1, :); angles];
+    res.frames = [locations; scales(1, :); angles];
   otherwise
     error('Invalid frame type');
 end

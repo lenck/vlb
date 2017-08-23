@@ -10,11 +10,13 @@ classdef test_dets < matlab.unittest.TestCase
       det = features.factory('det', detector);
       % Create the functor from scratch
       det_fun = str2func(['features.det.', detector]);
-      test.verifyEqual(nargout(det_fun), 2);
-      [~, det_info] = det_fun([]);
-      test.verifyTrue(isfield(det_info, 'name'));
+      test.verifyEqual(nargout(det_fun), 1);
+      [det_info] = det_fun([]);
+      test.verifyTrue(isfield(det_info, 'detName'));
       imsize = size(image);
-      [frames, ~] = det_fun(image);
+      feats = det_fun(image);
+      test.verifyTrue(isfield(feats, 'frames'));
+      frames = feats.frames;
       test.verifyGreaterThanOrEqual(size(frames, 1), 2);
       test.verifyLessThanOrEqual(size(frames, 1), 6);
       if ~isempty(frames)

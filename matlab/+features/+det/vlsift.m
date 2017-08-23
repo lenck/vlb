@@ -1,11 +1,10 @@
-function [ frames, info ] = vlsift( img, varargin )
+function [ res ] = vlsift( img, varargin )
 
-info.name = sprintf('vlsift');
-
-if isempty(img), frames = zeros(4, 0); return; end;
+res.detName = sprintf('vlsift');
+if isempty(img), res.frames = zeros(4, 0); return; end;
 img = utls.covdet_preprocessim(img);
 
-frames = vl_sift(img, varargin{:});
-
+[res.frames, res.descs] = vl_sift(img, varargin{:});
+res.args = varargin;
 end
 

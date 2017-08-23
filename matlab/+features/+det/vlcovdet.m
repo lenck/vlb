@@ -1,12 +1,14 @@
-function [ frames, info ] = vlcovdet( img, varargin )
+function [ res ] = vlcovdet( img, varargin )
 
 opts.Method = 'Dog';
 [opts, varargin] = vl_argparse(opts, varargin);
-info.name = sprintf('vlcovdet-det-%s', opts.Method);
-if isempty(img), frames = zeros(6, 0); return; end;
+res.detName = sprintf('vlcovdet-det-%s', opts.Method);
+if isempty(img), res.frames = zeros(6, 0); return; end;
 img = utls.covdet_preprocessim(img);
 
-frames = vl_covdet(img, 'Method', opts.Method, varargin{:});
-
+[res.frames, res.descs, info] = vl_covdet(img, 'PatchRelativeExtent', 1, ...
+  'Method', opts.Method, varargin{:});
+res.detresponses = info.peakScores;
+res.args = [{'Method', opts.Method}, varargin];
 end
 

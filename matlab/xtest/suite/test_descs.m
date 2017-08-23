@@ -6,20 +6,22 @@ classdef test_descs < matlab.unittest.TestCase
   end
   
   methods (Test)
-    function testdet(test, descriptor, image, frameType)
+    function testdesc(test, descriptor, image, frameType)
       desc_info = features.factory('desc', descriptor);
       desc_fun = desc_info.fun;
       test.verifyTrue(isfield(desc_info, 'name') == 1);
       test.verifyTrue(isfield(desc_info, 'describes') == 1);
       test.verifyTrue(ismember(desc_info.describes, {'patches', 'frames'}));
       imsize = size(image);
-      frames = features.det.random(image, 'frameType', frameType);
+      infeats = features.det.random(image, 'frameType', frameType);
       switch desc_info.describes
         case 'frames'
-          [frames, descs, ~] = desc_fun(image, frames);
+          feats = desc_fun(image, infeats);
           % Test if the returned frames are valid
-          test.verifyGreaterThanOrEqual(size(frames, 1), 2);
-          test.verifyLessThanOrEqual(size(frames, 1), 6);
+          test.verifyTrue(isfield(feats, 'frames') == 1);
+          test.verifyTrue(isfield(feats, 'descs') == 1);
+          test.verifyEqual(size(feats.descs, 2), size(feats.frames, 2));
+          frames = feats.frames;
           if ~isempty(frames)
             test.verifyGreaterThan(frames(1:2,:), 0);
             % Frames in IMAGE coordinates, not Matlab matrix coords
@@ -27,11 +29,11 @@ classdef test_descs < matlab.unittest.TestCase
             test.verifyLessThan(frames(1,:), imsize(2)+1);
           end
         case 'patches'
-          patches = utls.patches_extract_covdet(image, frames);
-          [descs, ~] = desc_fun(patches);
+          patches = utls.patches_extract_covdet(image, infeats.frames);
+          feats = desc_fun(patches);
       end
-      test.verifyEqual(size(descs, 2), size(frames, 2));
-      test.verifyGreaterThanOrEqual(size(descs, 1), 0);
+      test.verifyTrue(isfield(feats, 'descs') == 1);
+      test.verifyGreaterThanOrEqual(size(feats.descs, 1), 0);
     end
   end
 end

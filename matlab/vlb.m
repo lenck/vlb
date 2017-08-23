@@ -10,18 +10,19 @@ usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb');
 
 cmds = struct();
 cmds.view = struct('fun', @vlb_view, 'help', '');
-cmds.det = struct('fun', @vlb_det, 'help', '');
+% Generate features
+cmds.detect = struct('fun', @vlb_detect, 'help', '');
 cmds.extract = struct('fun', @vlb_extract, 'help', '');
-cmds.desc = struct('fun', @vlb_desc, 'help', '');
-cmds.detdesc = struct('fun', @vlb_detdesc, 'help', '');
-cmds.descmatch = struct('fun', @(varargin) vlb_desceval(varargin{:}, ...
-  'benchFun', @bench.descmatch), 'help', '');
-cmds.detmatch = struct('fun', @(varargin) vlb_desceval(varargin{:}, ...
-  'benchFun', @bench.detmatch), 'help', '');
-cmds.detrep = struct('fun', @(varargin) vlb_deteval(varargin{:}, ...
-  'benchFun', @bench.detrep), 'help', '');
-cmds.detrepthr = struct('fun', @(varargin) vlb_deteval(varargin{:}, ...
-  'benchFun', @bench.detrepthr), 'help', '');
+cmds.describe = struct('fun', @vlb_describe, 'help', '');
+% Benchmarks
+cmds.detrep = struct('fun', ...
+  @(varargin) vlb_evalfeatures(@bench.detrep, varargin{:}), 'help', '');
+cmds.detmatch = struct('fun', ...
+  @(varargin) vlb_evalfeatures(@bench.detmatch, varargin{:}), 'help', '');
+cmds.detrepthr = struct('fun', ...
+  @(varargin) vlb_evalfeatures(@bench.detrepthr, varargin{:}), 'help', '');
+cmds.descmatch = struct('fun', ...
+  @(varargin) vlb_evalfeatures(@bench.descmatch, varargin{:}), 'help', '');
 
 % The last command is always help
 cmds.help = struct('fun', @(varargin) usage(cmds, '', varargin{:}));

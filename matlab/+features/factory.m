@@ -1,4 +1,4 @@
-function [ feature, varargin ] = factory( type, name, varargin )
+function [ res, varargin ] = factory( type, name, varargin )
 
 %   feature name preference:
 %      - 'detName' argumnt
@@ -11,8 +11,8 @@ opts.([type, 'Args']) = {};
 funargs = opts.([type, 'Args']);
 
 if isstruct(name)
-  feature = name;
-  assert(isfield(feature, 'name'), isfield(feature, 'fun'));
+  res = name;
+  assert(isfield(res, 'name'), isfield(res, 'fun'));
   return;
 end;
 switch class(name)
@@ -24,32 +24,25 @@ switch class(name)
   otherwise
     error('Invalid detdesc');
 end
-assert(nargout(fun) >= 2, 'Feature wrapper does not return meta information.');
+assert(nargout(fun) >= 1, 'Feature wrapper does not return meta information.');
 func_nargin = nargin(fun);
-func_nargout = nargout(fun);
 if func_nargin < 0, func_nargin = abs(func_nargin) - 1; end;
-assert(func_nargout > 1 && func_nargout <= 3);
 switch func_nargin
   case 1
-    switch func_nargout
-      case 2
-        [~, feature] = fun([], funargs{:});
-      case 3
-        [~, ~, feature] = fun([], funargs{:});
-    end
-    feature.fun = @(a) fun(a, funargs{:});
+    f = fun([], funargs{:});
+    res.fun = @(a) fun(a, funargs{:});
   case 2
-    switch func_nargout
-      case 2
-        [~, feature] = fun([], [], funargs{:});
-      case 3
-        [~, ~, feature] = fun([], [], funargs{:});
-    end
-    feature.fun = @(a, b) fun(a, b, funargs{:});
+    f = fun([], [], funargs{:});
+    res.fun = @(a, b) fun(a, b, funargs{:});
 end
+assert(isfield(f, [type, 'Name']), ...
+  'Feature wrapper does not return meta information.');
+res.name = f.([type, 'Name']);
 if ~isempty(opts.([type, 'Name']))
-  feature.name = opts.([type, 'Name']);
+  res.name = opts.([type, 'Name']);
 end
-feature.args = opts.([type, 'Args']);
+if isfield(f, 'describes'), res.describes = f.describes; end;
+res.args = opts.([type, 'Args']);
+res.type = type;
 
 end

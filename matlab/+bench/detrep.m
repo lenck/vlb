@@ -26,7 +26,7 @@ opts = vl_argparse(opts, varargin);
 info = struct('geomMatches', zeros(2, 0)); 
 scores = struct('repeatability', 0, 'numCorresp', 0);
 if isempty(fa) || isempty(fb), return; end
-[tcorr, corr_score, info] = matchFrames(fa, fb);
+[tcorr, corr_score, info] = matchFrames(fa.frames, fb.frames);
 fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
 info.tcorr = tcorr; 
 info.corr_score = corr_score;

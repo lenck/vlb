@@ -11,14 +11,10 @@ function root = vlb_path(set, varargin)
 root = fileparts(fileparts(mfilename('fullpath'))) ;
 if nargin > 0
   switch set
-    case 'dets'
-      assert(numel(varargin) == 2, 'Invalid args (imdb, det)');
+    case 'features'
+      assert(numel(varargin) >= 2, 'Invalid args (imdb, featurename)');
       names = cellfun(@(a) a.name, varargin, 'Uni', false);
-      root = fullfile(root, 'data', 'dets', names{:});
-    case 'descs'
-      assert(numel(varargin) == 3, 'Invalid args (imdb, det, desc)');
-      names = cellfun(@(a) a.name, varargin, 'Uni', false);
-      root = fullfile(root, 'data', 'descs', names{:});
+      root = fullfile(root, 'data', 'features', names{:});
     case 'patches'
       assert(numel(varargin) == 2, 'Invalid input (imdb, det)');
       names = cellfun(@(a) a.name, varargin, 'Uni', false);
