@@ -12,10 +12,8 @@ opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.dsetfactory(imdb);
-if iscell(featsname), featsname = fullfile(featsname); end;
 
-scoresdir = vlb_path('scores', struct('name', opts.benchName), ...
-  imdb, struct('name', featsname));
+scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
 scores_path = fullfile(scoresdir, 'results.csv');
 info_path = fullfile(scoresdir, 'results.mat');
@@ -33,7 +31,7 @@ for ti = 1:numel(imdb.tasks)
   task = imdb.tasks(ti);
   fa = getfeats(imdb, featsname, task.ima);
   fb = getfeats(imdb, featsname, task.imb);
-  matchGeom = @(varargin) imdb.defGeom(task, varargin{:});
+  matchGeom = imdb.matchFramesFun(task); % Returns a functor
   [scores{ti}, info{ti}] = benchFun(matchGeom, fa, fb, varargin{:});
   scores{ti}.benchmark = opts.benchName;
   scores{ti}.dataset = imdb.name;

@@ -1,4 +1,4 @@
-function [scores, info] = detmatch(matchGeom, fa, da, fb, db, varargin)
+function [scores, info] = detmatch(matchGeom, feats_a, feats_b, varargin)
 % DETMATCH Compute matching score of given image features
 %   [SCORES] = obj.testFeatures(TF, IMAGE_A_SIZE,
 %   IMAGE_B_SIZE, FRAMES_A, FRAMES_B, DESCS_A, DESCS_B) Compute
@@ -30,6 +30,8 @@ opts.matchDescriptors = @utls.match_greedy;
 opts.geomMode = 'descriptors';
 opts = vl_argparse(opts, varargin);
 
+fa = feats_a.frames; fb = feats_b.frames;
+da = feats_a.descs; db = feats_b.descs;
 % Switch the match frames to descriptor mode
 matchG = @(varargin) matchGeom(varargin{:}, 'mode', opts.geomMode);
 
@@ -43,7 +45,7 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, info ] = bench.detrep(matchG, fa, fb);
+[scores, info ] = bench.detrep(matchG, feats_a, feats_b);
 if isempty(info.geomMatches), return; end;
 fa = fa(:, info.fa_valid); da = da(:, info.fa_valid);
 fb = fb(:, info.fb_valid); db = db(:, info.fb_valid);

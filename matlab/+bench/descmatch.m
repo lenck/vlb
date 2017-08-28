@@ -1,4 +1,4 @@
-function [ scores, info ] = descmatch( mFrames, fa, da, fb, db, varargin )
+function [ scores, info ] = descmatch( mFrames, featsa, featsb, varargin )
 % VLB_DESC_BENCHMARK Descriptors matching PR curves
 %
 % Options:
@@ -44,12 +44,14 @@ assert(ismember(opts.matchingStrategy, MATCH_STRATEGIES), ...
 
 info = struct(); scores = struct('ap', 0, 'auc', 0, ...
   'numCorresp', 0, 'numCorrectMatches', 0);
+fa = featsa.frames; fb = featsb.frames; 
+da = featsa.descs;  db = featsb.descs; 
 if isempty(fa) || isempty(fb), return; end
 if size(fa,2) ~= size(da,2) || size(fb,2) ~= size(db,2)
   error('Number of frames and descriptors must be the same.');
 end
 
-[tcorr, corr_score, info] = mFrames(fa, fb);
+[tcorr, corr_score, info] = mFrames(fa, fb, 'mode', 'descriptors');
 if isempty(tcorr), return; end;
 da = da(:, info.fa_valid); db = db(:, info.fb_valid);
 

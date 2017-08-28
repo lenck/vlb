@@ -1,51 +1,55 @@
 classdef test_frames_benchmark < matlab.unittest.TestCase
 
   properties (TestParameter)
-    category = {'boat'};
-    imid = {2};
+    detector = {@features.det.vlsift};
+    dataset = {dset.vgg};
+    taskid = {11};
     maxOverlapError = {0.5};
   end
   
   methods (Test)
-    function repeatability(test, category, imid, maxOverlapError)
-      imdb = vlb_dataset_vggaffine(category);
+    function repeatability(test, detector, dataset, taskid, maxOverlapError)
+      [~,ima_id] = ismember(dataset.tasks(taskid).ima, {dataset.images.name});
+      [~,imb_id] = ismember(dataset.tasks(taskid).imb, {dataset.images.name});
       
-      ima_p = fullfile(imdb.imageDir, imdb.images.name{1});
-      fa = vl_sift(single(utls.imread_grayscale(ima_p)));
+      ima_p = dataset.images(ima_id).path;
+      fa = detector(single(utls.imread_grayscale(ima_p)));
       
-      imb_p = fullfile(imdb.imageDir, imdb.images.name{imid});
-      fb = vl_sift(single(utls.imread_grayscale(imb_p)));
+      imb_p = dataset.images(imb_id).path;
+      fb = detector(single(utls.imread_grayscale(imb_p)));
       
-      geom = imdb.images.geometry(imid);
-      matchFrames = @(fa, fb) vlb_ellipse_overlap_H(geom, fa, fb, ...
+      g = dataset.tasks(taskid);
+      matchFrames = @(fa, fb) geom.ellipse_overlap_H(g, fa, fb, ...
         'maxOverlapError', maxOverlapError);
       
-      [rep, nm] = vlb_repeatability(matchFrames, fa, fb);
-      [rep_vgg, nm_vgg ] = legacy.vgg_frames_benchmark( geom, ...
-        ima_p, fa, [], imb_p, fb, [], 'maxOverlapError', maxOverlapError);
-      test.verifyEqual(rep, rep_vgg, 'AbsTol', 1e-3);
-      test.verifyEqual(nm, nm_vgg);
+      res = bench.detrep(matchFrames, fa, fb);
+      [rep_vgg, nm_vgg] = legacy.vgg_frames_benchmark(g, ...
+        ima_p, fa.frames, [], imb_p, fb.frames, [], ...
+        'maxOverlapError', maxOverlapError);
+      test.verifyEqual(res.repeatability, rep_vgg, 'AbsTol', 1e-3);
+      test.verifyEqual(res.numCorresp, nm_vgg, 'AbsTol', 1);
     end
     
-    function matchingscore(test, category, imid, maxOverlapError)
-      imdb = vlb_dataset_vggaffine(category);
+    function matchingscore(test, detector, dataset, taskid, maxOverlapError)
+      [~,ima_id] = ismember(dataset.tasks(taskid).ima, {dataset.images.name});
+      [~,imb_id] = ismember(dataset.tasks(taskid).imb, {dataset.images.name});
       
-      ima_p = fullfile(imdb.imageDir, imdb.images.name{1});
-      [fa, da] = vl_sift(single(utls.imread_grayscale(ima_p)));
+      ima_p = dataset.images(ima_id).path;
+      fa = detector(single(utls.imread_grayscale(ima_p)));
       
-      imb_p = fullfile(imdb.imageDir, imdb.images.name{imid});
-      [fb, db] = vl_sift(single(utls.imread_grayscale(imb_p)));
+      imb_p = dataset.images(imb_id).path;
+      fb = detector(single(utls.imread_grayscale(imb_p)));
       
-      geom = imdb.images.geometry(imid);
-      matchFrames = @(fa, fb) vlb_ellipse_overlap_H(geom, fa, fb, ...
-        'maxOverlapError', maxOverlapError);
+      g = dataset.tasks(taskid);
+      matchFrames = @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
+        'maxOverlapError', maxOverlapError, varargin{:});
       
-      [ms, nm] = vlb_matchingscore(matchFrames, fa, da, fb, db);
+      res = bench.detmatch(matchFrames, fa, fb);
       [~, ~, ms_vgg, nm_vgg] = ...
-        legacy.vgg_frames_benchmark( geom, ima_p, fa, da, imb_p, fb, db, ...
-        'maxOverlapError', maxOverlapError);
-      test.verifyEqual(ms, ms_vgg, 'RelTol', 0.01);
-      test.verifyEqual(nm, nm_vgg, 'RelTol', 0.01);
+        legacy.vgg_frames_benchmark( g, ima_p, fa.frames, single(fa.descs), ...
+        imb_p, fb.frames, single(fb.descs), 'maxOverlapError', maxOverlapError);
+      test.verifyEqual(res.matchingScore, ms_vgg, 'RelTol', 0.01);
+      test.verifyEqual(res.numCorresp, nm_vgg, 'RelTol', 0.01);
     end
     
   end

@@ -17,7 +17,9 @@ function [ imdb ] = vgg( varargin )
 % the terms of the BSD license (see the COPYING file).
 
 opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-vggaffine');
-opts.defGeom = @geom.ellipse_overlap_H;
+opts.matchFramesFun = @(g) ...
+  @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
+  'maxOverlapError', 0.5, varargin{:});
 opts = vl_argparse(opts, varargin);
 
 % Meta about all datasets
@@ -88,7 +90,7 @@ end
 imdb.images = cell2mat(imdb.images);
 imdb.tasks = cell2mat(imdb.tasks);
 imdb.name = 'vgg';
-imdb.defGeom = opts.defGeom;
+imdb.matchFramesFun = opts.matchFramesFun;
 imdb.rootdir = opts.rootDir;
 end
 

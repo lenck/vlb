@@ -19,6 +19,7 @@ function vgg_features_write(file, frames, descriptors, varargin)
 
 numFrames = size(frames,2);
 descrLen = size(descriptors,1);
+descriptors = double(descriptors); % It does not like uint8 descs.
 if numFrames == 0, return; end
 
 g = fopen(file, 'w');

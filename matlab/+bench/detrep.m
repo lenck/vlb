@@ -1,4 +1,4 @@
-function [ scores, info ] = detrep( matchFrames, fa, fb, varargin )
+function [ scores, info ] = detrep( matchFrames, feats_a, feats_b, varargin )
 % VLB_REPEATABILITY Compute repeatability of given image features
 %   [SCORES] = VLB_REPEATABILITY(MATCH, FRAMES_A, FRAMES_B)
 %   Computes the repeatability between frames FRAMES_A and FRAMES_B
@@ -23,10 +23,10 @@ function [ scores, info ] = detrep( matchFrames, fa, fb, varargin )
 opts.normFactor = 'minab';
 opts = vl_argparse(opts, varargin);
 
-info = struct('geomMatches', zeros(2, 0)); 
+info = struct('matches', zeros(1, 0)); 
 scores = struct('repeatability', 0, 'numCorresp', 0);
-if isempty(fa) || isempty(fb), return; end
-[tcorr, corr_score, info] = matchFrames(fa.frames, fb.frames);
+if isempty(feats_a) || isempty(feats_b), return; end
+[tcorr, corr_score, info] = matchFrames(feats_a.frames, feats_b.frames);
 fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
 info.tcorr = tcorr; 
 info.corr_score = corr_score;
@@ -39,7 +39,7 @@ tcorr_s= tcorr(:, perm);
 % Approximate the best bipartite matching
 matches = vlb_greedy_matching(fa_num, fb_num, tcorr_s');
 matches = matches(1, :);
-info.geomMatches = matches;
+info.matches = matches;
 
 % Compute the score
 nc = sum(matches ~= 0);

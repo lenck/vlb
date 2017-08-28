@@ -39,9 +39,9 @@ end
 
 tmpFile = tempname;
 ellb_p = [tmpFile 'ellB.txt']; ella_p = [tmpFile 'ellA.txt'];
-ella_f = utls.frame2ellipse(fa); ellb_f = utls.frame_to_ellipse(fb);
-legacy.vgg_features_write(ella_p, ella_f, da);
-legacy.vgg_features_write(ellb_p, ellb_f, db);
+ella_f = utls.frame2ellipse(fa); ellb_f = utls.frame2ellipse(fb);
+legacy.vgg_features_write(ella_p, ella_f, double(da));
+legacy.vgg_features_write(ellb_p, ellb_f, double(db));
 tmpH_p = [tmpFile 'H.txt']; H = geom.H; save(tmpH_p, 'H', '-ASCII');
 overlap_err_idx = round(opts.maxOverlapError*10);
 
