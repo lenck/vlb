@@ -12,7 +12,9 @@ funargs = opts.([type, 'Args']);
 
 if isstruct(name)
   res = name;
-  assert(isfield(res, 'name'), isfield(res, 'fun'));
+  res.type = type;
+  assert(isfield(res, 'name') && isfield(res, 'fun'), ...
+    'Invalid algorithm structure, must contain `name` and `fun`.');
   return;
 end;
 switch class(name)

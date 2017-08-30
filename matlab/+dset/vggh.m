@@ -1,5 +1,5 @@
-function [ imdb ] = vgg( varargin )
-%VLB_DATASET_VGGAFFINE Wrapper around the vgg affine datasets
+function [ imdb ] = vggh( varargin )
+%VGGH Wrapper around the vgg affine datasets
 %   datasets.VggAffineDataset('Option','OptionValue',...) Constructs
 %   an object which implements access to VGG Affine dataset used for
 %   affine invariant detectors evaluation.
@@ -23,24 +23,24 @@ opts.matchFramesFun = @(g) ...
 opts = vl_argparse(opts, varargin);
 
 % Meta about all datasets
-datasets = {};
-datasets{end+1} = struct('name', 'graf', 'description', 'Viewpoint angle', ...
+sequences = {};
+sequences{end+1} = struct('name', 'graf', 'description', 'Viewpoint angle', ...
   'labels', {{0 20 30 40 50 60}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'wall', 'description', 'Viewpoint angle', ...
+sequences{end+1} = struct('name', 'wall', 'description', 'Viewpoint angle', ...
   'labels', {{0 20 30 40 50 60}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'boat', 'description', 'Scale changes', ...
+sequences{end+1} = struct('name', 'boat', 'description', 'Scale changes', ...
   'labels', {{1 1.12 1.38 1.9 2.35 2.8}}, 'imext', 'pgm');
-datasets{end+1} = struct('name', 'bark', 'description', 'Scale changes', ...
+sequences{end+1} = struct('name', 'bark', 'description', 'Scale changes', ...
   'labels', {{1 1.2 1.8 2.5 3 4}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'bikes', 'description', 'Increasing blur', ...
+sequences{end+1} = struct('name', 'bikes', 'description', 'Increasing blur', ...
   'labels', {{1 2 3 4 5 6}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'trees', 'description', 'Increasing blur', ...
+sequences{end+1} = struct('name', 'trees', 'description', 'Increasing blur', ...
   'labels', {{1 2 3 4 5 6}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'ubc', 'description', 'JPEG compression', ...
+sequences{end+1} = struct('name', 'ubc', 'description', 'JPEG compression', ...
   'labels',  {{0 60 80 90 95 98}}, 'imext', 'ppm');
-datasets{end+1} = struct('name', 'leuven','description', 'Decreasing light', ...
+sequences{end+1} = struct('name', 'leuven','description', 'Decreasing light', ...
   'labels', {{1 2 3 4 5 6}}, 'imext', 'ppm');
-datasets = cell2mat(datasets);
+sequences = cell2mat(sequences);
 % Root url for dataset tarballs
 rootUrl = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/';
 getDsetUrl = @(dset) [rootUrl, dset.name, '.tar.gz'];
@@ -48,8 +48,8 @@ getImPath = @(dset, imid) fullfile(opts.rootDir, dset.name, ...
   sprintf('img%d.%s', imid, dset.imext));
 
 % Download the datasets
-for catIdx = 1:numel(datasets)
-  dset = datasets(catIdx);
+for catIdx = 1:numel(sequences)
+  dset = sequences(catIdx);
   dsetDir = fileparts(getImPath(dset, 1));
   if ~exist(getImPath(dset, 1), 'file')
     vl_xmkdir(dsetDir);
@@ -59,15 +59,16 @@ for catIdx = 1:numel(datasets)
   end
 end
 
-numImages = 6*numel(datasets);
+numImages = 6*numel(sequences);
 imdb.images = cell(1, numImages);
 imdb.tasks = {};
 
 % Read the image information
 imi = 1;
-for catIdx = 1:numel(datasets)
-  dset = datasets(catIdx);
+for catIdx = 1:numel(sequences)
+  dset = sequences(catIdx);
   refim = imi;
+  dsetDir = fileparts(getImPath(dset, 1));
   for imi_l = 1:6
     imPath = getImPath(dset, imi_l);
     assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
@@ -75,7 +76,7 @@ for catIdx = 1:numel(datasets)
     imdb.images{imi}.name = sprintf('%s-%d', dset.name, imi_l);
     imdb.images{imi}.path = imPath;
     imdb.images{imi}.seqnum = imi_l;
-    imdb.images{imi}.category = dset.name;
+    imdb.images{imi}.sequence = dset.name;
     if imi_l == 1, imi = imi + 1; continue; end;
     imSize =  utls.get_image_size(imPath);
     tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi_l)));
@@ -89,8 +90,9 @@ for catIdx = 1:numel(datasets)
 end
 imdb.images = cell2mat(imdb.images);
 imdb.tasks = cell2mat(imdb.tasks);
-imdb.name = 'vgg';
+imdb.name = 'vggh';
 imdb.matchFramesFun = opts.matchFramesFun;
+imdb.geometry = 'homography';
 imdb.rootdir = opts.rootDir;
 end
 

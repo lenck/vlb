@@ -7,7 +7,7 @@ cmds = struct();
 cmds.patches = struct('fun', @view_patches, 'help', 'imdb feats imnum');
 cmds.detections = struct('fun', @view_detections, 'help', 'imdb feats imnum');
 cmds.matches = struct('fun', @view_matches, 'help', 'imdb feats tasknum');
-
+cmds.matchpair = struct('fun', @view_matchpair, 'help', 'imdb tasknum');
 
 % The last command is always help
 cmds.help = struct('fun', @(varargin) usage(cmds, '', varargin{:}));
@@ -113,4 +113,35 @@ if nargout == 0
   title('IM-B');
   legend(la, 'Detected', 'Valid', 'Matched-Reproj.', 'Matched-Detected');
 end
+end
+
+
+function view_matchpair(imdb, taskid, varargin)
+imdb = dset.dsetfactory(imdb);
+
+task = imdb.tasks(taskid);
+imaid = getimid(imdb, task.ima);
+ima = imread(imdb.images(imaid).path);
+imbid = getimid(imdb, task.imb);
+imb = imread(imdb.images(imbid).path);
+
+switch imdb.geometry
+  case 'homography'
+    subplot(2,2,1); imshow(ima); title('A');
+    subplot(2,2,2); imshow(imb); title('B');
+    task = imdb.tasks(taskid);
+    H = task.H;
+    [imb_w, ref_b, ref_a] = utls.warpim_H(imb, H, 'invert', false);
+    resim_a = imfuse(ima, ref_a, imb_w, ref_b, 'falsecolor', ...
+      'Scaling', 'joint', 'ColorChannels', [1 2 0]);
+    subplot(2,2,3); imshow(resim_a);  title('B \rightarrow A');
+    
+    [ima_w, ref_a, ref_b] = utls.warpim_H(ima, H, 'invert', true);
+    resim_b = imfuse(imb, ref_b, ima_w, ref_a, 'falsecolor', ...
+      'Scaling', 'joint', 'ColorChannels', [1 2 0]);
+    subplot(2,2,4); imshow(resim_b); title('A \rightarrow B');
+  otherwise
+    error('Unsupported geometry: `%s`', imdb.geometry);
+end
+  
 end

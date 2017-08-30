@@ -3,8 +3,10 @@ function [ imdb ] = dsetfactory( imdbname, varargin )
 
 if isstruct(imdbname), imdb = imdbname; return; end;
 switch imdbname
-  case 'vgg'
-    imdb = dset.vgg(varargin{:});
+  case 'vggh'
+    imdb = dset.vggh(varargin{:});
+  case 'hsequences'
+    imdb = dset.hsequences(varargin{:});
   otherwise
     error('Unknown dataset %s', imdbname);
 end
