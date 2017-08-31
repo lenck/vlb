@@ -51,12 +51,7 @@ getImPath = @(dset, imid) fullfile(opts.rootDir, dset.name, ...
 for catIdx = 1:numel(sequences)
   dset = sequences(catIdx);
   dsetDir = fileparts(getImPath(dset, 1));
-  if ~exist(getImPath(dset, 1), 'file')
-    vl_xmkdir(dsetDir);
-    fprintf('Downloading `%s` to %s.\n\tIt may take some time.\n', ...
-      dset.name, dsetDir);
-    untar(getDsetUrl(dset), dsetDir);
-  end
+  utls.provision(getDsetUrl(dset), dsetDir);
 end
 
 numImages = 6*numel(sequences);
