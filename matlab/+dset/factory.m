@@ -12,7 +12,7 @@ if ~ismember(name, dsets),
 end
 dsetfun = str2func(['dset.', name]);
 imdb = dsetfun(varargin{:});
-if isfield(imdb, 'name')
+if ~isfield(imdb, 'name')
   error('Invalid dataset structure %s', name);
 end
 
