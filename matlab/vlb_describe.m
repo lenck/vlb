@@ -5,7 +5,7 @@ opts.imgExt = '.png';
 opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 if iscell(featsname), featsname = fullfile(featsname); end;
 impaths = {imdb.images.path};
 imnames = {imdb.images.name};

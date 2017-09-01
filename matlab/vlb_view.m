@@ -40,7 +40,7 @@ end
 
 
 function feats = view_detections(imdb, featsname, imid, varargin)
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 feats_path = vlb_path('features', imdb, featsname);
 if ~exist(feats_path, 'dir')
   error('No detections in %s.', feats_path);
@@ -56,7 +56,7 @@ end
 end
 
 function res = view_patches(imdb, featsname, imid, varargin)
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 patches_path = vlb_path('patches', imdb, featsname);
 if ~exist(patches_path, 'dir')
   error('No patches in %s.', patches_path);
@@ -72,7 +72,7 @@ end
 
 
 function res = view_matches(imdb, featsname, benchname, taskid, varargin)
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
 info_path = fullfile(scoresdir, 'results.mat');
 feats_path = vlb_path('features', imdb, featsname);
@@ -117,7 +117,7 @@ end
 
 
 function view_matchpair(imdb, taskid, varargin)
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 
 task = imdb.tasks(taskid);
 imaid = getimid(imdb, task.ima);

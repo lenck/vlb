@@ -4,7 +4,7 @@ import features.*;
 opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 detector = features.factory('det', detector, varargin{:});
 
 impaths = {imdb.images.path};

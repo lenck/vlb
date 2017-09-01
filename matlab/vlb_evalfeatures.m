@@ -11,7 +11,7 @@ opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);

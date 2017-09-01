@@ -9,7 +9,7 @@ opts.extractPatchesFun = @utls.patches_extract_covdet;
 opts.maxNumFeatures = 10000;
 [opts, varargin] = vl_argparse(opts, varargin);
 
-imdb = dset.dsetfactory(imdb);
+imdb = dset.factory(imdb);
 if iscell(featsname), featsname = fullfile(featsname); end;
 
 dets_path = vlb_path('features', imdb, struct('name', featsname));
