@@ -1,4 +1,4 @@
-function [ imdb ] = webcam( varargin )
+function [ imdb ] = edgefoci( varargin )
 
 % Copyright (C) 2017 Karel Lenc
 % All rights reserved.
@@ -6,11 +6,11 @@ function [ imdb ] = webcam( varargin )
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-DATADIR = 'WebcamRelease';
-NUMSEQUENCES = 6;
+DATADIR = 'OxfordRelease';
+NUMSEQUENCES = 13;
 
-opts.url = 'https://documents.epfl.ch/groups/c/cv/cvlab-unit/www/data/keypoints/WebcamRelease.tar.gz';
-opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-webcam');
+opts.url = 'https://documents.epfl.ch/groups/c/cv/cvlab-unit/www/data/keypoints/OxfordRelease.tar.gz';
+opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-edgefoci');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});
@@ -32,19 +32,15 @@ rfile = @(path) strtrim(strsplit(strtrim(fileread(path)), '\n'));
 imi = 1; lastim = 0;
 for sIdx = 1:numel(sequences)
   sequence = sequences{sIdx};
-  testimgs = rfile(fullfile(dataDir, sequence, 'test', 'test_imgs.txt'));
-  valimgs = rfile(fullfile(dataDir, sequence, 'test', 'validation_imgs.txt'));
-  allimgs = [valimgs, testimgs];
-  istest = [false(1, numel(valimgs)), true(1, numel(valimgs))];
-  [allimgs_u, ui, ic] = unique(allimgs);
-  istest = istest(ui);
+  allimgs = rfile(fullfile(dataDir, sequence, 'test', 'test_imgs.txt'));
+  [allimgs_u, ~, ic] = unique(allimgs);
   for imi_l = 1:numel(allimgs_u)
     [~, filename, ext] = fileparts(allimgs_u{imi_l});
     imPath = getImPath(sequence, [filename, ext]);
     assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
     imdb.images{imi} = struct('id', imi, ...
       'name', sprintf('%s-%s', sequence, filename), 'path', imPath, ...
-      'sequence', sequence, 'istest', istest(imi_l), 'isval', ~istest(imi_l), ...
+      'sequence', sequence, 'istest', true, 'isval', false, ...
       'imsize', utls.get_image_size(imPath));
     imi = imi + 1;
   end
@@ -58,7 +54,7 @@ for sIdx = 1:numel(sequences)
       'istest', ima.istest, 'isval', imb.isval, ...
       'description', struct('sequence', sequence, 'impair', [pi, pi+pidx]));
   end
-  lastim = imi - 1; 
+  lastim = imi - 1;
 end
 
 imdb.images = cell2mat(imdb.images);

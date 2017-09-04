@@ -27,18 +27,6 @@ end
 
 end
 
-function imid = getimid(imdb, imid)
-if ischar(imid)
-  imname = imid;
-  [found, imid] = ismember(imname, {imdb.images.name});
-  if ~found, error('Image %s not found.', imname); end;
-end
-if imid > numel(imdb.images) || imid < 1
-  error('Invalid image id %d.', imid);
-end
-end
-
-
 function feats = view_detections(imdb, featsname, imid, varargin)
 imdb = dset.factory(imdb);
 feats_path = vlb_path('features', imdb, featsname);
@@ -46,7 +34,7 @@ if ~exist(feats_path, 'dir')
   error('No detections in %s.', feats_path);
 end
 if nargin < 3, error('Imid not specified.'); end;
-imid = getimid(imdb, imid);
+imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
 feats = utls.features_load(fullfile(feats_path, imname));
 if nargout == 0
@@ -62,7 +50,7 @@ if ~exist(patches_path, 'dir')
   error('No patches in %s.', patches_path);
 end
 if nargin < 3, error('Imid not specified.'); end;
-imid = getimid(imdb, imid);
+imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
 res = utls.patches_load(fullfile(patches_path, [imname, '.png']));
 if nargout == 0
@@ -88,9 +76,9 @@ res = load(info_path);
 res = res.info(taskid);
 if nargout == 0
   task = imdb.tasks(taskid);
-  imaid = getimid(imdb, task.ima);
+  imaid = dset.utls.getimid(imdb, task.ima);
   featsa = utls.features_load(fullfile(feats_path, imdb.images(imaid).name));
-  imbid = getimid(imdb, task.imb);
+  imbid = dset.utls.getimid(imdb, task.imb);
   featsb = utls.features_load(fullfile(feats_path, imdb.images(imbid).name));
   
   subplot(1,2,1);
@@ -117,31 +105,53 @@ end
 
 
 function view_matchpair(imdb, taskid, varargin)
+opts.imperrow = ceil(sqrt(numel(taskid)));
+opts = vl_argparse(opts, varargin);
 imdb = dset.factory(imdb);
+clf;
 
-task = imdb.tasks(taskid);
-imaid = getimid(imdb, task.ima);
-ima = imread(imdb.images(imaid).path);
-imbid = getimid(imdb, task.imb);
-imb = imread(imdb.images(imbid).path);
-
-switch imdb.geometry
-  case 'homography'
-    subplot(2,2,1); imshow(ima); title('A');
-    subplot(2,2,2); imshow(imb); title('B');
-    task = imdb.tasks(taskid);
-    H = task.H;
-    [imb_w, ref_b, ref_a] = utls.warpim_H(imb, H, 'invert', false);
-    resim_a = imfuse(ima, ref_a, imb_w, ref_b, 'falsecolor', ...
-      'Scaling', 'joint', 'ColorChannels', [1 2 0]);
-    subplot(2,2,3); imshow(resim_a);  title('B \rightarrow A');
-    
-    [ima_w, ref_a, ref_b] = utls.warpim_H(ima, H, 'invert', true);
-    resim_b = imfuse(imb, ref_b, ima_w, ref_a, 'falsecolor', ...
-      'Scaling', 'joint', 'ColorChannels', [1 2 0]);
-    subplot(2,2,4); imshow(resim_b); title('A \rightarrow B');
-  otherwise
-    error('Unsupported geometry: `%s`', imdb.geometry);
+if numel(taskid) == 1 % Show a single pair
+  task = imdb.tasks(taskid);
+  imaid = dset.utls.getimid(imdb, task.ima);
+  ima = imread(imdb.images(imaid).path);
+  imbid = dset.utls.getimid(imdb, task.imb);
+  imb = imread(imdb.images(imbid).path);
+  
+  switch imdb.geometry
+    case 'homography'
+      subplot(2,2,1); imshow(ima); title('A');
+      subplot(2,2,2); imshow(imb); title('B');
+      task = imdb.tasks(taskid);
+      H = task.H;
+      [imb_w, ref_b, ref_a] = utls.warpim_H(imb, H, 'invert', false);
+      resim_a = imfuse(ima, ref_a, imb_w, ref_b, 'falsecolor', ...
+        'Scaling', 'joint', 'ColorChannels', [1 2 0]);
+      subplot(2,2,3); imshow(resim_a);  title('B \rightarrow A');
+      
+      [ima_w, ref_a, ref_b] = utls.warpim_H(ima, H, 'invert', true);
+      resim_b = imfuse(imb, ref_b, ima_w, ref_a, 'falsecolor', ...
+        'Scaling', 'joint', 'ColorChannels', [1 2 0]);
+      subplot(2,2,4); imshow(resim_b); title('A \rightarrow B');
+    otherwise
+      error('Unsupported geometry: `%s`', imdb.geometry);
+  end
+else % show multiple pairs
+  ncols = opts.imperrow;
+  nrows = ceil(numel(taskid)/ncols);
+  for ti = 1:numel(taskid)
+    [col, row] = ind2sub([ncols, nrows], ti);
+    task = imdb.tasks(taskid(ti));
+    imaid = dset.utls.getimid(imdb, task.ima);
+    ima = imread(imdb.images(imaid).path);
+    imbid = dset.utls.getimid(imdb, task.imb);
+    imb = imread(imdb.images(imbid).path);
+    vl_tightsubplot(nrows, ncols, col + (row-1)*ncols, 'margin', 0.01);
+    imshow(imfuse(ima, imb, 'montage'), 'border', 'tight');
+    text(0, 0, sprintf('%s -> %s', imdb.images(imaid).name, ...
+      imdb.images(imbid).name), 'Interpreter', 'none', ...
+      'BackgroundColor', 'k', 'Color', 'g');
+  end
 end
+
   
 end
