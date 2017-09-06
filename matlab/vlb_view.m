@@ -6,6 +6,7 @@ usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb_view');
 cmds = struct();
 cmds.patches = struct('fun', @view_patches, 'help', 'imdb feats imnum');
 cmds.detections = struct('fun', @view_detections, 'help', 'imdb feats imnum');
+cmds.detout = struct('fun', @view_detout, 'help', 'detector image');
 cmds.matches = struct('fun', @view_matches, 'help', 'imdb feats tasknum');
 cmds.matchpair = struct('fun', @view_matchpair, 'help', 'imdb tasknum');
 
@@ -41,6 +42,13 @@ if nargout == 0
   imshow(imdb.images(imid).path); hold on;
   vl_plotframe(feats.frames, 'LineWidth', 1, varargin{:});
 end
+end
+
+function feats = view_detout(det, img, varargin)
+det = features.factory('det', det, varargin{:});
+feats = det.fun(img);
+imshow(img); hold on;
+vl_plotframe(feats.frames, 'LineWidth', 1);
 end
 
 function res = view_patches(imdb, featsname, imid, varargin)

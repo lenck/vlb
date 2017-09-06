@@ -1,13 +1,16 @@
 function downloaded = provision( url, tgt_dir, varargin )
 opts.doneName = '.download.done';
 opts.override = false;
+opts.forceExt = '';
 opts = vl_argparse(opts, varargin);
 
+if exist(url, 'file'), url = fileread(url); end;
+url = strtrim(url);
 downloaded = false;
 done_file = fullfile(tgt_dir, opts.doneName);
 if ~exist(tgt_dir, 'dir'), mkdir(tgt_dir); end
 if exist(done_file, 'file') && ~opts.override, return; end;
-unpack(url, tgt_dir);
+unpack(url, tgt_dir, opts);
 downloaded = true;
 create_done(done_file);
 end
@@ -17,8 +20,9 @@ f = fopen(done_file, 'w'); fclose(f);
 fprintf('To reprovision, delete %s.\n', done_file);
 end
 
-function unpack(url, tgt_dir)
+function unpack(url, tgt_dir, opts)
 [~,~,ext] = fileparts(url);
+if opts.forceExt, ext = opts.forceExt; end;
 fprintf(isdeployed+1, ...
   'Downloading %s -> %s, this may take a while...\n',...
   url, tgt_dir);
