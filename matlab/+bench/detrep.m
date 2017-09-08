@@ -31,6 +31,8 @@ fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
 info.tcorr = tcorr; 
 info.corr_score = corr_score;
 info.geomMatches = zeros(2, 0);
+info.matches = zeros(1, 0);
+info.repeatability = nan; info.numCorresp = nan;
 if isempty(tcorr), return; end;
 
 % Sort the edgest by decrasing score

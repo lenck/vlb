@@ -15,9 +15,8 @@ dets_dir = vlb_path('features', imdb, struct('name', featsname));
 assert(isdir(dets_dir), 'Cannot find frames for %s - %s', ...
   imdb.name, featsname);
 
-desc_dest_dir = vlb_path('features', imdb, struct('name', featsname), ...
-  descriptor);
 dest_feats_name = fullfile(featsname, descriptor.name);
+desc_dest_dir = vlb_path('features', imdb, dest_feats_name);
 vl_xmkdir(desc_dest_dir);
 
 fprintf('Computing descriptor %s for %d sets of %s frames.\n', ...
@@ -49,7 +48,7 @@ for si = 1:numel(impaths)
       desc_feats.scalingFactor = scalingFactor;
     case 'frames'
       im = imread(impaths{si});
-      desc_feats = descriptor.fun(im, det_feats.frames);
+      desc_feats = descriptor.fun(im, det_feats);
   end
   feats = vl_override(det_feats, desc_feats);
   utls.features_save(feats_path, feats);

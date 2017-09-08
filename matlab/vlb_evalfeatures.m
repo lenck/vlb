@@ -1,4 +1,4 @@
-function [scores, info] = vlb_evalfeatures( benchFun, imdb, featsname, varargin )
+function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 
 
 % Copyright (C) 2017 Karel Lenc
@@ -12,6 +12,7 @@ opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
+if isstruct(feats), featsname = feats.name; else featsname = feats; end;
 
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
@@ -34,9 +35,11 @@ for ti = 1:numel(imdb.tasks)
   matchGeom = imdb.matchFramesFun(task); % Returns a functor
   [scores{ti}, info{ti}] = benchFun(matchGeom, fa, fb, varargin{:});
   scores{ti}.benchmark = opts.benchName;
-  scores{ti}.dataset = imdb.name;
   scores{ti}.features = featsname;
-  scores{ti}.ima = task.ima; scores{ti}.ima = task.imb;
+  scores{ti}.dataset = imdb.name;
+  scores{ti}.sequence = task.sequence;
+  scores{ti}.ima = task.ima;
+  scores{ti}.imb = task.imb;
   status(ti);
 end
 
