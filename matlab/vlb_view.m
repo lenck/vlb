@@ -7,8 +7,10 @@ cmds = struct();
 cmds.patches = struct('fun', @view_patches, 'help', 'imdb feats imnum');
 cmds.detections = struct('fun', @view_detections, 'help', 'imdb feats imnum');
 cmds.detout = struct('fun', @view_detout, 'help', 'detector image');
-cmds.matches = struct('fun', @view_matches, 'help', 'imdb feats tasknum');
 cmds.matchpair = struct('fun', @view_matchpair, 'help', 'imdb tasknum');
+cmds.matches = struct('fun', @view_matches, 'help', 'benchFun imdb feats tasknum');
+cmds.sequencescores = struct('fun', @view_sequencescores, 'help', 'benchFun imdb feats sequence valuename');
+cmds.descmatchpr = struct('fun', @view_descmatchpr, 'help', 'benchFun imdb feats tasknum');
 
 % The last command is always help
 cmds.help = struct('fun', @(varargin) usage(cmds, '', varargin{:}));
@@ -40,7 +42,15 @@ imname = imdb.images(imid).name;
 feats = utls.features_load(fullfile(feats_path, imname));
 if nargout == 0
   imshow(imdb.images(imid).path); hold on;
+  if isfield(feats, 'scalingFactor')
+    mframes = utls.frame_magnify_scale(feats.frames, feats.scalingFactor);
+    vl_plotframe(mframes, 'LineWidth', 1, 'LineStyle', ':', 'Color', 'y', ...
+      varargin{:});
+  end
   vl_plotframe(feats.frames, 'LineWidth', 1, varargin{:});
+  if isfield(feats, 'scalingFactor')
+    legend('Measuerement region', 'Detection');
+  end
 end
 end
 
@@ -50,6 +60,8 @@ feats = det.fun(img);
 imshow(img); hold on;
 vl_plotframe(feats.frames, 'LineWidth', 1);
 end
+
+
 
 function res = view_patches(imdb, featsname, imid, varargin)
 imdb = dset.factory(imdb);
@@ -67,49 +79,6 @@ end
 end
 
 
-function res = view_matches(imdb, featsname, benchname, taskid, varargin)
-imdb = dset.factory(imdb);
-scoresdir = vlb_path('scores', imdb, featsname, benchname);
-info_path = fullfile(scoresdir, 'results.mat');
-feats_path = vlb_path('features', imdb, featsname);
-
-if ~exist(info_path, 'file')
-  error('Could not find benchamrk results in %s.', info_path);
-end
-if taskid < 1 || taskid > numel(imdb.tasks)
-  error('Invalid task id %d', taskid);
-end
-
-res = load(info_path);
-res = res.info(taskid);
-if nargout == 0
-  task = imdb.tasks(taskid);
-  imaid = dset.utls.getimid(imdb, task.ima);
-  featsa = utls.features_load(fullfile(feats_path, imdb.images(imaid).name));
-  imbid = dset.utls.getimid(imdb, task.imb);
-  featsb = utls.features_load(fullfile(feats_path, imdb.images(imbid).name));
-  
-  subplot(1,2,1);
-  imshow(imdb.images(imaid).path); hold on;
-
-  vl_plotframe(featsa.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  vl_plotframe(featsa.frames(:, res.fa_valid), 'LineWidth', 1, 'Color', 'blue');
-  vl_plotframe(res.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(res.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
-  title('IM-A');
-  
-  subplot(1,2,2);
-  imshow(imdb.images(imbid).path); hold on;
-  
-  la = zeros(4, 1);
-  la(1) = vl_plotframe(featsb.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  la(2) = vl_plotframe(featsb.frames(:, res.fb_valid), 'LineWidth', 1, 'Color', 'blue');
-  la(3) = vl_plotframe(res.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
-  la(4) = vl_plotframe(res.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
-  title('IM-B');
-  legend(la, 'Detected', 'Valid', 'Matched-Reproj.', 'Matched-Detected');
-end
-end
 
 
 function view_matchpair(imdb, taskid, varargin)
@@ -160,6 +129,110 @@ else % show multiple pairs
       'BackgroundColor', 'k', 'Color', 'g');
   end
 end
+end
 
+
+
+
+function res = view_matches(benchname, imdb, featsname, taskid, varargin)
+imdb = dset.factory(imdb);
+scoresdir = vlb_path('scores', imdb, featsname, benchname);
+info_path = fullfile(scoresdir, 'results.mat');
+feats_path = vlb_path('features', imdb, featsname);
+
+if ~exist(info_path, 'file')
+  error('Could not find benchamrk results in %s.', info_path);
+end
+if taskid < 1 || taskid > numel(imdb.tasks)
+  error('Invalid task id %d', taskid);
+end
+
+res = load(info_path);
+res = res.info(taskid);
+if nargout == 0
+  task = imdb.tasks(taskid);
+  imaid = dset.utls.getimid(imdb, task.ima);
+  featsa = utls.features_load(fullfile(feats_path, imdb.images(imaid).name));
+  imbid = dset.utls.getimid(imdb, task.imb);
+  featsb = utls.features_load(fullfile(feats_path, imdb.images(imbid).name));
   
+  subplot(1,2,1);
+  imshow(imdb.images(imaid).path); hold on;
+
+  vl_plotframe(featsa.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
+  vl_plotframe(featsa.frames(:, res.fa_valid), 'LineWidth', 1, 'Color', 'blue');
+  vl_plotframe(res.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
+  vl_plotframe(res.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
+  title('IM-A');
+  
+  subplot(1,2,2);
+  imshow(imdb.images(imbid).path); hold on;
+  
+  la = zeros(4, 1);
+  la(1) = vl_plotframe(featsb.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
+  la(2) = vl_plotframe(featsb.frames(:, res.fb_valid), 'LineWidth', 1, 'Color', 'blue');
+  la(3) = vl_plotframe(res.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
+  la(4) = vl_plotframe(res.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  title('IM-B');
+  legend(la, 'Detected', 'Valid', 'Matched-Reproj.', 'Matched-Detected');
+end
+end
+
+
+function res_f = view_sequencescores(benchName, imdb, featsname, sequence, valuename, varargin)
+imdb = dset.factory(imdb);
+assert(ismember(benchName, {'detrep', 'detmatch'}), 'Unsupported benchmark.');
+if ~iscell(featsname), featsname = {featsname}; end;
+
+res = cell(numel(featsname), 1);
+for fi = 1:numel(featsname)
+  scoresdir = vlb_path('scores', imdb, featsname{fi}, benchName);
+  scores_path = fullfile(scoresdir, 'results.csv');
+  if ~exist(scores_path, 'file')
+    error('Scores file %s does not exist.', scores_path);
+  end;
+  res{fi} = readtable(scores_path);
+end
+res = vertcat(res{:});
+res_f = res(ismember(res.sequence, sequence), :);
+
+if nargout == 0
+  for fi = 1:numel(featsname)
+    plot(res_f{ismember(res_f.features, featsname{fi}), valuename}, varargin{:});
+    hold on;
+  end;
+  xlabel('Image'); ylabel(valuename); grid on;
+end
+end
+
+
+function res = view_descmatchpr(imdb, featsname, taskid, varargin)
+imdb = dset.factory(imdb);
+assert(taskid > 0 && taskid < numel(imdb.tasks), 'Invalid Task ID');
+if ~iscell(featsname), featsname = {featsname}; end;
+
+res = cell(numel(featsname), 1);
+info = cell(numel(featsname), 1);
+for fi = 1:numel(featsname)
+  scoresdir = vlb_path('scores', imdb, featsname{fi}, 'descmatch');
+  scores_path = fullfile(scoresdir, 'results.csv');
+  info_path = fullfile(scoresdir, 'results.mat');
+  if ~exist(scores_path, 'file')
+    error('Scores file %s does not exist.', scores_path);
+  end;
+  res{fi} = readtable(scores_path);
+  in = load(info_path); in = in.info;
+  assert(numel(in) == numel(imdb.tasks), 'Invalid results.');
+  info{fi} = in(taskid);
+end
+res = vertcat(res{:}); info = vertcat(info{:});
+
+if nargout == 0
+  for fi = 1:numel(featsname)
+    plot(info(fi).recall, info(fi).precision);
+    hold on;
+  end;
+  xlabel('Recall'); ylabel('Precision'); grid on;
+  title(sprintf('%s -> %s', imdb.tasks(taskid).ima, imdb.tasks(taskid).imb));
+end
 end

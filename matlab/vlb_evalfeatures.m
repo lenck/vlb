@@ -6,7 +6,7 @@ function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 %
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
-
+allargs = varargin;
 opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
@@ -40,6 +40,7 @@ for ti = 1:numel(imdb.tasks)
   scores{ti}.sequence = task.sequence;
   scores{ti}.ima = task.ima;
   scores{ti}.imb = task.imb;
+  scores{ti}.args = allargs;
   status(ti);
 end
 

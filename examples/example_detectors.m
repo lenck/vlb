@@ -1,17 +1,29 @@
-run ./matlab/vlb_setup.m;
+vlb_setup();
 dbstop if error;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Repeatability example
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Basic Commands
 
-% Single detector
 imdb = dset.vggh();
-% Compute repepatability for a single detector
-vlb('detect', imdb, 'vlsift')
-res = vlb('detrep', imdb, 'vlsift');
+figure(1); clf;
+vlb('view', 'matchpair', imdb, 1);
 
-%% Set of detectors
+figure(2); clf;
+vlb('view', 'matchpair', imdb, 1:5);
+
+%% Run a detector and show detection
+feat = vlb('detect', imdb, 'vlsift');
+figure(3); clf;
+vlb('view', 'detections', imdb, feat, 1);
+
+%% Extract and visualise patches
+vlb('extract', imdb, 'vlsift');
+figure(3); clf;
+vlb('view', 'patches', imdb, feat, 1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Repeatability example
+
 feats = {};
 feats{end+1} = vlb('detect', imdb, 'vlsift');
 feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'hesaff'});
@@ -20,36 +32,21 @@ feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'haraff'});
 res = cellfun(@(f) vlb('detrep', imdb, f), feats, 'Uni', false);
 res = vertcat(res{:});
 
-%% Display overall performance
-
+%% Display average repeatability per detector
 display(varfun(@mean, res, 'InputVariables', 'repeatability',...
   'GroupingVariables', 'features'));
 
-display(varfun(@mean, res, 'InputVariables', 'repeatability',...
-  'GroupingVariables', {'features', 'sequence'}));
-
 %% Plot the results
 
-res_f = res(ismember(res.sequence, 'graf'), :);
-
-figure(1); clf;
+figure(10); clf;
 subplot(1,2,1);
-for fi = 1:numel(feats)
-  plot(res_f{ismember(res_f.features, feats{fi}), 'repeatability'});
-  hold on;
-end;
-xlabel('Image'); ylabel('Repeatability'); grid on;
+vlb('view', 'sequencescores', 'detrep', imdb, feats, 'graf', 'repeatability');
+title('Graph Repetability');
 subplot(1,2,2);
-for fi = 1:numel(feats)
-  plot(res_f{ismember(res_f.features, feats{fi}), 'numCorresp'});
-  hold on;
-end;
-xlabel('Image'); ylabel('Num Corresps.'); grid on;
-legend(feats);
+vlb('view', 'sequencescores', 'detrep', imdb, feats, 'graf', 'numCorresp');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Matching score example
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 feats = {};
 feats{end+1} = vlb('detect', imdb, 'vlsift');
@@ -61,10 +58,18 @@ feats{end} = vlb('describe', imdb, feats{end}, 'vggdesc');
 res = cellfun(@(f) vlb('detmatch', imdb, f), feats, 'Uni', false);
 res = vertcat(res{:});
 
-%%
+%% Show the average matching score per detector
 display(varfun(@mean, res, 'InputVariables', 'repeatability',...
   'GroupingVariables', 'features'));
 
+%% Plot the results in a graph
+figure(11); clf;
+subplot(2,2,1);
+vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'repeatability');
+title('Graph Matching Score');
+subplot(2,2,2);
+vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'numCorresp');
+
 %% View matched frames
-figure(1); clf;
+figure(21); clf;
 vlb('view', 'matches', imdb, feats{2}, 'detmatch', 3);
