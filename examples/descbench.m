@@ -1,5 +1,6 @@
-run ./matlab/vlb_setup.m;
-dbstop if error;
+% Setup and compile vlb, if run for the first time
+run(fullfile(fileparts(mfilename('fullpath')), '..', 'matlab', 'vlb_setup.m'));
+if ~exist(['vlb_greedy_matching.', mexext], 'file'), vlb_compile(); end;
 
 %% Run the experiment
 imdb = dset.vggh();

@@ -5,9 +5,18 @@ Reimplementation of the VLBenchmarks project.
 **Currenlty work in progress** so it has more than few rough edges.
 
 ## Getting Started
+To setup the VLBenchmarks, run from the vlb path:
+```
+run ./matlab/vlb_setup.m
+run ./matlab/vlb_compile.m
+```
+where one needs to compile the package only while running for the first time.
 
-For example usage, see the prepared [examples](./examples/).
+For example usage, see the prepared [examples](./examples/):
+* [detbench.m](./example/detbench.m) - Detector benchmarks and results visualsiation
+* [descbench.m](./example/descbench.m) - Descriptor benchmarks
 
+## Basic Usage
 The entry function is `vlb` which supports the following commands:
 
 `FEATSNAME = vlb('detect', IMDBNAME, DETNAME)`  
@@ -27,7 +36,7 @@ which is additionally stored in `./data/scores/BENCH/IMDBNAME/FEATSNAME` as a cs
 
 
 ## Directory structure
-`matlab/+dset`   Implemented datasets.  
+`matlab/+dset`   Implemented datasets (VGG-Aff, EdgeFoci, WebCam, Hsequences...).  
 `matlab/+features/+det` Implemented detector wrappers.  
 `matlab/+features/+desc` Implemented descriptor wrappers. Please note that some descriptors accept detected frames, some need extracted patches.
 

@@ -12,9 +12,14 @@ args = args(1:end-2);
 if isempty(ima) || isempty(fms),patches = []; return; end;
 is_uint = isa(ima, 'uint8');
 ima = utls.covdet_preprocessim(ima);
-
-[~, patches] = vl_covdet(ima, 'frames', fms, 'Descriptor', 'patch', ...
-  'PatchRelativeExtent', opts.scalingFactor, args{:});
+try
+  [~, patches] = vl_covdet(ima, 'frames', fms, 'Descriptor', 'patch', ...
+    'PatchRelativeExtent', opts.scalingFactor, args{:});
+catch
+  warning('vlb:oldvlfeat', 'Old version of VL_COVDET without baseScale, using fallback method.');
+  warning('off', 'vlb:oldvlfeat');
+  [patches, varargin] = utls.patches_extract_interp(ima, fms, args{:});
+end
 patchesSz = [opts.patchResolution*2 + 1, opts.patchResolution*2 + 1, ...
   1, size(fms,2)];
 patches = reshape(patches, patchesSz);

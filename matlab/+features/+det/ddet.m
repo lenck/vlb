@@ -20,6 +20,8 @@ utls.provision(opts.url, opts.rootDir, 'forceExt', '.zip');
 utls.provision(opts.netsUrl, opts.netsDir);
 if ~exist('DDet.m', 'file')
   addpath(opts.binDir);
+  vlb_setup();
+  delete(fullfile(opts.binDir, '+utls', 'provision.m'));
 end
 net = dagnn.DagNN.loadobj(load(opts.net));
 det = DDet(net, 'thr', opts.thr);
