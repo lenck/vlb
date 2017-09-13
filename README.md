@@ -5,6 +5,8 @@ Reimplementation of the VLBenchmarks project.
 **Currenlty work in progress** so it has more than few rough edges.
 
 ## Getting Started
+Setup matlab mex environment, before starting to setup vlb. 
+
 To setup the VLBenchmarks, run from the vlb path:
 ```
 run ./matlab/vlb_setup.m
