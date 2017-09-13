@@ -33,6 +33,10 @@ which is additionally stored in `./data/scores/BENCH/IMDBNAME/FEATSNAME` as a cs
 
 Furthermore, you can extract the features outside of this framework in order to evaluate them. Please extract e.g. `vlsift` features and follow the naming conventions.
 
+## Compile Conflicts
+`mex` command may be recognized as `mex` command in texlive. Make sure that the matlab/bin path is added to system PATH before the directory of mex in texlive. 
+
 ## Running the tests
 To run the tests, call:
 `vlb_test`.
+

@@ -52,6 +52,8 @@ opts.linkpass = {} ;
 opts.mex_dir = fullfile(root, 'matlab', 'mex');
 [opts, varargin] = vl_argparse(opts, varargin);
 opts.bld_dir = fullfile(opts.mex_dir, '.build');
+% Need to create this directory
+[status, msg, msgID] = mkdir(opts.bld_dir);
 opts = vl_argparse(opts, varargin);
 
 % --------------------------------------------------------------------

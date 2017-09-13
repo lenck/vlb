@@ -26,9 +26,11 @@ vlb('view', 'patches', imdb, feat, 1);
 
 feats = {};
 feats{end+1} = vlb('detect', imdb, 'vlsift');
-feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'hesaff'});
-feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'haraff'});
-
+%MACOS doesn't support hesaff and haraff
+if ~ismac
+    feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'hesaff'});
+    feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'haraff'});
+end
 res = cellfun(@(f) vlb('detrep', imdb, f), feats, 'Uni', false);
 res = vertcat(res{:});
 
@@ -45,15 +47,18 @@ title('Graph Repetability');
 subplot(1,2,2);
 vlb('view', 'sequencescores', 'detrep', imdb, feats, 'graf', 'numCorresp');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Matching score example
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %% Matching score example
 
 feats = {};
 feats{end+1} = vlb('detect', imdb, 'vlsift');
-feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'hesaff'});
-feats{end} = vlb('describe', imdb, feats{end}, 'vggdesc');
-feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'haraff'});
-feats{end} = vlb('describe', imdb, feats{end}, 'vggdesc');
+%MACOS doesn't support hesaff and haraff
+if ~ismac
+    feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'hesaff'});
+    feats{end} = vlb('describe', imdb, feats{end}, 'vggdesc');
+    feats{end+1} = vlb('detect', imdb, 'vggaff', 'detArgs', {'detector', 'haraff'});
+    feats{end} = vlb('describe', imdb, feats{end}, 'vggdesc');
+end
 
 res = cellfun(@(f) vlb('detmatch', imdb, f), feats, 'Uni', false);
 res = vertcat(res{:});
@@ -71,5 +76,8 @@ subplot(2,2,2);
 vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'numCorresp');
 
 %% View matched frames
-figure(21); clf;
-vlb('view', 'matches', imdb, feats{2}, 'detmatch', 3);
+%MACOS doesn't support hesaff and haraff
+if ~ismac
+    figure(21); clf;
+    vlb('view', 'matches', imdb, feats{2}, 'detmatch', 3);
+end
