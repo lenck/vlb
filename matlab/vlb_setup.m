@@ -13,4 +13,4 @@ addpath(fullfile(root, 'matlab')) ;
 addpath(fullfile(root, 'matlab', 'mex')) ;
 addpath(fullfile(root, 'examples')) ;
 addpath(fullfile(root, 'matlab', 'xtest')) ;
-run(fullfile(root, 'vlfeat', 'toolbox', 'vl_setup'));
+utls.setup_vlfeat();

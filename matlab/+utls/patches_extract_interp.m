@@ -1,14 +1,14 @@
-function [ patches, varargin ] = extract_patches_interp( ima, fms, varargin )
+function [ patches, varargin ] = patches_extract_interp( ima, fms, varargin )
 %EXTRACT_PATCHES_COVDET Extract patches using VL_COVDET
 opts.patchResolution = 32;
-opts.PatchRelativeExtent = 3*sqrt(3);
+opts.scalingFactor = 1;
 opts.method = 'linear';
 if nargout == 1
   opts = vl_argparse(opts, varargin);
 else
   [opts, varargin] = vl_argparse(opts, varargin);
 end
-args = helpers.struct2args(opts);
+fms = vl_frame2oell(fms);
 
 is_uint = isa(ima, 'uint8');
 if is_uint, ima = single(ima) ./ 255; end
@@ -21,8 +21,8 @@ s = linspace(-1, 1, outsz);
 P_n = [C_n(:), R_n(:)]';
 
 for pi = 1:size(fms, 2)
-  H = utls.frame2afftf(utls.frame_magnify_scale(fms(:, pi), opts.PatchRelativeExtent));
-  P_i = helpers.p2e(H*helpers.e2p(P_n)) + 1;
+  H = utls.frame2afftf(utls.frame_magnify_scale(fms(:, pi), opts.scalingFactor));
+  P_i = p2e(H*e2p(P_n)) + 1;
   % 'Query' rows and columns
   R_i = reshape(P_i(2,:), outsz, outsz);
   C_i = reshape(P_i(1,:), outsz, outsz);
@@ -31,5 +31,14 @@ end
 
 if is_uint, patches = uint8(patches * 255); end
 
+end
+
+function [ pts ] = e2p( pts )
+pts = [pts;ones(1,size(pts,2))];
+end
+
+function [ pts ] = p2e( pts )
+pts = pts./repmat(pts(size(pts,1),:),size(pts,1),1);
+pts = pts(1:size(pts,1)-1,:);
 end
 
