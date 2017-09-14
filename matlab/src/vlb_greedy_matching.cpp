@@ -119,3 +119,10 @@ void mexFunction(int nlhs,       mxArray *plhs[],
     }
     return;
 }
+
+//Stupid dummy main function. Otherwise will tigger a linking error on MAC OS
+int main()
+{
+    return 0;
+}
+

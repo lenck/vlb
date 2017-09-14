@@ -241,3 +241,9 @@ void mexFunction(int nlhs,       mxArray *plhs[],
   delete []feat1a;
   delete []feat2a;
 }
+
+//Stupid dummy main function. Otherwise will tigger a linking error on MAC OS
+int main()
+{
+    return 0;
+}
