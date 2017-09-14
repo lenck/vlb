@@ -74,7 +74,7 @@ imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
 res = utls.patches_load(fullfile(patches_path, [imname, '.png']));
 if nargout == 0
-  imshow(vl_imarray(res));
+  imshow(vl_imarray(squeeze(res)));
 end
 end
 

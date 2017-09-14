@@ -18,7 +18,8 @@ try
 catch
   warning('vlb:oldvlfeat', 'Old version of VL_COVDET without baseScale, using fallback method.');
   warning('off', 'vlb:oldvlfeat');
-  [patches, varargin] = utls.patches_extract_interp(ima, fms, args{:});
+  [patches, varargin] = utls.patches_extract_interp(ima, fms, ...
+    'scalingFactor', opts.scalingFactor, args{:});
 end
 patchesSz = [opts.patchResolution*2 + 1, opts.patchResolution*2 + 1, ...
   1, size(fms,2)];
