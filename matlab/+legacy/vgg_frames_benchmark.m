@@ -1,5 +1,5 @@
 function [ repScore, numCorresp, matchScore, numMatches ] = ...
-  vgg_frames_benchmark( geom, ima_p, fa, da, imb_p, fb, db, varargin)
+  vgg_frames_benchmark( geom, ima_p, featsa, imb_p, featsb, varargin)
 % VGG_FRAMES_BENCHMARK Compute scores of image features
 %   [REP, NUM_CORR, MATCHING, NUM_MATCHES] = VGG_FRAMES_BENCHMARK(GEOM,
 %   IMAGEA_PATH, FRAMES_A, DESCRIPTORS_A, IMAGEB_PATH, FRAMES_B,
@@ -29,6 +29,8 @@ if exist(fullfile(BIN_DIR, ['c_eoverlap', mexext]), 'file')
     fullfile(vlb_path(), 'matlab', 'mex', ['vgg_compute_ellipse_overlap.', mexext]), ...
     fullfile(BIN_DIR, ['c_eoverlap.', mexext]));
 end
+fa = featsa.frames; da = single(featsa.descs);
+fb = featsb.frames; db = single(featsb.descs);
 
 if ~isempty(da)
   assert(size(fa, 2) == size(da, 2), 'Invalid number of frames/descriptors');
