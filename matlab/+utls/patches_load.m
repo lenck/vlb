@@ -15,3 +15,7 @@ assert(mod(npatches, 1) == 0, 'Invalid patch image height.');
 patches = mat2cell(patches, size(patches, 2)*ones(1, npatches), size(patches, 2));
 patches = permute(patches, [2, 3, 4, 1]);
 patches = cell2mat(patches);
+%remove the single channel. Don't use squeeze, may only contain one patch.
+if size(patches,3)==1
+    patches = reshape(patches,size(patches,1),size(patches,2),size(patches,4));
+end
