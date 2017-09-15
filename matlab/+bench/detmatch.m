@@ -32,8 +32,6 @@ opts = vl_argparse(opts, varargin);
 
 fa = feats_a.frames; fb = feats_b.frames;
 da = feats_a.descs; db = feats_b.descs;
-% Switch the match frames to descriptor mode
-matchG = @(varargin) matchGeom(varargin{:}, 'mode', opts.geomMode);
 
 info = struct(); 
 scores = struct('matchingScore', 0, 'numMatches', 0, ...
@@ -45,7 +43,8 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, info ] = bench.detrep(matchG, feats_a, feats_b);
+[scores, info ] = bench.detrep(matchGeom, feats_a, feats_b);
+info.geomMatches = info.matches;
 if isempty(info.geomMatches), return; end;
 fa = fa(:, info.fa_valid); da = da(:, info.fa_valid);
 fb = fb(:, info.fb_valid); db = db(:, info.fb_valid);

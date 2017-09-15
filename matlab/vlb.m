@@ -10,6 +10,7 @@ usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb');
 
 cmds = struct();
 cmds.view = struct('fun', @vlb_view, 'help', '');
+cmds.imagelist = struct('fun', @vlb_imagelist, 'help', '');
 % Generate features
 cmds.detect = struct('fun', @vlb_detect, 'help', '');
 cmds.extract = struct('fun', @vlb_extract, 'help', '');

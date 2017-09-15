@@ -5,7 +5,7 @@ Reimplementation of the VLBenchmarks project.
 **Currenlty work in progress** so it has more than few rough edges.
 
 ## Getting Started
-Setup matlab mex environment, before starting to setup vlb. 
+Setup matlab mex environment, before starting to setup vlb.
 
 To setup the VLBenchmarks, run from the vlb path:
 ```
@@ -36,6 +36,16 @@ Features stored in `./data/features/IMDBNAME/FEATSNAME/DESCNAME/` as csv files.
 Evaluates the detector repeatabiliy, detector matching score or a descriptor matching score of features `FEATSNAME` in the selected dataset. Returns a table with results,
 which is additionally stored in `./data/scores/BENCH/IMDBNAME/FEATSNAME` as a csv file.
 
+## Custom Features
+For custom features, you can either add your own wrapper to `matlab/+features/+det` or `matlab/+features/+desc`, depending whether the input is an image or patches/detected keypoints. Afterwards, you can use the vlb interface directly.
+
+However, you can also compute the features outside of MATLAB and store them as CSV files. To get the list of image paths and target feature paths in format: `IMAGEPATH;TARGET_FRAMESPATH;TARGET_DESCSPATH` you can run:
+```
+vlb imagelist IMDBNAME FEATSNAME
+```
+Typically, this would create a file in `data/IMDBNAME-FEATSNAME.csv`
+
+The format of the CSV files is one descriptor/frame per line. The frames or **one-indexed** (center of the first image pixel has a coordinate [1, 1]) and in format of `vl_plotframe` (`[c, r]` for a point, `[c, r, s]` for a disc, `[c, r, s, rot]` for oriented disc, `[c, r, S11, S12, S22]` for ellipse, `[c, r, A11, A12, A21, A22]` for oriented ellipse/affine frame).
 
 ## Directory structure
 `matlab/+dset`   Implemented datasets (VGG-Aff, EdgeFoci, WebCam, Hsequences...).  
@@ -45,9 +55,8 @@ which is additionally stored in `./data/scores/BENCH/IMDBNAME/FEATSNAME` as a cs
 Furthermore, you can extract the features outside of this framework in order to evaluate them. Please extract e.g. `vlsift` features and follow the naming conventions.
 
 ## Compile Conflicts
-`mex` command may be recognized as `mex` command in texlive. Make sure that the matlab/bin path is added to system PATH before the directory of mex in texlive. 
+`mex` command may be recognized as `mex` command in texlive. Make sure that the matlab/bin path is added to system PATH before the directory of mex in texlive.
 
 ## Running the tests
 To run the tests, call:
 `vlb_test`.
-

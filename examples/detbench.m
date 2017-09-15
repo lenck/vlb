@@ -48,8 +48,8 @@ title('Graph Repetability');
 subplot(1,2,2);
 vlb('view', 'sequencescores', 'detrep', imdb, feats, 'graf', 'numCorresp');
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %% Matching score example
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Matching score example
 
 feats = {};
 feats{end+1} = vlb('detect', imdb, 'vlsift');
@@ -71,14 +71,11 @@ display(varfun(@mean, res, 'InputVariables', 'repeatability',...
 %% Plot the results in a graph
 figure(11); clf;
 subplot(2,2,1);
-vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'repeatability');
+vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'matchingScore');
 title('Graph Matching Score');
 subplot(2,2,2);
-vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'numCorresp');
+vlb('view', 'sequencescores', 'detmatch', imdb, feats, 'graf', 'numMatches');
 
 %% View matched frames
-%MACOS doesn't support hesaff and haraff
-if ~ismac
-    figure(21); clf;
-    vlb('view', 'matches', imdb, feats{2}, 'detmatch', 3);
-end
+figure(21); clf;
+vlb('view', 'matches', imdb, feats{1}, 'detmatch', 3);

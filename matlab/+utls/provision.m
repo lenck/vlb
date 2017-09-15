@@ -1,8 +1,9 @@
 function downloaded = provision( url, tgt_dir, varargin )
-opts.doneName = '.download.done';
-opts.override = false;
-opts.forceExt = '';
-opts = vl_argparse(opts, varargin);
+p = inputParser;
+addParameter(p, 'doneName', '.download.done', @isstr);
+addParameter(p, 'override', false, @islogical);
+addParameter(p, 'forceExt', '', @isstr);
+parse(p, varargin{:}); opts = p.Results;
 
 if exist(url, 'file'), url = fileread(url); end;
 url = strtrim(url);

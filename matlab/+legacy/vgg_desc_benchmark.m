@@ -1,5 +1,5 @@
 function [results, info] = vgg_desc_benchmark(geom, ...
-  ima_p, fa, da, imb_p, fb, db, varargin)
+  ima_p, featsa, imb_p, featsb, varargin)
 %VGG_DESC_BENCHMARK Summary of this function goes here
 opts.maxOverlapError = 0.5;
 opts = vl_argparse(opts, varargin);
@@ -16,6 +16,8 @@ end
 if ~exist(fullfile(BIN_DIR, ['c_eoverlap.', mexext]), 'file')
   mex(fullfile(BIN_DIR, 'c_eoverlap.cxx'), '-outdir', BIN_DIR);
 end
+fa = featsa.frames; da = single(featsa.descs);
+fb = featsb.frames; db = single(featsb.descs);
 assert(size(fa, 2) == size(da, 2), 'Invalid number of frames/descriptors');
 assert(size(fb, 2) == size(db, 2), 'Invalid number of frames/descriptors');
 
