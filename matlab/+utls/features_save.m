@@ -11,7 +11,7 @@ for fi = 1:numel(fields)
   tgtpath = fullfile(respath, [imname, '.', field]);
   data = features.(field);
   switch class(data)
-    case {'double', 'single'}
+    case {'double', 'single', 'uint8'}
       dlmwrite([tgtpath, '.csv'], data', ';');
     case {'char'}
       fd = fopen([tgtpath, '.txt'], 'w');
