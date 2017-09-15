@@ -1,5 +1,8 @@
 function [ patches, varargin ] = patches_extract_interp( ima, fms, varargin )
 %EXTRACT_PATCHES_COVDET Extract patches using VL_COVDET
+
+% TODO test that it gives same output as vl_covdet
+
 opts.patchResolution = 32;
 opts.scalingFactor = 1;
 opts.method = 'linear';
