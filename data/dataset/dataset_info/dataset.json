@@ -33,7 +33,7 @@
              },
              "minItems": 1,
              "uniqueItems": true         
-         }
+         },
          "Sequences":{
              "type": "array",
              "items": {
@@ -45,12 +45,12 @@
     "definitions": {
         "Sequence":{
             "type": "object",
-            "description": "schema for sequence in database"
+            "description": "schema for sequence in database",
             "properties": {
                 "Name":{
                     "type": "string",
                     "description": "name for the sequence"
-                }
+                },
                 "Description":{
                     "type": "string",
                     "description": "General description of the sequence"
@@ -72,7 +72,7 @@
                 "Link Number":{
                     "type": "integer",
                     "description": "Number of links in the sequence"
-                }
+                },
                 "Links":{
                     "description": "relations in the sequence",
                     "type": "array",
@@ -83,7 +83,7 @@
 
         "Image": {
             "type": "object",
-            "description": "schema for image in sequence"
+            "description": "schema for image in sequence",
             "properties": {
                 "id":{
                     "type": "string",
@@ -102,7 +102,7 @@
 
         "Link": {
             "type": "object",
-            "description": "relation between two image"
+            "description": "relation between two image",
             "properties": {
                 "source":{
                     "type": "string",
