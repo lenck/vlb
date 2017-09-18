@@ -16,7 +16,6 @@ json_data = {}
 json_data['Dataset Name'] = 'VGG Affine'
 json_data['Description'] = 'Standard Benchmark'
 json_data['url'] = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/'
-json_data['root dir'] = '../data/dataset/'
 json_data['Sequence Number'] = len(sequence_name_list)
 json_data['Sequence Name List'] = sequence_name_list
 json_data['Sequences'] = []

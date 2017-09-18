@@ -1,7 +1,6 @@
 {
   "Description": "Standard Benchmark", 
   "url": "http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/", 
-  "root dir": "../data/dataset/", 
   "Dataset Name": "VGG Affine", 
   "Sequences": [
     {

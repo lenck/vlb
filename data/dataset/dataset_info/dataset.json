@@ -16,10 +16,6 @@
              "type": "string",
              "description": "Downlaod url for the dataset"
          },
-         "root dir":{
-             "type": "string",
-             "description": "Save position of the dataset, the default place is ./data/datasets/"
-         },
          "Sequence Number":{
             "type": "integer",
             "description": "Number of Sequence in the dataset",
