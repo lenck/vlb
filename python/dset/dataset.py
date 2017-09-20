@@ -35,10 +35,11 @@ class Sequence:
 
 class SequenceDataset():
     __metaclass__ = ABCMeta 
-    def __init__(self, name, root_dir = './dataset/', download_flag = False):
+    def __init__(self, name, root_dir = './datasets/', download_flag = False):
         self.name = name
         self.root_dir = root_dir
         self.load_dataset_info()
+        print(self.sequence_name_list)
         
         if download_flag:
             self.download()
@@ -175,7 +176,15 @@ class SequenceDataset():
 
     
 
+    def get_sequence(self, sequence_name):
+        return self.sequences[sequence_name]
 
+    def get_image(self,sequence_name, image_id):
+        return self.sequences[sequence_name].image_dict[image_id]
+
+    def get_link(self, sequence_name, link_id):
+        return self.sequences[sequence_name].link_dict[link_id]
+    
     def __getitem__(self,i):
         return self.sequences[self.sequence_name_list[i]]
     

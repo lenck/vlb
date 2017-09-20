@@ -6,7 +6,7 @@ import os
 
 class vggh_Dataset(SequenceDataset):
 
-    def __init__(self,root_dir = './dataset/', download_flag = False):
+    def __init__(self,root_dir = './datasets/', download_flag = False):
         super(vggh_Dataset,self).__init__(name = 'vggh', root_dir = root_dir, download_flag = download_flag)
 
     def download(self):
