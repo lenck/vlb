@@ -1,0 +1,546 @@
+{
+  "Description": "Standard Benchmark", 
+  "url": "http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/", 
+  "Dataset Name": "VGG Affine", 
+  "Sequences": [
+    {
+      "Name": "bikes", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "bikes/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "bikes/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "bikes/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "bikes/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "bikes/H1to6p"
+        }
+      ], 
+      "Label": "Increasing blur", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "bikes/img1.ppm", 
+          "label": "1"
+        }, 
+        {
+          "id": "2", 
+          "file": "bikes/img2.ppm", 
+          "label": "2"
+        }, 
+        {
+          "id": "3", 
+          "file": "bikes/img3.ppm", 
+          "label": "3"
+        }, 
+        {
+          "id": "4", 
+          "file": "bikes/img4.ppm", 
+          "label": "4"
+        }, 
+        {
+          "id": "5", 
+          "file": "bikes/img5.ppm", 
+          "label": "5"
+        }, 
+        {
+          "id": "6", 
+          "file": "bikes/img6.ppm", 
+          "label": "6"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "bikes"
+    }, 
+    {
+      "Name": "trees", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "trees/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "trees/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "trees/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "trees/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "trees/H1to6p"
+        }
+      ], 
+      "Label": "Increasing blur", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "trees/img1.ppm", 
+          "label": "1"
+        }, 
+        {
+          "id": "2", 
+          "file": "trees/img2.ppm", 
+          "label": "2"
+        }, 
+        {
+          "id": "3", 
+          "file": "trees/img3.ppm", 
+          "label": "3"
+        }, 
+        {
+          "id": "4", 
+          "file": "trees/img4.ppm", 
+          "label": "4"
+        }, 
+        {
+          "id": "5", 
+          "file": "trees/img5.ppm", 
+          "label": "5"
+        }, 
+        {
+          "id": "6", 
+          "file": "trees/img6.ppm", 
+          "label": "6"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "trees"
+    }, 
+    {
+      "Name": "graf", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "graf/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "graf/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "graf/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "graf/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "graf/H1to6p"
+        }
+      ], 
+      "Label": "Viewpoint angle", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "graf/img1.ppm", 
+          "label": "0"
+        }, 
+        {
+          "id": "2", 
+          "file": "graf/img2.ppm", 
+          "label": "20"
+        }, 
+        {
+          "id": "3", 
+          "file": "graf/img3.ppm", 
+          "label": "30"
+        }, 
+        {
+          "id": "4", 
+          "file": "graf/img4.ppm", 
+          "label": "40"
+        }, 
+        {
+          "id": "5", 
+          "file": "graf/img5.ppm", 
+          "label": "50"
+        }, 
+        {
+          "id": "6", 
+          "file": "graf/img6.ppm", 
+          "label": "60"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "graf"
+    }, 
+    {
+      "Name": "wall", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "wall/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "wall/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "wall/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "wall/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "wall/H1to6p"
+        }
+      ], 
+      "Label": "Viewpoint angle", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "wall/img1.ppm", 
+          "label": "0"
+        }, 
+        {
+          "id": "2", 
+          "file": "wall/img2.ppm", 
+          "label": "20"
+        }, 
+        {
+          "id": "3", 
+          "file": "wall/img3.ppm", 
+          "label": "30"
+        }, 
+        {
+          "id": "4", 
+          "file": "wall/img4.ppm", 
+          "label": "40"
+        }, 
+        {
+          "id": "5", 
+          "file": "wall/img5.ppm", 
+          "label": "50"
+        }, 
+        {
+          "id": "6", 
+          "file": "wall/img6.ppm", 
+          "label": "60"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "wall"
+    }, 
+    {
+      "Name": "boat", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "boat/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "boat/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "boat/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "boat/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "boat/H1to6p"
+        }
+      ], 
+      "Label": "Scale changes", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "boat/img1.pgm", 
+          "label": "1"
+        }, 
+        {
+          "id": "2", 
+          "file": "boat/img2.pgm", 
+          "label": "1.12"
+        }, 
+        {
+          "id": "3", 
+          "file": "boat/img3.pgm", 
+          "label": "1.38"
+        }, 
+        {
+          "id": "4", 
+          "file": "boat/img4.pgm", 
+          "label": "1.9"
+        }, 
+        {
+          "id": "5", 
+          "file": "boat/img5.pgm", 
+          "label": "2.35"
+        }, 
+        {
+          "id": "6", 
+          "file": "boat/img6.pgm", 
+          "label": "2.8"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "boat"
+    }, 
+    {
+      "Name": "bark", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "bark/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "bark/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "bark/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "bark/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "bark/H1to6p"
+        }
+      ], 
+      "Label": "Scale changes", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "bark/img1.ppm", 
+          "label": "1"
+        }, 
+        {
+          "id": "2", 
+          "file": "bark/img2.ppm", 
+          "label": "1.2"
+        }, 
+        {
+          "id": "3", 
+          "file": "bark/img3.ppm", 
+          "label": "1.8"
+        }, 
+        {
+          "id": "4", 
+          "file": "bark/img4.ppm", 
+          "label": "2.5"
+        }, 
+        {
+          "id": "5", 
+          "file": "bark/img5.ppm", 
+          "label": "3"
+        }, 
+        {
+          "id": "6", 
+          "file": "bark/img6.ppm", 
+          "label": "4"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "bark"
+    }, 
+    {
+      "Name": "leuven", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "leuven/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "leuven/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "leuven/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "leuven/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "leuven/H1to6p"
+        }
+      ], 
+      "Label": "Decreasing light", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "leuven/img1.ppm", 
+          "label": "1"
+        }, 
+        {
+          "id": "2", 
+          "file": "leuven/img2.ppm", 
+          "label": "2"
+        }, 
+        {
+          "id": "3", 
+          "file": "leuven/img3.ppm", 
+          "label": "3"
+        }, 
+        {
+          "id": "4", 
+          "file": "leuven/img4.ppm", 
+          "label": "4"
+        }, 
+        {
+          "id": "5", 
+          "file": "leuven/img5.ppm", 
+          "label": "5"
+        }, 
+        {
+          "id": "6", 
+          "file": "leuven/img6.ppm", 
+          "label": "6"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "leuven"
+    }, 
+    {
+      "Name": "ubc", 
+      "Links": [
+        {
+          "source": "1", 
+          "target": "2", 
+          "file": "ubc/H1to2p"
+        }, 
+        {
+          "source": "1", 
+          "target": "3", 
+          "file": "ubc/H1to3p"
+        }, 
+        {
+          "source": "1", 
+          "target": "4", 
+          "file": "ubc/H1to4p"
+        }, 
+        {
+          "source": "1", 
+          "target": "5", 
+          "file": "ubc/H1to5p"
+        }, 
+        {
+          "source": "1", 
+          "target": "6", 
+          "file": "ubc/H1to6p"
+        }
+      ], 
+      "Label": "JPEG compression", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "1", 
+          "file": "ubc/img1.ppm", 
+          "label": "0"
+        }, 
+        {
+          "id": "2", 
+          "file": "ubc/img2.ppm", 
+          "label": "60"
+        }, 
+        {
+          "id": "3", 
+          "file": "ubc/img3.ppm", 
+          "label": "80"
+        }, 
+        {
+          "id": "4", 
+          "file": "ubc/img4.ppm", 
+          "label": "90"
+        }, 
+        {
+          "id": "5", 
+          "file": "ubc/img5.ppm", 
+          "label": "95"
+        }, 
+        {
+          "id": "6", 
+          "file": "ubc/img6.ppm", 
+          "label": "98"
+        }
+      ], 
+      "Image Number": 6, 
+      "Description": "ubc"
+    }
+  ], 
+  "Sequence Number": 8, 
+  "Sequence Name List": [
+    "bikes", 
+    "trees", 
+    "graf", 
+    "wall", 
+    "boat", 
+    "bark", 
+    "leuven", 
+    "ubc"
+  ]
+}

@@ -31,9 +31,9 @@ for idx, sequence_name in enumerate(sequence_name_list):
     for image_idx, image_label in enumerate(label_list[idx]):
         image = {}
         if sequence_name == 'boat':
-            image['file'] = 'vggh/{}/{}.pgm'.format(sequence_name,image_idx+1)
+            image['file'] = '{}/img{}.pgm'.format(sequence_name,image_idx+1)
         else:
-            image['file'] = 'vggh/{}/{}.ppm'.format(sequence_name,image_idx+1)
+            image['file'] = '{}/img{}.ppm'.format(sequence_name,image_idx+1)
             
         image['id'] = str(image_idx+1)
         image['label'] = str(image_label)
@@ -45,9 +45,9 @@ for idx, sequence_name in enumerate(sequence_name_list):
         link = {}
         link['source'] = str(1)
         link['target'] = str(i+1)
-        link['file'] = 'vggh/{}/H1to{}p'.format(sequence_name, i+1)
+        link['file'] = '{}/H1to{}p'.format(sequence_name, i+1)
         sequence['Links'].append(link)
     json_data['Sequences'].append(sequence)
 
-with open('../../data/dataset/dataset_info/{}.json'.format('vggh'),'w') as json_file:
+with open('./dataset/dataset_info/{}.json'.format('vggh'),'w') as json_file:
     json.dump(json_data, json_file, indent=2)
