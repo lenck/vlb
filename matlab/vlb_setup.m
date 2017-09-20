@@ -10,14 +10,10 @@ function vlb_setup()
 
 root = vlb_path() ;
 pathCell = regexp(path, pathsep, 'split');
-check_and_add(fullfile(root, 'matlab'),pathCell)
-check_and_add(fullfile(root, 'matlab', 'mex'),pathCell)
-check_and_add(fullfile(root, 'examples'),pathCell)
-check_and_add(fullfile(root, 'matlab', 'xtest'),pathCell)
-%addpath(fullfile(root, 'matlab')) ;
-%addpath(fullfile(root, 'matlab', 'mex')) ;
-%addpath(fullfile(root, 'examples')) ;
-%addpath(fullfile(root, 'matlab', 'xtest')) ;
+check_and_add(fullfile(root, 'matlab'), pathCell)
+check_and_add(fullfile(root, 'matlab', 'mex'), pathCell)
+check_and_add(fullfile(root, 'examples'), pathCell)
+check_and_add(fullfile(root, 'matlab', 'xtest'), pathCell)
 utls.setup_vlfeat();
 end
 
