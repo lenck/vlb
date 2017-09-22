@@ -9,8 +9,6 @@ sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/features/'
 import vgg_dataset
 import vlsift
 
-
-
 if __name__ == "__main__":
 
     a = vgg_dataset.vggh_Dataset()

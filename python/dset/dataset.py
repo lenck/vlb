@@ -4,7 +4,7 @@ import os
 import cv2
 import cyvlfeat
 import exifread
-
+import matlab
 from abc import ABCMeta, abstractmethod
 
 class Image:
@@ -18,6 +18,7 @@ class Link:
     target = ''
     filename = ''
     transform_matrix = None
+    matlab_task = {}
 
 class Sequence:
     name = ''
@@ -51,7 +52,7 @@ class SequenceDataset():
 
         self.read_image_data()
         self.read_link_data()
-        print(self.sequences['bikes'].link_dict['1_3'].transform_matrix)
+        self.set_matlab_task()
 
     def load_dataset_info(self):
         try:
@@ -71,6 +72,7 @@ class SequenceDataset():
             try:
                 this_sequence.name = read_sequence['Name']
                 this_sequence.description = read_sequence['Description']
+                this_sequence.label = read_sequence['Label']
             except:
                 pass
             
@@ -95,7 +97,8 @@ class SequenceDataset():
                 this_link.target = read_link['target']
                 this_link.filename = None
                 this_link.transform_matrix = None
-
+                this_link.matlab_task = {}
+                
                 try:
                     this_link.filename = read_link['file']
                 except:
@@ -112,6 +115,7 @@ class SequenceDataset():
                     except:
                         this_link.transform_matrix = np.eye(3,dtype = np.float)
 
+                
                 this_sequence.link_dict["{}_{}".format(read_link['source'],read_link['target'])] = this_link
                 this_sequence.link_id_list.append("{}_{}".format(read_link['source'],read_link['target']))
                 
@@ -161,6 +165,8 @@ class SequenceDataset():
                         with open('{}{}/{}'.format(self.root_dir, self.name, sequence.link_dict[link_id].filename)) as f:
                             sequence.link_dict[link_id].transform_matrix = []
                             for line in f:
+                                if len(line)<2:
+                                    continue
                                 array_line = []
                                 for element in line.split(' '):
                                     if element == '' or element =='\n':
@@ -174,17 +180,51 @@ class SequenceDataset():
                             .format(sequence.link_dict[link_id].filename))
                         exit()
 
-    
+    def set_matlab_task(self):
+        for sequence_name in self.sequence_name_list:
+            sequence = self.sequences[sequence_name]
+            for link_id in sequence.link_id_list:
+                this_link = sequence.link_dict[link_id]
+                image_a = sequence.image_dict[this_link.source]
+                image_b = sequence.image_dict[this_link.target]
+                this_link.matlab_task['ima'] = str(image_a.idx)
+                this_link.matlab_task['imb'] = str(image_b.idx)
+                
+                try:
+                    imga_ch = image_a.image_data.shape[2]
+                except:
+                    imga_ch = 1
+                try:
+                    imgb_ch = image_b.image_data.shape[2]
+                except:
+                    imgb_ch = 1
+
+                this_link.matlab_task['ima_size'] = matlab.double([image_a.image_data.shape[0], image_a.image_data.shape[1], imga_ch])
+                this_link.matlab_task['imb_size'] = matlab.double([image_b.image_data.shape[0], image_b.image_data.shape[1], imgb_ch])
+                #print(this_link.transform_matrix.tolist())
+                this_link.matlab_task['H'] = matlab.double(this_link.transform_matrix.tolist())
+                this_link.matlab_task['name'] = str(sequence.name)
+                this_link.matlab_task['description'] = {}
+                this_link.matlab_task['description']['impair'] = [str(image_a.idx), str(image_b.idx)]
+                try:
+                    this_link.matlab_task['description']['nuisanceName'] = str(sequence.label)
+                    this_link.matlab_task['description']['nuisanceValue'] = str(imageb.label)
+                except:
+                    pass
+
 
     def get_sequence(self, sequence_name):
         return self.sequences[sequence_name]
 
     def get_image(self,sequence_name, image_id):
-        return self.sequences[sequence_name].image_dict[image_id]
+        return self.sequences[sequence_name].image_dict[image_id].image_data
 
     def get_link(self, sequence_name, link_id):
-        return self.sequences[sequence_name].link_dict[link_id]
+        return self.sequences[sequence_name].link_dict[link_id].transform_matrix
     
+    def get_matlab_task(self, sequence_name, link_id):
+        return self.sequences[sequence_name].link_dict[link_id].matlab_task
+
     def __getitem__(self,i):
         return self.sequences[self.sequence_name_list[i]]
     
