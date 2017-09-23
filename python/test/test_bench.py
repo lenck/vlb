@@ -20,7 +20,11 @@ if __name__ == "__main__":
     bench = repBench.repBench()
     
     #bench.detect_feature(vggh,vlsift_matlab)
-    bench.evaluate(vggh,vlsift_all)
+    result = bench.evaluate(vggh,vlsift_all)
+    result = [result,result]
+    bench.print_result(result)
+    bench.save_result(result)
+
     #feature,descriptor = vlsift_all.extract_all(image)
     #print(feature.shape, descriptor.shape)
     
