@@ -70,6 +70,7 @@ else
 end
 
 arch = computer();
+%my computer returns all captital :), Xu
 arch = lower(arch);
 switch arch
   case {'maci64'}
