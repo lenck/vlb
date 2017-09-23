@@ -70,6 +70,7 @@ else
 end
 
 arch = computer();
+arch = lower(arch);
 switch arch
   case {'maci64'}
     opts.ccpass{end+1} = '-mmacosx-version-min=10.9' ;
