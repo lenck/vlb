@@ -40,7 +40,7 @@ class SequenceDataset():
         self.name = name
         self.root_dir = root_dir
         self.load_dataset_info()
-        print(self.sequence_name_list)
+        #print(self.sequence_name_list)
         
         if download_flag:
             self.download()

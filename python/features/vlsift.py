@@ -10,13 +10,13 @@ from DetectorDescriptorTemplate import DetectorAndDescriptor
 from abc import ABCMeta, abstractmethod
 
 class vlsift(DetectorAndDescriptor):
-    def __init__(self, peak_thresh = 3.0):
+    def __init__(self, peak_thresh = 10.0):
         super(vlsift,self).__init__(name = 'vlsift', is_detector = True, is_descriptor = True, is_both = True)
         self.peak_thresh = peak_thresh
 
     def detect_feature(self, image):
         image = Utils.all_to_gray(image)
-        feature = cyvlfeat.sift.sift(image, magnification = 5)#, peak_thresh=self.peak_thresh
+        feature = cyvlfeat.sift.sift(image, peak_thresh=self.peak_thresh, magnification = 5)#
         return feature
 
     def extract_descriptor(self, image, feature):

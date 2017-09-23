@@ -49,5 +49,5 @@ for idx, sequence_name in enumerate(sequence_name_list):
         sequence['Links'].append(link)
     json_data['Sequences'].append(sequence)
 
-with open('./dataset/dataset_info/{}.json'.format('vggh'),'w') as json_file:
+with open('./datasets/dataset_info/{}.json'.format('vggh'),'w') as json_file:
     json.dump(json_data, json_file, indent=2)

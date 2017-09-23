@@ -4,6 +4,10 @@ import os
 import cv2
 
 def all_to_gray(image):
+    
+    if len(image.shape)==2:
+        return image
+    
     if image.shape[2] == 4:
         image = image[:,:,:3]
     if image.shape[2] == 3:
