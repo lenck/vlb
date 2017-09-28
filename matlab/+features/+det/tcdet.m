@@ -37,7 +37,7 @@ actpath = pwd;
 try
   cd(opts.runDir);
   [ret, out] = system(cmd);
-  res.frames = tcdet_rundet(img, featsname);
+  [res.frames, res.detresponses] = tcdet_rundet(img, featsname);
 catch 
   cd(actpath);
 end

@@ -21,19 +21,23 @@ function [ scores, info ] = detrep( matchFrames, feats_a, feats_b, varargin )
 %   When frame CFRAMES_A(k) is not matched, MATCHES(k) = 0.
 
 opts.normFactor = 'minab';
+opts.topn = inf;
 opts = vl_argparse(opts, varargin);
 
-info = struct('matches', zeros(1, 0)); 
+info.geom = []; 
+info.tcorr = zeros(2, 0);  info.corr_score = zeros(1, 0);
+info.geomMatches = zeros(2, 0); info.matches = zeros(1, 0); 
 scores = struct('repeatability', 0, 'numCorresp', 0);
-if isempty(feats_a) || isempty(feats_b), return; end
-[tcorr, corr_score, info] = matchFrames(feats_a.frames, feats_b.frames);
-fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
-info.tcorr = tcorr; 
-info.corr_score = corr_score;
-info.geomMatches = zeros(2, 0);
-info.matches = zeros(1, 0);
-info.repeatability = nan; info.numCorresp = nan;
-if isempty(tcorr), return; end;
+if isempty(feats_a.frames) || isempty(feats_b.frames), return; end
+if ~isinf(opts.topn) && isfield(feats_a, 'detresponses') && ...
+    isfield(feats_b, 'detresponses')
+  feats_a = utls.topnframes(feats_a, opts.topn);
+  feats_b = utls.topnframes(feats_b, opts.topn);
+end
+[tcorr, corr_score, info.geom] = matchFrames(feats_a.frames, feats_b.frames);
+info.tcorr = tcorr;  info.corr_score = corr_score;
+fa_num = sum(info.geom.fa_valid); fb_num = sum(info.geom.fb_valid);
+if isempty(tcorr), return; end
 
 % Sort the edgest by decrasing score
 [~, perm] = sort(corr_score, 'descend');
@@ -55,5 +59,4 @@ switch opts.normFactor
   otherwise
     error('Invalid `normFactor`.');
 end
-info.repeatability = rep; info.numCorresp = nc;
 scores = struct('repeatability', rep, 'numCorresp', nc);

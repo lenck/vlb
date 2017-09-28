@@ -22,7 +22,7 @@ if ~opts.override && exist(scores_path, 'file') && exist(info_path, 'file')
   scores = readtable(scores_path); info = load(info_path);
   fprintf('Results loaded from %s.\n', scores_path);
   return;
-end;
+end
 
 fprintf('Running %d tasks of %s on %s for %s features.\n', ...
   numel(imdb.tasks), opts.benchName, imdb.name, featsname);
@@ -40,7 +40,7 @@ for ti = 1:numel(imdb.tasks)
   scores{ti}.sequence = task.sequence;
   scores{ti}.ima = task.ima;
   scores{ti}.imb = task.imb;
-  scores{ti}.args = allargs;
+  info{ti}.args = {allargs};
   status(ti);
 end
 
