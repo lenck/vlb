@@ -23,7 +23,7 @@ classdef test_detrepthr_benchmark < matlab.unittest.TestCase
       
       res = bench.detrepthr(matchFrames, fa, fb);
       test.verifyLessThanOrEqual(res.repeatability, 1);
-      if 1
+      if 0
         figure(1);
         subplot(1,2,1); hold on;
         plot(res.numDets, res.repeatability);

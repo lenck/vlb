@@ -34,6 +34,7 @@ if ~isinf(opts.topn) && isfield(feats_a, 'detresponses') && ...
   feats_a = utls.topnframes(feats_a, opts.topn);
   feats_b = utls.topnframes(feats_b, opts.topn);
 end
+feats_a.descs = []; feats_b.descs = [];
 [tcorr, corr_score, info.geom] = matchFrames(feats_a.frames, feats_b.frames);
 info.tcorr = tcorr;  info.corr_score = corr_score;
 fa_num = sum(info.geom.fa_valid); fb_num = sum(info.geom.fb_valid);
