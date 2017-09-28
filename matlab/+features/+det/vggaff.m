@@ -26,7 +26,7 @@ if isempty(img), res.frames = zeros(5, 0); return; end;
 
 % Constants
 VALID_DETECTORS = {'hesaff', 'haraff', 'heslap', 'harlap', 'har'};
-BIN_DIR = fullfile(vlb_path(), 'data','vgg_aff');
+BIN_DIR = fullfile(vlb_path('vendor'), 'vgg_aff');
 BIN_PATH = fullfile(BIN_DIR, 'h_affine.ln');
 BIN_URL = 'http://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/h_affine.ln.gz';
 

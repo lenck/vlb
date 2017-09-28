@@ -16,6 +16,11 @@ for fi = 1:numel(files)
   if opts.checkonly
     features.(field) = nan;
   else
+    fp = dir(fpath);
+    if fp.bytes == 0
+      features.(field) = [];
+      continue;
+    end
     switch ext
       case '.csv'
         features.(field) = dlmread(fpath, ';')';

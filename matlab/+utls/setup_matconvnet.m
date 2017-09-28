@@ -1,13 +1,13 @@
 function setup_matconvnet(varargin)
 opts.url = 'https://github.com/vlfeat/matconvnet/archive/master.zip';
-opts.rootDir = fullfile(vlb_path(), 'data', 'matconvnet');
+opts.rootDir = fullfile(vlb_path('vendor'), 'matconvnet');
 opts = vl_argparse(opts, varargin);
 
 if ~exist('vl_nnconv', 'file')
   utls.provision(opts.url, opts.rootDir);
   run(fullfile(getlatest(opts.rootDir, 'matconvnet'), 'matlab', 'vl_setupnn.m'));
   
-  if isempty(strfind(which('vl_nnconv'), mexext))
+  if ~contains(which('vl_nnconv'), mexext)
     fprintf('MatConvNet not compiled. Attempting to run `vl_compilenn` (CPU ONLY, no imreadjpeg).\n');
     fprintf('To compile with a GPU support, see `help vl_compilenn`.');
     vl_compilenn('EnableImreadJpeg', false);

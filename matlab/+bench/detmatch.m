@@ -33,21 +33,22 @@ opts = vl_argparse(opts, varargin);
 fa = feats_a.frames; fb = feats_b.frames;
 da = feats_a.descs; db = feats_b.descs;
 
-info = struct(); 
-scores = struct('matchingScore', 0, 'numMatches', 0, ...
-  'repeatability', 0, 'numCorresp', 0);
+info = struct('rep', [], 'geom', [], 'descMatches', [], 'matches', []); 
+scores = struct('repeatability', [], 'numCorresp', [], ...
+  'matchingScore', [], 'numMatches', []);
 
-if isempty(fa) || isempty(fb), return; end;
-if isempty(da) || isempty(db), return; end;
+if isempty(fa) || isempty(fb), return; end
+if isempty(da) || isempty(db), return; end
 if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, info ] = bench.detrep(matchGeom, feats_a, feats_b);
-info.geomMatches = info.matches;
-if isempty(info.geomMatches), return; end;
-fa = fa(:, info.fa_valid); da = da(:, info.fa_valid);
-fb = fb(:, info.fb_valid); db = db(:, info.fb_valid);
+[scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+info.rep = ri;
+info.geom = ri.geom;
+if isempty(ri.matches), return; end
+fa = fa(:, ri.geom.fa_valid); da = da(:, ri.geom.fa_valid);
+fb = fb(:, ri.geom.fb_valid); db = db(:, ri.geom.fb_valid);
 
 descMatchEdges = opts.matchDescriptors(db, da);
 descMatches = zeros(1, size(fa, 2));
@@ -57,12 +58,12 @@ info.descMatches = descMatches;
 if opts.matchGeometry
   % A match valid when 1-to-1 matched for both geom and desc
   matches = descMatches;
-  matches(descMatches ~= info.geomMatches) = 0;
+  matches(descMatches ~= ri.matches) = 0;
 else
   % A match valid when among tentative correspondences which are expressed
   % as edges in the bipartite graph.
   fsz = [size(fa, 2), size(fb, 2)];
-  tcorrIdxs = sub2ind(fsz, info.tcorr(1,:), info.tcorr(2,:));
+  tcorrIdxs = sub2ind(fsz, ri.tcorr(1,:), ri.tcorr(2,:));
   % descMatchEdges are B->A
   matchIdxs = sub2ind(fsz, descMatchEdges(2,:), descMatchEdges(1,:));
   [~, validMatch] = intersect(matchIdxs, tcorrIdxs);
@@ -73,7 +74,7 @@ end
 info.matches = matches;
 % Compute the score
 nm = sum(matches ~= 0);
-fa_num = sum(info.fa_valid); fb_num = sum(info.fb_valid);
+fa_num = sum(ri.geom.fa_valid); fb_num = sum(ri.geom.fb_valid);
 switch opts.normFactor
   case 'minab'
     ms = nm / min(fa_num, fb_num);
@@ -85,4 +86,3 @@ switch opts.normFactor
     error('Invalid `normFactor`.');
 end
 scores.matchingScore = ms; scores.numMatches = nm;
-scores.numCorresp = info.numCorresp;

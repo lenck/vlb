@@ -6,7 +6,7 @@ function [ res ] = surf( img, feats, varargin )
 % Authors: Karel Lenc
 
 % AUTORIGHTS
-opts.rootDir = fullfile(vlb_path(), 'data', 'surf');
+opts.rootDir = fullfile(vlb_path('vendor'), 'surf');
 opts.binPath = fullfile(opts.rootDir,'SURF-V1.0.9','surf.ln');
 opts.url = 'http://www.vision.ee.ethz.ch/~surf/SURF-V1.0.9.tar.gz';
 [opts, varargin] = vl_argparse(opts, varargin);

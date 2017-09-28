@@ -48,6 +48,11 @@ Typically, this would create a file in `data/IMDBNAME-FEATSNAME.csv`
 The format of the CSV files is one descriptor/frame per line. The frames or **one-indexed** (center of the first image pixel has a coordinate [1, 1]) and in format of `vl_plotframe` (`[c, r]` for a point, `[c, r, s]` for a disc, `[c, r, s, rot]` for oriented disc, `[c, r, S11, S12, S22]` for ellipse, `[c, r, A11, A12, A21, A22]` for oriented ellipse/affine frame).
 
 ## Directory structure
+`data/features/DATASET/FEATURES` Compputed local features in csv format (see `vlb detect` and `vlb describe`)
+`data/patches/DATASET/FEATURES` Extracted patches as png images (see `vlb extract`)
+`data/scores/BENCHMARK/DATASET/FEATURES` Computed benchmark scores, stored as .csv tables
+`datasets` Downloaded datasets
+`matlab` MATLAB source code
 `matlab/+dset`   Implemented datasets (VGG-Aff, EdgeFoci, WebCam, Hsequences...).  
 `matlab/+features/+det` Implemented detector wrappers.  
 `matlab/+features/+desc` Implemented descriptor wrappers. Please note that some descriptors accept detected frames, some need extracted patches.

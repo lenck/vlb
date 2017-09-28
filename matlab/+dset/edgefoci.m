@@ -10,7 +10,7 @@ DATADIR = 'OxfordRelease';
 NUMSEQUENCES = 13;
 
 opts.url = 'https://documents.epfl.ch/groups/c/cv/cvlab-unit/www/data/keypoints/OxfordRelease.tar.gz';
-opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-edgefoci');
+opts.rootDir = fullfile(vlb_path('datasets'), 'edgefoci');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});
