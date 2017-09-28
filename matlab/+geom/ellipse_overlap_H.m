@@ -92,6 +92,12 @@ info.ellb = ellb(:, fb_valid);
 info.ella_rep = ella_rep(:, fa_valid);
 info.ellb_rep = ellb_rep(:, fb_valid);
 
+%fix the problem that all features are not in the box. 
+%In this case, it can't pass to the next function
+if isempty(info.ella)||isempty(info.ellb)
+    return;
+end
+
 if ~opts.normaliseFrames
   % When frames are not normalised, account the descriptor region
   magFactor = opts.magnification^2;
