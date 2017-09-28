@@ -10,7 +10,7 @@ DATADIR = 'WebcamRelease';
 NUMSEQUENCES = 6;
 
 opts.url = 'https://documents.epfl.ch/groups/c/cv/cvlab-unit/www/data/keypoints/WebcamRelease.tar.gz';
-opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-webcam');
+opts.rootDir = fullfile(vlb_path('datasets'), 'webcam');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});

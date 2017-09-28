@@ -1,4 +1,4 @@
-function [ res ] = resize(patches, varargin)
+function [ res ] = p_resize(patches, varargin)
 opts.numbins = 4;
 opts = vl_argparse(opts, varargin);
 res = struct('descName', mfilename, 'describes', 'patches', 'args', opts);

@@ -1,5 +1,8 @@
 data
+vendor
+datasets
 *.mexa64
 *~
 *.o
 .build
+vlfeat

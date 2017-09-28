@@ -20,7 +20,7 @@ function imdb = hannoverh(varargin)
 %       2011
 
 
-opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-hannover');
+opts.rootDir = fullfile(vlb_path('datasets'), 'hannover');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});

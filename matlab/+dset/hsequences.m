@@ -12,7 +12,7 @@ DATADIR = 'hpatches-sequences-release';
 NUMSEQUENCES = 116;
 
 opts.url = 'http://www.iis.ee.ic.ac.uk/~vbalnt/hpatches/hpatches-sequences-release.tar.gz';
-opts.rootDir = fullfile(vlb_path(), 'data', 'dataset-hsequences');
+opts.rootDir = fullfile(vlb_path('datasets'), 'hsequences');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});

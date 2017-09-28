@@ -1,4 +1,4 @@
-function [ res ] = sift( patches )
+function [ res ] = p_sift( patches )
 res = struct('descName', mfilename, 'describes', 'patches', 'descs', []);
 if isempty(patches), return; end;
 

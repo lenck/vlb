@@ -1,7 +1,7 @@
 function res = ddet(img, varargin)
 
 opts.url = 'https://codeload.github.com/lenck/ddet/zip/master';
-opts.rootDir = fullfile(vlb_path(), 'data', 'ddet');
+opts.rootDir = fullfile(vlb_path('vendor'), 'ddet');
 [opts, varargin] = vl_argparse(opts, varargin);
 opts.binDir = fullfile(opts.rootDir, 'ddet-master');
 opts.netsDir = fullfile(opts.binDir, 'nets');

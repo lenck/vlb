@@ -35,6 +35,12 @@ if nargin > 0
     case 'scores'
       assert(nargin == 4, 'Invalid input (imdb, feats, bench)');
       root = fullfile(root, 'data', 'scores', benchname, imdb_name, featsname);
+    case 'datasets'
+      assert(nargin == 1, 'Too many args for datasets');
+      root = fullfile(root, 'datasets');
+    case 'vendor'
+      assert(nargin == 1, 'Too many args for vendor');
+      root = fullfile(root, 'vendor');
     otherwise
       error('Invalid set %s.', set);
   end

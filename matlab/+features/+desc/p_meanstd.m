@@ -1,6 +1,6 @@
-function [ res ] = meanstd(patches)
+function [ res ] = p_meanstd(patches)
 res = struct('descName', mfilename, 'describes', 'patches', 'descs', []);
-if isempty(patches), return; end;
+if isempty(patches), return; end
 
 patches = single(squeeze(patches));
 meanVal = reshape(mean(mean(patches, 1), 2), 1, []);

@@ -1,6 +1,6 @@
 function setup_vlfeat()
 url = 'http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz';
-rootDir = fullfile(vlb_path(), 'data', 'vlfeat');
+rootDir = fullfile(vlb_path('vendor'), 'vlfeat');
 if ~exist('vl_argparse.m', 'file')
   utls.provision(url, rootDir);
   run(fullfile(getlatest(rootDir, 'vlfeat'), 'toolbox', 'vl_setup.m'));
