@@ -19,7 +19,7 @@ vl_xmkdir(scoresdir);
 scores_path = fullfile(scoresdir, 'results.csv');
 info_path = fullfile(scoresdir, 'results.mat');
 if ~opts.override && exist(scores_path, 'file') && exist(info_path, 'file')
-  scores = readtable(scores_path); info = load(info_path);
+  scores = readtable(scores_path, 'delimiter', ','); info = load(info_path);
   fprintf('Results loaded from %s.\n', scores_path);
   return;
 end

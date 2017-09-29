@@ -189,7 +189,7 @@ for fi = 1:numel(featsname)
   if ~exist(scores_path, 'file')
     error('Scores file %s does not exist.', scores_path);
   end;
-  res{fi} = readtable(scores_path);
+  res{fi} = readtable(scores_path, 'Delimiter', ',');
 end
 res = vertcat(res{:});
 res_f = res(ismember(res.sequence, sequence), :);
@@ -218,7 +218,7 @@ for fi = 1:numel(featsname)
   if ~exist(scores_path, 'file')
     error('Scores file %s does not exist.', scores_path);
   end;
-  res{fi} = readtable(scores_path);
+  res{fi} = readtable(scores_path, 'Delimiter', ',');
   in = load(info_path); in = in.info;
   assert(numel(in) == numel(imdb.tasks), 'Invalid results.');
   info{fi} = in(taskid);
