@@ -15,6 +15,9 @@ function scales = frame_get_scale(frames)
 
 % AUTORIGHTS
 import localFeatures.helpers.*;
+if isstruct(frames)
+  frames = frames.frames;
+end
 
 if isempty(frames)
   scales = [];
