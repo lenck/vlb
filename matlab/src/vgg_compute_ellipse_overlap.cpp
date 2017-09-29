@@ -66,14 +66,14 @@ void mexFunction(int nlhs,       mxArray *plhs[],
 
   int common_part=(int)flag[0];
 
-   for(int j=0;j<dims1[1];j++){
+  for(int j=0;j<dims1[1];j++){
     for (int i=0; i<dims2[1]; i++){
       over_out[j*dims2[1]+i]=100.0;
       desc_out[j*dims2[1]+i]=1000000.0;
     }
-   }
+  }
 
-   // printf("%f %f\n",flag[0],flag[1]);
+  // printf("%f %f\n",flag[0],flag[1]);
   // total number of elements in arrays.
   /*int total = 1;
   for (int i=0; i<num_dims1; ++i){
@@ -124,61 +124,62 @@ void mexFunction(int nlhs,       mxArray *plhs[],
 
 
       if(dist<max_dist){
-	feat2a[2]=fac*feat2[f2+2];
-	feat2a[3]=fac*feat2[f2+3];
-	feat2a[4]=fac*feat2[f2+4];
-	feat2a[7] = sqrt(feat2a[4]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
-	feat2a[8] = sqrt(feat2a[2]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
-	//find the largest eigenvalue
-	float maxx=ceil((feat1a[7]>(dx+feat2a[7]))?feat1a[7]:(dx+feat2a[7]));
-	float minx=floor((-feat1a[7]<(dx-feat2a[7]))?(-feat1a[7]):(dx-feat2a[7]));
-	float maxy=ceil((feat1a[8]>(dy+feat2a[8]))?feat1a[8]:(dy+feat2a[8]));
+        feat2a[2]=fac*feat2[f2+2];
+        feat2a[3]=fac*feat2[f2+3];
+        feat2a[4]=fac*feat2[f2+4];
+        feat2a[7] = sqrt(feat2a[4]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
+        feat2a[8] = sqrt(feat2a[2]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
+        //find the largest eigenvalue
+        float maxx=ceil((feat1a[7]>(dx+feat2a[7]))?feat1a[7]:(dx+feat2a[7]));
+        float minx=floor((-feat1a[7]<(dx-feat2a[7]))?(-feat1a[7]):(dx-feat2a[7]));
+        float maxy=ceil((feat1a[8]>(dy+feat2a[8]))?feat1a[8]:(dy+feat2a[8]));
         float miny=floor((-feat1a[8]<(dy-feat2a[8]))?(-feat1a[8]):(dy-feat2a[8]));
 
-	float mina=(maxx-minx)<(maxy-miny)?(maxx-minx):(maxy-miny);
-	float dr=mina/50.0;
-	bua=0;bna=0;int t1=0,t2=0;
-	//compute the area
-	for(float rx=minx;rx<=maxx;rx+=dr){
-	  float rx2=rx-dx;t1++;
-	  for(float ry=miny;ry<=maxy;ry+=dr){
-	    float ry2=ry-dy;
-	    //compute the distance from the ellipse center
-	    float a=feat1a[2]*rx*rx+2*feat1a[3]*rx*ry+feat1a[4]*ry*ry;
-	    float b=feat2a[2]*rx2*rx2+2*feat2a[3]*rx2*ry2+feat2a[4]*ry2*ry2;
-	    //compute the area
-	    if(a<1 && b<1)bna++;
-	    if(a<1 || b<1)bua++;
-	  }
-	}
-	ov=100.0*(1-bna/bua);
+        float mina=(maxx-minx)<(maxy-miny)?(maxx-minx):(maxy-miny);
+        float dr=mina/50.0;
+        bua=0;bna=0;int t1=0,t2=0;
+        //compute the area
+        for(float rx=minx;rx<=maxx;rx+=dr){
+          float rx2=rx-dx;t1++;
+          for(float ry=miny;ry<=maxy;ry+=dr){
+            float ry2=ry-dy;
+            //compute the distance from the ellipse center
+            float a=feat1a[2]*rx*rx+2*feat1a[3]*rx*ry+feat1a[4]*ry*ry;
+            float b=feat2a[2]*rx2*rx2+2*feat2a[3]*rx2*ry2+feat2a[4]*ry2*ry2;
+            //compute the area
+            if(a<1 && b<1)bna++;
+            if(a<1 || b<1)bua++;
+          }
+        }
+        ov=100.0*(1-bna/bua);
         if (j == 0) {
           //mexPrintf("over with %d: %g\n", i, 1-ov/100.0) ;
         }
-	tover_out[j*dims2[1]+i]=ov;
-	mover_out[j*dims2[1]+i]=ov;
-	//printf("overlap %f  \n",over_out[j*dims2[1]+i]);return;
+        tover_out[j*dims2[1]+i]=ov;
+        mover_out[j*dims2[1]+i]=ov;
+        //printf("overlap %f  \n",over_out[j*dims2[1]+i]);return;
       }else {
-	tover_out[j*dims2[1]+i]=100.0;
-	mover_out[j*dims2[1]+i]=100.0;
+        tover_out[j*dims2[1]+i]=100.0;
+        mover_out[j*dims2[1]+i]=100.0;
         ov=100.0 ;
       }
+      /*
       if (i == 339-1 && j==3-1) {
         mexPrintf("\n#### %g %g %g %g %g %g %g %g\n",
                   feat1[f1],
                   feat1[f1+1],
-                  feat1[f1+2],
-                  feat1[f1+3],
-                  feat1[f1+4],
-                  feat1[f1+5],
-                  feat1[f1+6],
-                  fac) ;
+            feat1[f1+2],
+            feat1[f1+3],
+            feat1[f1+4],
+            feat1[f1+5],
+            feat1[f1+6],
+            fac) ;
         mexPrintf("#### %g %g %g\n", dist, max_dist, ov) ;
-      }
+      }*/
 
       descd=0;
       for(int v=9;v<dims1[0];v++){
-	descd+=((feat1[f1+v]-feat2[f2+v])*(feat1[f1+v]-feat2[f2+v]));
+        descd+=((feat1[f1+v]-feat2[f2+v])*(feat1[f1+v]-feat2[f2+v]));
       }
       descd=sqrt(descd);
       tdesc_out[j*dims2[1]+i]=descd;
@@ -190,25 +191,25 @@ void mexFunction(int nlhs,       mxArray *plhs[],
   int mini=0;
   int minj=0;
   do{
-      minr=100;
+    minr=100;
+    for(int j=0;j<dims1[1];j++){
+      for (int i=0; i<dims2[1]; i++) {
+        if(minr>tover_out[j*dims2[1]+i]){
+          minr=tover_out[j*dims2[1]+i];
+          mini=i;
+          minj=j;
+        }
+      }
+    }
+    if(minr<100){
       for(int j=0;j<dims1[1];j++){
-	for (int i=0; i<dims2[1]; i++) {
-	  if(minr>tover_out[j*dims2[1]+i]){
-	    minr=tover_out[j*dims2[1]+i];
-	    mini=i;
-	    minj=j;
-	  }
-	}
+        tover_out[j*dims2[1]+mini]=100;
       }
-      if(minr<100){
-	for(int j=0;j<dims1[1];j++){
-	  tover_out[j*dims2[1]+mini]=100;
-	}
-	for (int i=0; i<dims2[1]; i++){
-	  tover_out[minj*dims2[1]+i]=100;
-	}
-	over_out[minj*dims2[1]+mini]=minr;
+      for (int i=0; i<dims2[1]; i++){
+        tover_out[minj*dims2[1]+i]=100;
       }
+      over_out[minj*dims2[1]+mini]=minr;
+    }
   }while(minr<70);
 
 
@@ -217,19 +218,19 @@ void mexFunction(int nlhs,       mxArray *plhs[],
     minr=1000000;
     for(int j=0;j<dims1[1];j++){
       for (int i=0; i<dims2[1]; i++){
-	if(minr>tdesc_out[j*dims2[1]+i]){
-	  minr=tdesc_out[j*dims2[1]+i];
-	  mini=i;
-	  minj=j;
-	}
+        if(minr>tdesc_out[j*dims2[1]+i]){
+          minr=tdesc_out[j*dims2[1]+i];
+          mini=i;
+          minj=j;
+        }
       }
     }
     if(minr<1000000){
       for(int j=0;j<dims1[1];j++){
-	tdesc_out[j*dims2[1]+mini]=1000000;
-	}
+        tdesc_out[j*dims2[1]+mini]=1000000;
+      }
       for (int i=0; i<dims2[1]; i++){
-	tdesc_out[minj*dims2[1]+i]=1000000;
+        tdesc_out[minj*dims2[1]+i]=1000000;
       }
       desc_out[minj*dims2[1]+mini]=dnbr++;//minr
     }
@@ -245,5 +246,5 @@ void mexFunction(int nlhs,       mxArray *plhs[],
 //Stupid dummy main function. Otherwise will tigger a linking error on MAC OS
 int main()
 {
-    return 0;
+  return 0;
 }
