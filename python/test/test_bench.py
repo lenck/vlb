@@ -20,10 +20,11 @@ if __name__ == "__main__":
     bench = repBench.repBench()
     
     #bench.detect_feature(vggh,vlsift_matlab)
-    result = bench.evaluate(vggh,vlsift_all)
+    result = bench.evaluate(vggh,vlsift_all,use_cache = False, save_result = True)
     result = [result,result]
     bench.print_result(result)
-    bench.save_result(result)
+    #bench.print_result_sequence(result,'bikes')
+    #bench.save_result(result)
 
     #feature,descriptor = vlsift_all.extract_all(image)
     #print(feature.shape, descriptor.shape)
