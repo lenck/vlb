@@ -66,8 +66,10 @@ class Benchmark():
             os.makedirs('{}{}/{}/'.format(self.tmp_feature_dir, dataset.name, detector.name))
         except:
             pass
-
-        for sequence in tqdm(dataset):
+        
+        pbar = tqdm(dataset)
+        for sequence in pbar:
+            pbar.set_description("Extract feature for {} in {} with {}".format(sequence.name, dataset.name, detector.name))
             for image in sequence.images():
                 image = image[1]
                 feature_file_name = '{}{}/{}/{}_{}_frame'.format(self.tmp_feature_dir,\
