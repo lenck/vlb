@@ -81,7 +81,6 @@ if opts.cropFrames
   end
   fa_valid = utls.ellipse_in_bbox(ella, bba) & utls.ellipse_in_bbox(ella_rep, bbb);
   fb_valid = utls.ellipse_in_bbox(ellb_rep, bba) & utls.ellipse_in_bbox(ellb, bbb);
-  if isempty(ella) || isempty(ellb), return; end
 end
 
 info.fa_valid = fa_valid;
@@ -91,6 +90,7 @@ info.ella = ella(:, fa_valid);
 info.ellb = ellb(:, fb_valid);
 info.ella_rep = ella_rep(:, fa_valid);
 info.ellb_rep = ellb_rep(:, fb_valid);
+if all(~fa_valid) || all(~fb_valid), return; end
 
 %fix the problem that all features are not in the box. 
 %In this case, it can't pass to the next function

@@ -35,7 +35,7 @@ res.detName = 'vggmser'; res.args = opts;
 if isempty(img), res.frames = zeros(5, 0); return; end;
 
 % Constants
-BIN_DIR = fullfile(vlb_path(), 'data','vgg_mser');
+BIN_DIR = fullfile(vlb_path('vendor'), 'vgg_mser');
 switch(computer)
   case  {'GLNX86','GLNXA64'}
     BIN_PATH = fullfile(BIN_DIR, 'mser.ln');

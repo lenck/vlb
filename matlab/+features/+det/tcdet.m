@@ -2,7 +2,7 @@ function res = tcdet(img, varargin)
 % Dependecies in Python: tensorflow, scikit-image, opencv-python
 
 opts.url = 'https://codeload.github.com/ColumbiaDVMM/Transform_Covariant_Detector/zip/master';
-opts.rootDir = fullfile(vlb_path(), 'data', 'tcdet');
+opts.rootDir = fullfile(vlb_path('vendor'), 'tcdet');
 [opts, varargin] = vl_argparse(opts, varargin);
 opts.binDir = fullfile(opts.rootDir, 'Transform_Covariant_Detector-master/');
 opts.netsDir = fullfile(opts.binDir, 'tensorflow_model');
@@ -37,7 +37,7 @@ actpath = pwd;
 try
   cd(opts.runDir);
   [ret, out] = system(cmd);
-  res.frames = tcdet_rundet(img, featsname);
+  [res.frames, res.detresponses] = tcdet_rundet(img, featsname);
 catch 
   cd(actpath);
 end

@@ -152,29 +152,27 @@ res = res.info(taskid);
 if nargout == 0
   task = imdb.tasks(taskid);
   imaid = dset.utls.getimid(imdb, task.ima);
-  featsa = utls.features_load(fullfile(feats_path, imdb.images(imaid).name));
   imbid = dset.utls.getimid(imdb, task.imb);
-  featsb = utls.features_load(fullfile(feats_path, imdb.images(imbid).name));
   
   subplot(1,2,1);
   imshow(imdb.images(imaid).path); hold on;
 
-  vl_plotframe(featsa.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  vl_plotframe(featsa.frames(:, res.fa_valid), 'LineWidth', 1, 'Color', 'blue');
-  vl_plotframe(res.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(res.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
-  title('IM-A');
+  vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
+  vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
+  vl_plotframe(res.geom.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
+  vl_plotframe(res.geom.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
+  title(['IM-A ', featsname], 'Interpreter', 'none');
   
   subplot(1,2,2);
   imshow(imdb.images(imbid).path); hold on;
   
-  la = zeros(4, 1);
-  la(1) = vl_plotframe(featsb.frames, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  la(2) = vl_plotframe(featsb.frames(:, res.fb_valid), 'LineWidth', 1, 'Color', 'blue');
-  la(3) = vl_plotframe(res.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
-  la(4) = vl_plotframe(res.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
-  title('IM-B');
-  legend(la, 'Detected', 'Valid', 'Matched-Reproj.', 'Matched-Detected');
+  la = [];
+  la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
+  la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
+  la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
+  la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  title(['IM-B ' featsname], 'Interpreter', 'none');
+  legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
 end
 end
 
