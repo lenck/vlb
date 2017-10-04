@@ -22,22 +22,22 @@ class vlsift_matlab(DetectorAndDescriptor):
     def detect_feature(self, image):
         image = Utils.all_to_gray(image)
         image = image/255.0
-        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), nargout = 2)#, peak_thresh=self.peak_thresh
+        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), peak_thresh=self.peak_thresh, nargout = 2)#, peak_thresh=self.peak_thresh
         feature =np.transpose(np.array(feature))
         return feature
 
     def extract_descriptor(self, image, feature):
         image = Utils.all_to_gray(image)
         image = image/255.0
-        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), nargout = 2)#, peak_thresh=self.peak_thresh
+        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), peak_thresh=self.peak_thresh, nargout = 2)#, peak_thresh=self.peak_thresh
         descriptor =np.transpose(np.array(descriptor))
         return descriptor
 
     def extract_all(self, image):
         image = Utils.all_to_gray(image)
         image = image/255.0
-        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), nargout = 2)#, peak_thresh=self.peak_thresh
+        feature, descriptor = eng.vl_sift(matlab.single(image.tolist()), peak_thresh=self.peak_thresh, nargout = 2)#
         feature =np.transpose(np.array(feature))
         descriptor =np.transpose(np.array(descriptor))
-        return feature, descriptor_vector
+        return feature, descriptor
 

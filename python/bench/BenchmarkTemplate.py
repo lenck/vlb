@@ -11,7 +11,7 @@ import matlab.engine
 import csv
 import numpy as np
 from abc import ABCMeta, abstractmethod
-
+import os
 from tqdm import tqdm
 import hickle as hkl
 
@@ -73,7 +73,9 @@ class Benchmark():
         except:
             pass
 
-        for sequence in dataset:
+        pbar = tqdm(dataset)
+        for sequence in pbar:
+            pbar.set_description("Extract feature for {} in {} with {}".format(sequence.name, dataset.name, detector.name))
             for image in sequence.images():
                 image = image[1]
                 feature_file_name = '{}{}/{}/{}_{}_frame'.format(self.tmp_feature_dir, dataset.name,\
@@ -95,21 +97,22 @@ class Benchmark():
                 
         return feature_dict
 
-    def extract_descriptor(self, dataset, descriptor, use_cache = False, save_feature = True):
+    def extract_descriptor(self, dataset, detector, use_cache = False, save_feature = True):
         feature_dict = {}
         descriptor_dict = {}
+        
         try:
             os.makedirs('{}{}/{}/'.format(self.tmp_feature_dir, dataset.name, detector.name))
         except:
             pass
 
-        for sequence in dataset:
+        for sequence in tqdm(dataset):
             for image in sequence.images():
                 image = image[1]
-                feature_file_name = '{}{}/{}/{}_{}_frame'.format(self.tmp_feature_dir, dataset.name,\
-                        detector.name, sequence.name, image.idx)
-                descriptor_file_name = '{}{}/{}/{}_{}_descriptor'.format(self.tmp_feature_dir, dataset.name,\
-                        detector.name, sequence.name, image.idx)
+                feature_file_name = '{}{}/{}/{}_{}_frame'.format(self.tmp_feature_dir,\
+                        dataset.name, detector.name, sequence.name, image.idx)
+                descriptor_file_name = '{}{}/{}/{}_{}_descriptor'.format(self.tmp_feature_dir,\
+                        dataset.name, detector.name, sequence.name, image.idx)
                 get_feature_flag = False
                 if use_cache:
                     try:
@@ -128,9 +131,11 @@ class Benchmark():
                     if save_feature:
                         np.save(feature_file_name,feature)
                         np.save(descriptor_file_name,descriptor)
+                #print(feature.shape)
+                #print(descriptor.shape)
                 feature_dict['{}_{}'.format(sequence.name,image.idx)] = feature
                 descriptor_dict['{}_{}'.format(sequence.name,image.idx)] = descriptor
-                
+         
         return feature_dict, descriptor_dict
 
     def load_feature(self, dataset_name, sequence_name, image, detector):
@@ -160,17 +165,17 @@ class Benchmark():
             use_cache = True, save_result = True):
         
         if extract_descriptor:
-            feature_dict, descriptor_dict = self.detect_feature(dataset,detector, use_cache, save_result)
+            feature_dict, descriptor_dict = self.extract_descriptor(dataset, detector, use_cache = True, save_feature = save_result)
         else:
-            feature_dict = self.detect_feature(dataset,detector, use_cache = True, save_feature = True)
+            feature_dict = self.detect_feature(dataset,detector, use_cache = use_cache, save_feature = save_result)
 
         try:
-            os.makedirs('{}detrep/{}/{}/'.format(self.result_dir, dataset.name, detector.name))
+            os.makedirs('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
         except:
             pass
 
         get_result_flag = False
-        result_file_name = '{}detrep/{}/{}/repeatability.hkl'.format(self.result_dir, dataset.name, detector.name)
+        result_file_name = '{}{}/{}/{}/{}.hkl'.format(self.result_dir, self.bench_name, dataset.name, detector.name, self.test_name)
 
         if use_cache:
             try:

@@ -202,6 +202,9 @@ class SequenceDataset():
                 this_link.matlab_task['ima_size'] = matlab.double([image_a.image_data.shape[0], image_a.image_data.shape[1], imga_ch])
                 this_link.matlab_task['imb_size'] = matlab.double([image_b.image_data.shape[0], image_b.image_data.shape[1], imgb_ch])
                 #print(this_link.transform_matrix.tolist())
+                ##for bad test
+                #this_link.transform_matrix = np.eye(3)
+                #print(this_link.transform_matrix)
                 this_link.matlab_task['H'] = matlab.double(this_link.transform_matrix.tolist())
                 this_link.matlab_task['name'] = str(sequence.name)
                 this_link.matlab_task['description'] = {}
