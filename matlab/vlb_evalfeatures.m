@@ -1,6 +1,5 @@
 function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 
-
 % Copyright (C) 2017 Karel Lenc
 % All rights reserved.
 %
