@@ -1,7 +1,7 @@
 """
 The module is the basic interface for benchmark
 
-It contains basic input and output funtion and display function.
+It contains basic wrapper function.
 
 Author: Xu Zhang
 
@@ -123,7 +123,8 @@ class Benchmark():
             np.save(descriptor_file_name,descriptor)
 
         return descriptor
-
+    
+    #Evaluation warpper
     def evaluate_warpper(self, dataset, detector, result_list, extract_descriptor = False,
             use_cache = True, save_result = True):
          
@@ -136,10 +137,9 @@ class Benchmark():
             os.makedirs('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
         except:
             pass
-
+        
         get_result_flag = False
         result_file_name = '{}{}/{}/{}/{}.hkl'.format(self.result_dir, self.bench_name, dataset.name, detector.name, self.test_name)
-
         if use_cache:
             try:
                 result = hkl.load(open(result_file_name,'r'))
@@ -157,7 +157,8 @@ class Benchmark():
             result['sequence_result'] = []
             for result_name in result_list:
                 result['ave_{}'.format(result_name)] = 0.0
-
+            
+            #work with each sequence
             pbar = tqdm(dataset)
             for sequence in pbar:
                 pbar.set_description("Processing {} in {} for {}".format(sequence.name, dataset.name, detector.name))
@@ -173,6 +174,7 @@ class Benchmark():
                 except:
                     pass
 
+                #for each link
                 for link in sequence.links():
                     link = link[1]
                     task = link.matlab_task
@@ -185,6 +187,7 @@ class Benchmark():
                     sequence_result['result_link_id_list'].append("{}_{}".format(link.source, link.target))
                     sequence_result['result_label_list'].append(dataset.get_image(sequence.name, link.target))
                     
+                    #simple evaluation function for each test
                     if extract_descriptor:
                         result_number_list = self.evaluate_unit((feature_1,descriptor_1), (feature_2,descriptor_2), task)
                     else:
@@ -198,7 +201,7 @@ class Benchmark():
                     result['ave_{}'.format(result_name)] = result['ave_{}'.format(result_name)]+sequence_result['ave_{}'.format(result_name)]
 
                 result['sequence_result'].append(sequence_result)
-
+            # get average result
             for result_name in result_list: 
                 result['ave_{}'.format(result_name)] = result['ave_{}'.format(result_name)]/len(result['sequence_result'])
                 print('ave {} {}'.format(result_name,result['ave_{}'.format(result_name)]))

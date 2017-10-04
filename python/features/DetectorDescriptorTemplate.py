@@ -1,3 +1,9 @@
+"""
+The module is the detector and descriptor wrapper
+
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os

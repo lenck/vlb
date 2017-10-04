@@ -1,3 +1,9 @@
+"""
+The module defines all print and draw function for showing the result
+
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os

@@ -1,3 +1,9 @@
+"""
+The module is the repeatability benchmark
+
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os

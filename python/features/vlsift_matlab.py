@@ -1,3 +1,8 @@
+"""
+vlsift matlab version python wrapper
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os

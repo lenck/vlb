@@ -1,3 +1,9 @@
+"""
+Basic function for feature detector and descriptor
+
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os
@@ -11,6 +17,7 @@ def all_to_gray(image):
     if image.shape[2] == 4:
         image = image[:,:,:3]
     if image.shape[2] == 3:
+        #cv version of color convert seems slightly different from the one in Matlab.
         image = rgb2gray(image)#cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
     return image
 

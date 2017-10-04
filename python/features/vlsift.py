@@ -1,3 +1,8 @@
+"""
+vlsift cython version
+Author: Xu Zhang
+"""
+
 import numpy as np
 import json
 import os
