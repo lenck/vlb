@@ -45,7 +45,17 @@ end
 
 [scores, info ] = bench.detrep(matchGeom, feats_a, feats_b);
 info.geomMatches = info.matches;
-if isempty(info.geomMatches), return; end;
+
+%Need to set this, otherwise benchmark will missing member.
+ms = 0.0;
+nm = 0;
+if isempty(info.geomMatches)
+    scores.matchingScore = ms; 
+    scores.numMatches = nm;
+    info.matches = [];
+    info.descMatches = [];
+    return; 
+end;
 fa = fa(:, info.fa_valid); da = da(:, info.fa_valid);
 fb = fb(:, info.fb_valid); db = db(:, info.fb_valid);
 
@@ -84,5 +94,6 @@ switch opts.normFactor
   otherwise
     error('Invalid `normFactor`.');
 end
-scores.matchingScore = ms; scores.numMatches = nm;
-scores.numCorresp = info.numCorresp;
+scores.matchingScore = ms; 
+scores.numMatches = nm;
+%scores.numCorresp = info.numCorresp;
