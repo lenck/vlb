@@ -3,15 +3,15 @@ import json
 import os
 import cv2
 
+#import pdb
+
 def all_to_gray(image):
-    
     if len(image.shape)==2:
         return image
-    
     if image.shape[2] == 4:
         image = image[:,:,:3]
     if image.shape[2] == 3:
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+        image = rgb2gray(image)#cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
     return image
 
 def all_to_BGR(image):
@@ -36,3 +36,9 @@ def extract_patch(img, kp, patch_sz = 32, rectigy_flag = False):
     if rectigy_flag:
         res = rectify_patch(res, kp, patch_sz)
     return np.asarray(res)
+
+def rgb2gray(img):
+    #pdb.set_trace()
+    img_gray = np.average(img, weights=[0.2989, 0.5870, 0.1140], axis=2)
+    #img_gray = img_gray.astype(np.uint8)
+    return img_gray

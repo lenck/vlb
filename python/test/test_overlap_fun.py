@@ -10,7 +10,7 @@ sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/features/'
 
 import vgg_dataset
 import vlsift
-import Utils
+import feature_utils
 
 if __name__ == "__main__":
     eng = matlab.engine.start_matlab()
@@ -18,14 +18,14 @@ if __name__ == "__main__":
     a = vgg_dataset.vggh_Dataset()
     image = a.get_image('bark','1')
     print(image.shape)
-    image = Utils.all_to_gray(image)
+    image = feature_utils.all_to_gray(image)
     #image = image/255.0
     #feature_1, descriptor_1 = eng.vl_sift(matlab.single(image.tolist()),nargout = 2)
     #feature_1 = np.transpose(np.array(feature_1))
     vlsift_all = vlsift.vlsift()
     feature_1, descriptor_1 = vlsift_all.extract_all(image)
     image = a.get_image('bark','6')
-    image = Utils.all_to_gray(image)
+    image = feature_utils.all_to_gray(image)
     #image = image/255.0
     #feature_2, descriptor_2 = eng.vl_sift(matlab.single(image.tolist()), nargout = 2)
     #feature_2 = np.transpose(np.array(feature_2))

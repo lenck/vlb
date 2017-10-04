@@ -6,7 +6,7 @@ It contains basic input and output funtion and display function.
 Author: Xu Zhang
 
 """
-
+import matlab
 import matlab.engine
 import csv
 import numpy as np
@@ -27,45 +27,6 @@ class Benchmark():
         self.tmp_feature_dir = tmp_feature_dir
         self.result_dir = result_dir
     
-    def print_table(self, content_list):
-        if len(content_list)==0:
-            return
-
-        max_detector_name_len = 8
-        max_sequence_name_len = 6
-
-        for content in content_list:
-            if len(content[0])>max_detector_name_len:
-                max_detector_name_len = len(content[0])
-
-        content = content_list[0][1:]
-        for sequence_name in content:
-            if len(sequence_name)>max_sequence_name_len:
-                max_sequence_name_len = len(sequence_name)
-
-        content = content_list[0]
-        title_str = ''
-        for idx, this_str in enumerate(content):
-            if idx == 0:
-                title_str = "|{}|".format(this_str.ljust(max_detector_name_len)[:max_detector_name_len])
-            else:
-                title_str = title_str+"{}|".format(this_str.ljust(max_sequence_name_len)[:max_sequence_name_len]) 
-                
-        print('-'*len(title_str))
-        print(title_str)
-        print('-'*len(title_str))
-        content_str = ''
-        for content in content_list[1:]:
-            for idx, this_str in enumerate(content):
-                if idx == 0:
-                    content_str = "|{}|".format(this_str.ljust(max_detector_name_len)[:max_detector_name_len])
-                else:
-                    content_str = content_str + "{}|".format(this_str.ljust(max_sequence_name_len)[:max_sequence_name_len])
-            print(content_str)
-
-        print('-'*len(title_str))
-        return
-   
     def detect_feature(self, dataset, detector, use_cache = False, save_feature = True):
         feature_dict = {}
         try:
@@ -90,7 +51,7 @@ class Benchmark():
                         
                 if not get_feature_flag:
                     feature = detector.detect_feature(image.image_data)
-                    print(feature.shape)
+                    #print(feature.shape)
                     if save_feature:
                         np.save(feature_file_name,feature)
                 feature_dict['{}_{}'.format(sequence.name,image.idx)] = feature
@@ -163,9 +124,9 @@ class Benchmark():
 
     def evaluate_warpper(self, dataset, detector, result_list, extract_descriptor = False,
             use_cache = True, save_result = True):
-        
+         
         if extract_descriptor:
-            feature_dict, descriptor_dict = self.extract_descriptor(dataset, detector, use_cache = True, save_feature = save_result)
+            feature_dict, descriptor_dict = self.extract_descriptor(dataset, detector, use_cache = use_cache, save_feature = save_result)
         else:
             feature_dict = self.detect_feature(dataset,detector, use_cache = use_cache, save_feature = save_result)
 
@@ -186,11 +147,9 @@ class Benchmark():
                 get_result_flag = False
 
         if not get_result_flag:
-            #if BenchmarkTemplate.eng is None:
-            #    BenchmarkTemplate.eng = matlab.engine.start_matlab()
-            #    BenchmarkTemplate.eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
             result = {}
             result['dataset_name'] = dataset.name
+            result['result_term_list'] = result_list
             result['task_name'] = self.name
             result['detector_name'] = detector.name
             result['sequence_result'] = []
@@ -248,30 +207,14 @@ class Benchmark():
 
         return result
 
-    @abstractmethod
-    def evaluate_unit(feature_1, feature_2, task):
-        pass
-
-    @abstractmethod
-    def print_result_sequence(result,results,sequence):
-        pass
-
-    @abstractmethod
-    def print_result(self,results):
-        pass
-
-    @abstractmethod
-    def save_result(self,results):
-        pass
-    
     def print_and_save_result(results):
         self.print_result(results)
         self.save_result(results)
 
     @abstractmethod
-    def get_str_list(self,results):
+    def evaluate(self, dataset, detector):
         pass
 
     @abstractmethod
-    def evaluate(self, dataset, detector):
+    def evaluate_unit(feature_1, feature_2, task):
         pass

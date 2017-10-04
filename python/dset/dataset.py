@@ -7,6 +7,8 @@ import exifread
 import matlab
 from abc import ABCMeta, abstractmethod
 
+import scipy.ndimage
+
 class Image:
     idx = ''
     image_data = None
@@ -126,10 +128,15 @@ class SequenceDataset():
             sequence = self.sequences[sequence_name]
             for image_id in sequence.image_id_list:
                 try:
-                    img = cv2.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
-                    #print('{}{}/{}'.format(self.root_dir, self.name, image_file.filename))
-                    if img.shape[2] == 4 :
-                        img = img[:,:,:3]
+                    #opencv image read cause issue when read pgm file
+                    #img = cv2.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
+                    img = scipy.ndimage.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
+                    #print('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
+                    #print(img.shape)
+                    if len(img.shape) == 3:
+                        if img.shape[2] == 4:
+                            img = img[:,:,:3]
+
                     _, file_extension = os.path.splitext(sequence.image_dict[image_id].filename)
 
                     if file_extension == 'jpg' or file_extension == 'JPG' \
