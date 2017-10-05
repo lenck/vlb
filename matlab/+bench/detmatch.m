@@ -44,7 +44,10 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+%change this, return repeatability score will overwrite old one
+[rep_scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+scores.repeatability = rep_scores.repeatability;
+scores.numCorresp = rep_scores.numCorresp;
 info.rep = ri;
 info.geom = ri.geom;
 
