@@ -34,8 +34,9 @@ fa = feats_a.frames; fb = feats_b.frames;
 da = feats_a.descs; db = feats_b.descs;
 
 info = struct('rep', [], 'geom', [], 'descMatches', [], 'matches', []); 
-scores = struct('repeatability', [], 'numCorresp', [], ...
-  'matchingScore', [], 'numMatches', []);
+%set the defualt value to 0 instead of empty array seems more reasonable?
+scores = struct('repeatability', 0, 'numCorresp', 0, ...
+  'matchingScore', 0, 'numMatches', 0);
 
 if isempty(fa) || isempty(fb), return; end
 if isempty(da) || isempty(db), return; end
@@ -43,10 +44,15 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+%change this, return repeatability score will overwrite old one
+[rep_scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+scores.repeatability = rep_scores.repeatability;
+scores.numCorresp = rep_scores.numCorresp;
 info.rep = ri;
 info.geom = ri.geom;
-if isempty(ri.matches), return; end
+
+if isempty(ri.matches),return;end
+
 fa = fa(:, ri.geom.fa_valid); da = da(:, ri.geom.fa_valid);
 fb = fb(:, ri.geom.fb_valid); db = db(:, ri.geom.fb_valid);
 
