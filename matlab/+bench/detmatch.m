@@ -91,4 +91,5 @@ switch opts.normFactor
   otherwise
     error('Invalid `normFactor`.');
 end
+
 scores.matchingScore = ms; scores.numMatches = nm;

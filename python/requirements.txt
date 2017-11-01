@@ -1,0 +1,10 @@
+cyvlfeat==0.4.6
+hickle==2.1.0
+plotly==2.0.15
+numpy==1.13.0
+tqdm==4.14.0
+scipy==0.18.1
+ExifRead==2.1.2
+opencv_contrib_python==3.2.0.7
+matplotlib==1.5.1
+matlab==0.1

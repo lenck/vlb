@@ -61,7 +61,23 @@ Furthermore, you can extract the features outside of this framework in order to 
 
 ## Compile Conflicts
 `mex` command may be recognized as `mex` command in texlive. Make sure that the matlab/bin path is added to system PATH before the directory of mex in texlive.
+  
 
 ## Running the tests
 To run the tests, call:
 `vlb_test`.
+
+## Python Interface
+### Requirement
+Rightnow, our python interface is based on some scripts in matlab. We will remove the dependences later. To run our python code, [python-matlab engine](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html) should be installed.
+
+Install other requirements
+
+```
+pip install -r ./python/requirements.txt 
+```
+
+###Test the code
+```
+python ./python/test/test_ms_bench.py
+```
