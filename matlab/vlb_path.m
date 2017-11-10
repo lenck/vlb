@@ -1,6 +1,26 @@
 function root = vlb_path(set, imdb, featsname, benchname)
 %VLB_ROOT Get the root path of the VLB toolbox.
 %   VLB_ROOT() returns the path to the VLB toolbox.
+%
+%   Otherwise can return paths to particular data locations of the VLB. In
+%   all cases, several specifiers are required:
+%     IMDBNM:  structure or a string, specifying the image database
+%     FEATSNM: structure or a string, specifying the local features
+%     FEATSNM: string, specifying the benchmark
+
+%   To access the benchmark data and results one can call:
+%   VLB_ROOT('features', IMDBNM, FEATSNM) returns features path
+%   VLB_ROOT('patches', IMDBNM, FEATSNM) returns patches path
+%   VLB_ROOT('results', IMDBNM, FEATSNM, BENCHNM) returns patches path
+%
+%   By default, all data are stored in a path relative to the location of
+%   this script. This can be overriden with an environment variable
+%   VLB_DATAROOT.
+%
+%   Additionally one can acces:
+%   VLB_ROOT('datasets') returns the image database path
+%   VLB_ROOT('vendor') returns the third party library path.
+
 
 % Copyright (C) 2017 Karel Lenc.
 % All rights reserved.
@@ -9,6 +29,15 @@ function root = vlb_path(set, imdb, featsname, benchname)
 % the terms of the BSD license (see the COPYING file).
 
 root = fileparts(fileparts(mfilename('fullpath'))) ;
+
+% Allow to store data per project with a environment variable
+env_scoresroot = getenv('VLB_DATAROOT');
+if ~isempty(env_scoresroot)
+  dataroot = strtrim(env_scoresroot);
+else
+  dataroot = fullfile(root, 'data');
+end
+
 if nargin > 0
   if nargin > 1
     assert(isstruct(imdb) && isfield(imdb, 'name'), 'Invalid imdb');
@@ -31,10 +60,10 @@ if nargin > 0
   switch set
     case {'features', 'patches'}
       assert(nargin == 3, 'Invalid args (imdb, feats)');
-      root = fullfile(root, 'data', set, imdb_name, featsname);
+      root = fullfile(dataroot, set, imdb_name, featsname);
     case 'scores'
       assert(nargin == 4, 'Invalid input (imdb, feats, bench)');
-      root = fullfile(root, 'data', 'scores', benchname, imdb_name, featsname);
+      root = fullfile(dataroot, 'scores', benchname, imdb_name, featsname);
     case 'datasets'
       assert(nargin == 1, 'Too many args for datasets');
       root = fullfile(root, 'datasets');

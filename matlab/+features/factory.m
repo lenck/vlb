@@ -7,6 +7,7 @@ function [ res, varargin ] = factory( type, name, varargin )
 assert(ismember(type, {'det', 'desc', 'detdesc'}));
 opts.([type, 'Name']) = '';
 opts.([type, 'Args']) = {};
+opts.rootpackage = 'features';
 [opts, varargin] = vl_argparse(opts, varargin);
 funargs = opts.([type, 'Args']);
 
@@ -16,10 +17,10 @@ if isstruct(name)
   assert(isfield(res, 'name') && isfield(res, 'fun'), ...
     'Invalid algorithm structure, must contain `name` and `fun`.');
   return;
-end;
+end
 switch class(name)
   case 'char'
-    fname = ['features.', type, '.' strtrim(name)];
+    fname = [opts.rootpackage '.', type, '.' strtrim(name)];
     fun = str2func(fname);
   case 'function_handle'
     fun = name;
