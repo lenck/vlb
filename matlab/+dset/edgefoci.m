@@ -59,7 +59,7 @@ end
 
 imdb.images = cell2mat(imdb.images);
 imdb.tasks = cell2mat(imdb.tasks);
-imdb.name = 'webcam';
+imdb.name = 'edgefoci';
 imdb.matchFramesFun = opts.matchFramesFun;
 imdb.geometry = 'homography';
 imdb.rootdir = opts.rootDir;
