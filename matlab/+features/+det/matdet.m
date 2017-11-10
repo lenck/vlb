@@ -24,7 +24,7 @@ fp = fun(img, varargin{:});
 res.frames = double(fp.Location');
 if isprop(fp, 'Scale'), res.frames = [res.frames; fp.Scale']; end
 if isprop(fp, 'Orientation'), res.frames = [res.frames; fp.Orientation']; end
-if isprop(fp, 'Metric'), res.peakScores = fp.Metric'; end
+if isprop(fp, 'Metric'), res.detresponses = fp.Metric'; end
 if isprop(fp, 'Axes') % MSER
   res.frames = [double(fp.Location'); zeros(4, numel(fp.Orientation))];
   for fi = 1:numel(fp.Orientation)
