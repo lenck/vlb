@@ -9,6 +9,7 @@ dets.fast = @detectFASTFeatures;
 dets.surf = @detectSURFFeatures;
 dets.brisk = @detectBRISKFeatures;
 dets.mser = @detectMSERFeatures;
+dets.harris = @detectHarrisFeatures;
 
 if ~isfield(dets, opts.detector)
   error('Invalid detector. Valid options are: %s', strjoin(fieldnames(dets)));
