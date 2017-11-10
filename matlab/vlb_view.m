@@ -69,7 +69,7 @@ patches_path = vlb_path('patches', imdb, featsname);
 if ~exist(patches_path, 'dir')
   error('No patches in %s.', patches_path);
 end
-if nargin < 3, error('Imid not specified.'); end;
+if nargin < 3, error('Imid not specified.'); end
 imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
 res = utls.patches_load(fullfile(patches_path, [imname, '.png']));

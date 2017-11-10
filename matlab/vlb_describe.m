@@ -19,8 +19,8 @@ dest_feats_name = fullfile(featsname, descriptor.name);
 desc_dest_dir = vlb_path('features', imdb, dest_feats_name);
 vl_xmkdir(desc_dest_dir);
 
-fprintf('Computing descriptor %s for %d sets of %s frames.\n', ...
-  descriptor.name, numel(impaths), featsname);
+fprintf('Computing descriptor `%s` for %d images of features `%s` from a dset `%s`.\n', ...
+  descriptor.name, numel(impaths), featsname, imdb.name);
 fprintf('Resulting features are going to be stored in:\n%s.\n', desc_dest_dir);
 status = utls.textprogressbar(numel(impaths), 'startmsg', ...
   sprintf('Computing %s ', descriptor.name), 'updatestep', 1);

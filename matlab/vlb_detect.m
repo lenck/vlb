@@ -13,8 +13,8 @@ dest_dir = vlb_path('features', imdb, detector);
 dest_feats_name = detector.name;
 vl_xmkdir(dest_dir);
 
-fprintf('Computing detections %s for %d images.\n', ...
-  detector.name, numel(impaths));
+fprintf('Running detector `%s` for %d images of dset `%s`.\n', ...
+  detector.name, numel(impaths), imdb.name);
 fprintf('Resulting features are going to be stored in:\n%s.\n', dest_dir);
 status = utls.textprogressbar(numel(impaths), 'startmsg', ...
   sprintf('Computing %s ', detector.name), 'updatestep', 1);
