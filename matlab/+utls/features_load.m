@@ -13,7 +13,7 @@ if ~isempty(opts.compulsoryFields)
   compulsoryFnames = cellfun(@(cf) [imname, '.', cf], ...
     opts.compulsoryFields, 'Uni', false);
   if any(~ismember(compulsoryFnames, {files.name}))
-    return;
+     features = []; return;
   end
 end
 
