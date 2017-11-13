@@ -9,6 +9,7 @@ function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 allargs = varargin;
 opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
+opts.loadOnly = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
@@ -22,6 +23,10 @@ if ~opts.override && exist(scores_path, 'file') && exist(info_path, 'file')
   scores = readtable(scores_path, 'delimiter', ','); info = load(info_path);
   fprintf('Results loaded from %s.\n', scores_path);
   return;
+end
+if opts.loadOnly
+  warning('Results %s not found.', scores_path);
+  scores = table(); info = struct(); return;
 end
 
 fprintf('Running %d tasks of %s on %s for %s features.\n', ...
