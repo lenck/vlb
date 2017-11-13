@@ -2,13 +2,15 @@ function dest_feats_name = vlb_detect(imdb, detector, varargin)
 import features.*;
 
 opts.override = false;
+opts.imids = [];
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
+if isempty(opts.imids), opts.imids = 1:numel(imdb.images); end
 detector = features.factory('det', detector, varargin{:});
 
-impaths = {imdb.images.path};
-imnames = {imdb.images.name};
+impaths = {imdb.images(opts.imids).path};
+imnames = {imdb.images(opts.imids).name};
 dest_dir = vlb_path('features', imdb, detector);
 dest_feats_name = detector.name;
 vl_xmkdir(dest_dir);
