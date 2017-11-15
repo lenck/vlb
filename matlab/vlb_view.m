@@ -136,6 +136,7 @@ end
 
 function res = view_matches(benchname, imdb, featsname, taskid, varargin)
 imdb = dset.factory(imdb);
+if isstruct(featsname), featsname = featsname.name; end;
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
 info_path = fullfile(scoresdir, 'results.mat');
 feats_path = vlb_path('features', imdb, featsname);

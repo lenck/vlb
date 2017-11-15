@@ -6,6 +6,7 @@ opts.override = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
+if isstruct(featsname), featsname = featsname.name; end;
 if iscell(featsname), featsname = fullfile(featsname); end;
 impaths = {imdb.images.path};
 imnames = {imdb.images.name};
