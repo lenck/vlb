@@ -28,6 +28,8 @@ opts.normFactor = 'minab';
 opts.matchGeometry = true;
 opts.matchDescriptors = @utls.match_greedy; 
 opts.geomMode = 'descriptors';
+opts.topn = inf;
+opts.forceTopn = false;
 opts = vl_argparse(opts, varargin);
 
 fa = feats_a.frames; fb = feats_b.frames;
@@ -43,7 +45,16 @@ if size(fa, 2) ~= size(da, 2) || size(fb,2) ~= size(db,2)
   obj.error('Number of frames and descriptors must be the same.');
 end
 
-[scores, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+if ~isinf(opts.topn) && isfield(feats_a, 'detresponses') && ...
+    isfield(feats_b, 'detresponses')
+  feats_a = utls.topnframes(feats_a, opts.topn);
+  feats_b = utls.topnframes(feats_b, opts.topn);
+elseif ~isinf(opts.topn) && opts.forceTopn
+  error('Features do not have `detresponses` fields for a topn.');
+end
+
+[scores_r, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+scores = vl_override(scores, scores_r);
 info.rep = ri;
 info.geom = ri.geom;
 if isempty(ri.matches), return; end
