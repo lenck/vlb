@@ -2,6 +2,7 @@ function [ res ] = matdet( img, varargin )
 %MATDET Summary of this function goes here
 %   Detailed explanation goes here
 opts.detector = 'fast';
+opts.defScale  = 3;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 dets = struct();
@@ -22,9 +23,16 @@ if size(img, 3) > 1, img = rgb2gray(img); end;
 fp = fun(img, varargin{:});
 
 res.frames = double(fp.Location');
-if isprop(fp, 'Scale'), res.frames = [res.frames; fp.Scale']; end
+if isprop(fp, 'Scale')
+  res.frames = [res.frames; fp.Scale'];
+else
+  res.frames = [res.frames; opts.defScale*ones(1, size(res.frames, 2))];
+end
 if isprop(fp, 'Orientation'), res.frames = [res.frames; fp.Orientation']; end
-if isprop(fp, 'Metric'), res.detresponses = fp.Metric'; end
+if isprop(fp, 'Metric')
+  res.detresponses = fp.Metric';
+  assert(numel(res.detresponses) == size(res.frames, 2));
+end
 if isprop(fp, 'Axes') % MSER
   res.frames = [double(fp.Location'); zeros(4, numel(fp.Orientation))];
   for fi = 1:numel(fp.Orientation)
