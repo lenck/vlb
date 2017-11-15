@@ -15,6 +15,8 @@ import csv
 import matlab
 import matlab.engine
 
+#import pdb
+
 class repBench(Benchmark):
     def __init__(self, tmp_feature_dir = './features/', result_dir = './python_scores/'):
         super(repBench,self).__init__(name = 'Repeatability', tmp_feature_dir = tmp_feature_dir, result_dir = result_dir)
@@ -30,7 +32,7 @@ class repBench(Benchmark):
         else:
             tcorr, corr_score, info = BenchmarkTemplate.eng.geom.ellipse_overlap_H(task, matlab.double(np.transpose(feature_1).tolist()),\
                     matlab.double(np.transpose(feature_2).tolist()), 'maxOverlapError', 0.5, nargout=3)
-            
+            #pdb.set_trace()            
             corr_score = np.squeeze(np.array(corr_score))
             if corr_score.size==0:
                 rep = 0.0

@@ -15,7 +15,8 @@ import os
 from tqdm import tqdm
 import hickle as hkl
 
-eng = None
+#import pdb
+
 eng = matlab.engine.start_matlab()
 eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
 
@@ -50,7 +51,13 @@ class Benchmark():
                         get_feature_flag = False
                         
                 if not get_feature_flag:
-                    feature = detector.detect_feature(image.image_data)
+                    if detector.csv_flag:
+                        feature_csv_name = './data/{}/{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,\
+                            detector.name, sequence.name, image.idx)
+                        feature = self.load_csv_feature(feature_csv_name)
+                        #pdb.set_trace()
+                    else:
+                        feature = detector.detect_feature(image.image_data)
                     #print(feature.shape)
                     if save_feature:
                         np.save(feature_file_name,feature)
@@ -86,11 +93,19 @@ class Benchmark():
                         get_feature_flag = False
                         
                 if not get_feature_flag:
-                    if detector.is_both:
-                        feature, descriptor = detector.extract_all(image.image_data)
+                    if detector.csv_flag:
+                        feature_csv_name = './data/{}/{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,\
+                            detector.name, sequence.name, image.idx)
+                        feature = self.load_csv_feature(feature_csv_name)
+                        descriptor_csv_name = './data/{}/{}/{}/{}-{}.descs.csv'.format(self.tmp_feature_dir, dataset.name,\
+                            detector.name, sequence.name, image.idx)
+                        descriptor = self.load_csv_feature(descriptor_csv_name)
                     else:
-                        feature = detector.detect_feature(image.image_data)
-                        descriptor = detector.extract_descriptor(image.image_data, feature = feature)
+                        if detector.is_both:
+                            feature, descriptor = detector.extract_all(image.image_data)
+                        else:
+                            feature = detector.detect_feature(image.image_data)
+                            descriptor = detector.extract_descriptor(image.image_data, feature = feature)
                     if save_feature:
                         np.save(feature_file_name,feature)
                         np.save(descriptor_file_name,descriptor)
@@ -101,6 +116,15 @@ class Benchmark():
          
         return feature_dict, descriptor_dict
 
+    def load_csv_feature(self,csv_feature_file):
+        feature = []
+        with open(csv_feature_file) as f:
+            for line in f:
+                tmp_list = line.split(';')
+                float_list = [float(i) for i in tmp_list]
+                feature.append(float_list)
+        return np.asarray(feature)
+    
     def load_feature(self, dataset_name, sequence_name, image, detector):
         feature_file_name = '{}{}/{}/{}_{}_frame'.format(self.tmp_feature_dir, dataset_name,\
                         detector.name, sequence_name, image.idx)
@@ -186,7 +210,10 @@ class Benchmark():
 
                     sequence_result['result_link_id_list'].append("{}_{}".format(link.source, link.target))
                     sequence_result['result_label_list'].append(dataset.get_image(sequence.name, link.target))
-                    
+                    #for debug
+                    #print("{}: {}_{}".format(sequence.name, link.source, link.target))
+                    #if sequence.name == 'wall' and link.source=='1' and link.target == '2':
+                    #    pdb.set_trace()
                     #simple evaluation function for each test
                     if extract_descriptor:
                         result_number_list = self.evaluate_unit((feature_1,descriptor_1), (feature_2,descriptor_2), task)
@@ -194,6 +221,8 @@ class Benchmark():
                         result_number_list = self.evaluate_unit(feature_1, feature_2, task)
                     
                     for result_name, result_number in zip(result_list, result_number_list):
+                        #for debug
+                        #print('{}: {}'.format(result_name, result_number))
                         sequence_result[result_name].append(result_number)
 
                 for result_name in result_list:
@@ -204,7 +233,8 @@ class Benchmark():
             # get average result
             for result_name in result_list: 
                 result['ave_{}'.format(result_name)] = result['ave_{}'.format(result_name)]/len(result['sequence_result'])
-                print('ave {} {}'.format(result_name,result['ave_{}'.format(result_name)]))
+                #for debug
+                #print('ave {} {}'.format(result_name,result['ave_{}'.format(result_name)]))
 
             if save_result:
                 with open(result_file_name, "w") as output_file:
