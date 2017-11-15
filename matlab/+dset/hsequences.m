@@ -16,6 +16,7 @@ opts.rootDir = fullfile(vlb_path('datasets'), 'hsequences');
 opts.matchFramesFun = @(g) ...
   @(fa, fb, varargin) geom.ellipse_overlap_H(g, fa, fb, ...
   'maxOverlapError', 0.5, varargin{:});
+opts.category = '';
 opts = vl_argparse(opts, varargin);
 
 utls.provision(opts.url, opts.rootDir);
@@ -39,6 +40,9 @@ for sIdx = 1:numel(sequences)
     category = 'viewpoint';
   else
     error('Invalid category');
+  end
+  if ~isempty(opts.category) && ~strcmp(category, opts.category)
+    continue;
   end
   for imi_l = 1:NUMIMSEQ
     imPath = getImPath(sequence, imi_l);
@@ -70,6 +74,9 @@ end
 imdb.images = cell2mat(imdb.images);
 imdb.tasks = cell2mat(imdb.tasks);
 imdb.name = 'hpatches-sequences';
+if ~isempty(opts.category)
+  imdb.name = [imdb.name, '-', opts.category];
+end
 imdb.matchFramesFun = opts.matchFramesFun;
 imdb.geometry = 'homography';
 imdb.rootdir = opts.rootDir;
