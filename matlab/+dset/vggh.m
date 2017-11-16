@@ -64,6 +64,7 @@ for catIdx = 1:numel(sequences)
   dset = sequences(catIdx);
   refim = imi;
   dsetDir = fileparts(getImPath(dset, 1));
+  imSizeRef = [];
   for imi_l = 1:6
     imPath = getImPath(dset, imi_l);
     assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
@@ -72,13 +73,18 @@ for catIdx = 1:numel(sequences)
     imdb.images{imi}.path = imPath;
     imdb.images{imi}.seqnum = imi_l;
     imdb.images{imi}.sequence = dset.name;
-    if imi_l == 1, imi = imi + 1; continue; end;
+    if imi_l == 1
+        imi = imi + 1;
+        %Size of the first image may not be the same as other images.
+        imSizeRef =  utls.get_image_size(imPath);
+        continue; 
+    end;
     imSize =  utls.get_image_size(imPath);
     tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi_l)));
     imdb.tasks{end+1} = struct('ima', imdb.images{refim}.name, ...
       'imb', imdb.images{imi}.name, ...
       'ima_id', refim, 'imb_id', imi, 'H', tfs, ...
-      'ima_size', imSize, 'imb_size', imSize, ...
+      'ima_size', imSizeRef, 'imb_size', imSize, ...
       'sequence', dset.name, ...
       'description', struct('impair', [1, imi_l], ...
       'nuisanceName', dset.description, 'nuisanceValue', dset.labels{imi_l}));

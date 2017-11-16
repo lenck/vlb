@@ -14,6 +14,7 @@ import matlab.engine
 import matlab
 import csv
 from tqdm import tqdm
+import cv2
 
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
@@ -73,6 +74,44 @@ def print_result_sequence(results, sequence_name, term_to_show, figure_num = 1, 
     plt.savefig('{}{}/{}/{}_{}_result.png'.format(result_dir,\
             results[0]['bench_name'], results[0]['dataset_name'], sequence_name, term_to_show))
     plt.clf()
+
+def draw_feature(dataset, sequence_name, image_idx, detector, use_cache = True, figure_num = 1,\
+        tmp_feature_dir = './features/', result_dir = './python_image/'):
+
+    image = dataset.get_image(sequence_name, image_idx) 
+    feature_file_name = '{}{}/{}/{}_{}_frame'.format(tmp_feature_dir,\
+                        dataset.name, detector.name, sequence_name, image_idx)
+
+    get_feature_flag = False
+    if use_cache:
+        try:
+            feature = np.load(feature_file_name+'.npy')
+            get_feature_flag = True
+        except:
+            get_feature_flag = False
+            
+    if not get_feature_flag:
+        feature = detector.detect_feature(image)
+    
+    kp_list = [cv2.KeyPoint(p[1],p[0],p[2],p[3]) for p in feature]
+
+    draw_image = np.copy(image)
+    #draw_image = draw_image[...,::-1]
+    #draw_image = draw_image.copy()
+    if len(draw_image.shape)==3:
+        draw_image = (draw_image[...,::-1]).copy()
+
+    try:
+        os.makedirs('{}{}/{}/'.format(result_dir, dataset.name, detector.name))
+    except:
+        pass
+    
+    draw_image=cv2.drawKeypoints(draw_image, kp_list, draw_image,flags = cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    
+    image_file_name = '{}{}/{}/{}_{}_frame.png'.format(result_dir,\
+                        dataset.name, detector.name, sequence_name, image_idx)
+
+    cv2.imwrite(image_file_name, draw_image)
 
 def print_result(results, term_to_show):
     if len(results) ==0 :

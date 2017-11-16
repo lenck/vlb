@@ -15,11 +15,12 @@ from abc import ABCMeta, abstractmethod
 
 class DetectorAndDescriptor():
     __metaclass__ = ABCMeta 
-    def __init__(self, name, is_detector = False, is_descriptor = False, is_both = True):
+    def __init__(self, name, is_detector = False, is_descriptor = False, is_both = True, csv_flag = False):
         self.name = name
         self.is_detector = is_detector
         self.is_descriptor = is_descriptor
         self.is_both = is_both
+        self.csv_flag = csv_flag
 
     @abstractmethod
     def detect_feature(self, image):

@@ -1,4 +1,4 @@
-function [ size ] = imageSize(imagePath)
+function [ imgSize ] = imageSize(imagePath)
 %IMAGESIZE Get image size helper
 %   SIZE = IMAGESIZE(IMAGEPATH) returns size of the image defined by path
 %   IMAGEPATH. Size is defined as size of Matlab matrix, i.e. as
@@ -16,7 +16,8 @@ switch info.ColorType
   case 'indexed'
     numPlanes = 3;
 end
+%Change size to imgsize to avoid potential conflict with matlab size()
+imgSize = [info.Height, info.Width numPlanes];
 
-size = [info.Height, info.Width numPlanes];
 end
 
