@@ -30,7 +30,7 @@ opts.matchDescriptors = @utls.match_greedy;
 opts.geomMode = 'descriptors';
 opts.topn = inf;
 opts.forceTopn = false;
-opts = vl_argparse(opts, varargin);
+[opts, varargin] = vl_argparse(opts, varargin);
 
 fa = feats_a.frames; fb = feats_b.frames;
 da = feats_a.descs; db = feats_b.descs;
@@ -53,7 +53,7 @@ elseif ~isinf(opts.topn) && opts.forceTopn
   error('Features do not have `detresponses` fields for a topn.');
 end
 
-[scores_r, ri] = bench.detrep(matchGeom, feats_a, feats_b);
+[scores_r, ri] = bench.detrep(matchGeom, feats_a, feats_b, varargin{:});
 scores = vl_override(scores, scores_r);
 info.rep = ri;
 info.geom = ri.geom;
