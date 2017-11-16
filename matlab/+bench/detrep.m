@@ -23,7 +23,8 @@ function [ scores, info ] = detrep( matchFrames, feats_a, feats_b, varargin )
 opts.normFactor = 'minab';
 opts.topn = inf;
 opts.forceTopn = false;
-opts = vl_argparse(opts, varargin);
+opts.magnifyFrames = [];
+[opts, varargin] = vl_argparse(opts, varargin);
 
 info.geom = []; 
 info.tcorr = zeros(2, 0);  info.corr_score = zeros(1, 0);
@@ -37,8 +38,12 @@ if ~isinf(opts.topn) && isfield(feats_a, 'detresponses') && ...
 elseif ~isinf(opts.topn) && opts.forceTopn
   error('Features do not have `detresponses` fields for a topn.');
 end
+if ~isempty(opts.magnifyFrames)
+  feats_a.frames = utls.frame_magnify_scale(feats_a.frames, opts.magnifyFrames);
+  feats_b.frames = utls.frame_magnify_scale(feats_b.frames, opts.magnifyFrames);
+end
 feats_a.descs = []; feats_b.descs = [];
-[tcorr, corr_score, info.geom] = matchFrames(feats_a.frames, feats_b.frames);
+[tcorr, corr_score, info.geom] = matchFrames(feats_a.frames, feats_b.frames, varargin{:});
 info.tcorr = tcorr;  info.corr_score = corr_score;
 fa_num = sum(info.geom.fa_valid); fb_num = sum(info.geom.fb_valid);
 if isempty(tcorr), return; end
