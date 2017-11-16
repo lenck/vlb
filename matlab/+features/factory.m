@@ -27,9 +27,14 @@ switch class(name)
   otherwise
     error('Invalid detdesc');
 end
-assert(nargout(fun) >= 1, 'Feature wrapper does not return meta information.');
+try
+  nout = nargout(fun);
+catch
+  error('Invalid %s: %s - Function not found', type, fname);
+end
+assert(nout >= 1, 'Feature wrapper does not return meta information.');
 func_nargin = nargin(fun);
-if func_nargin < 0, func_nargin = abs(func_nargin) - 1; end;
+if func_nargin < 0, func_nargin = abs(func_nargin) - 1; end
 switch func_nargin
   case 1
     f = fun([], funargs{:});
