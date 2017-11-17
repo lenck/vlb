@@ -50,9 +50,16 @@ for ti = 1:numel(imdb.tasks)
 end
 
 scores = struct2table(cell2mat(scores), 'AsArray', true);
-writetable(scores, scores_path);
-info = cell2mat(info);
-save(info_path, 'info');
+try
+  writetable(scores, scores_path);
+  info = cell2mat(info);
+  save(info_path, 'info');
+catch e
+  fprintf('Cleaning up %s due to error', scoresdir);
+  if exist(scores_path, 'file'), delete(scores_path); end
+  if exist(info_path, 'file'), delete(info_path); end
+  throw(e);
+end
 
 end
 
