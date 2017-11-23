@@ -148,6 +148,8 @@ if taskid < 1 || taskid > numel(imdb.tasks)
   error('Invalid task id %d', taskid);
 end
 
+scores = readtable(fullfile(scoresdir, 'results.csv'));
+scores = scores(taskid, :); display(scores);
 res = load(info_path);
 res = res.info(taskid);
 if nargout == 0
