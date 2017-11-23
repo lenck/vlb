@@ -17,8 +17,8 @@ if ~isfield(dets, opts.detector)
 end
 fun = dets.(opts.detector);
 res.detName = sprintf('matdet-%s', opts.detector);
-if isempty(img), res.frames = zeros(6, 0); return; end;
-if size(img, 3) > 1, img = rgb2gray(img); end;
+if isempty(img), res.frames = zeros(6, 0); return; end
+if size(img, 3) > 1, img = rgb2gray(img); end
 
 fp = fun(img, varargin{:});
 
