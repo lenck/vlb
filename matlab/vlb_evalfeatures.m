@@ -18,9 +18,14 @@ if isstruct(feats), featsname = feats.name; else featsname = feats; end;
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
 scores_path = fullfile(scoresdir, 'results.csv');
-info_path = fullfile(scoresdir, 'results.mat');
-if ~opts.override && exist(scores_path, 'file') && exist(info_path, 'file')
-  scores = readtable(scores_path, 'delimiter', ','); info = load(info_path);
+res_exists = exist(scores_path, 'file');
+if nargout > 1
+  info_path = fullfile(scoresdir, 'results.mat');
+  res_exists = res_exists && exist(info_path, 'file');
+end
+if ~opts.override && res_exists
+  scores = readtable(scores_path, 'delimiter', ',');
+  if nargout > 1, info = load(info_path); end
   fprintf('Results loaded from %s.\n', scores_path);
   return;
 end
