@@ -28,7 +28,7 @@ if count ~= 12 * numPoints, error('Invalid frames format.'); end
 % X Y CORNERNESS SCALE/3 ANGLE TYPE LAP EXTR M11 M12 M21 M22
 frames = zeros(6, numPoints);
 frames(1:2,:) = data(1:2,:) + 1;
-frames(3:6,:) =  data(9:12, :).*data(4, :) * 3;
+frames(3:6,:) =  bsxfun(@times, data(9:12, :), data(4, :)) .* 3;
 out.frames = utls.frame2ellipse(frames);
 
 out.detresponses = data(3, :);
