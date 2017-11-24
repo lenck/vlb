@@ -24,6 +24,9 @@ if ~isempty(getenv('SGE_TASK_ID')) && ~isempty(getenv('SGE_TASK_LAST')) ...
     task_first, task_id, task_last, ...
     size(idxs, 1), task_sz, ...
     min(tasks_sel), max(tasks_sel));
+  % Shuffle indexes with a fixed seed so that the tasks are evenly distributed
+  s = RandStream('mt19937ar', 'Seed', 0);
+  idxs = idxs(randperm(s, size(idxs, 1)), :);
   idxs = idxs(tasks_sel, :);
 end
 
