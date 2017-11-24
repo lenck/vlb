@@ -18,9 +18,9 @@ if isstruct(feats), featsname = feats.name; else featsname = feats; end;
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
 scores_path = fullfile(scoresdir, 'results.csv');
+info_path = fullfile(scoresdir, 'results.mat');
 res_exists = exist(scores_path, 'file');
 if nargout > 1
-  info_path = fullfile(scoresdir, 'results.mat');
   res_exists = res_exists && exist(info_path, 'file');
 end
 if ~opts.override && res_exists
