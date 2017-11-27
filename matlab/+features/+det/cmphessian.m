@@ -117,7 +117,7 @@ else
 end
 fclose(fid);
 res.type = frames(1,:);
-res.detresponse = frames(2,:);
+res.detresponses = frames(2,:);
 res.frames = frames(3:end,:);
 res.frames(1:2,:) = res.frames(1:2,:) + 1; % Convert to Matlab coordinates
 
