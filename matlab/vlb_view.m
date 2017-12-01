@@ -149,9 +149,14 @@ if taskid < 1 || taskid > numel(imdb.tasks)
 end
 
 scores = readtable(fullfile(scoresdir, 'results.csv'));
-scores = scores(taskid, :); display(scores);
 res = load(info_path);
-res = res.info(taskid);
+if size(scores, 1) == numel(imdb.tasks)
+  scores = scores(taskid, :);
+  res = res.info(taskid);
+else
+  res = res.info;
+end
+display(scores);
 if nargout == 0
   task = imdb.tasks(taskid);
   imaid = dset.utls.getimid(imdb, task.ima);
@@ -160,10 +165,12 @@ if nargout == 0
   subplot(1,2,1);
   imshow(imdb.images(imaid).path); hold on;
 
+  ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
   vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
   vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  vl_plotframe(res.geom.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(res.geom.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
+  vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
+  vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
+  line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'k', 'LineWidth', 1);
   title(['IM-A ', featsname], 'Interpreter', 'none');
   
   subplot(1,2,2);
