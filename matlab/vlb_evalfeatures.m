@@ -10,6 +10,7 @@ allargs = varargin;
 opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
 opts.loadOnly = false;
+opts.taskids = 1:numel(imdb.tasks);
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
@@ -35,11 +36,11 @@ if opts.loadOnly
 end
 
 fprintf('Running %d tasks of %s on %s for %s features.\n', ...
-  numel(imdb.tasks), opts.benchName, imdb.name, featsname);
+  numel(opts.taskids), opts.benchName, imdb.name, featsname);
 status = utls.textprogressbar(numel(imdb.tasks), 'updatestep', 1);
-scores = cell(1, numel(imdb.tasks)); info = cell(1, numel(imdb.tasks));
-for ti = 1:numel(imdb.tasks)
-  task = imdb.tasks(ti);
+scores = cell(1, numel(opts.taskids)); info = cell(1, numel(opts.taskids));
+for ti = 1:numel(opts.taskids)
+  task = imdb.tasks(opts.taskids(ti));
   fa = getfeats(imdb, featsname, task.ima);
   fb = getfeats(imdb, featsname, task.imb);
   matchGeom = imdb.matchFramesFun(task); % Returns a functor
@@ -60,7 +61,7 @@ try
   info = cell2mat(info);
   save(info_path, 'info');
 catch e
-  fprintf('Cleaning up %s due to error', scoresdir);
+  fprintf('Cleaning up %s due to error', e.message);
   if exist(scores_path, 'file'), delete(scores_path); end
   if exist(info_path, 'file'), delete(info_path); end
   throw(e);
