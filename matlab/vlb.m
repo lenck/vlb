@@ -1,4 +1,4 @@
-function res = vlb(cmd, varargin)
+function [res, info] = vlb(cmd, varargin)
 
 % Copyright (C) 2016-2017 Karel Lenc
 % All rights reserved.
@@ -38,6 +38,8 @@ if strcmp(cmd, 'commands'), res = cmds; return; end;
 if isfield(cmds, cmd) && ~isempty(cmds.(cmd).fun)
   if nargout == 1
     res = cmds.(cmd).fun(varargin{:});
+  elseif nargout == 2
+    [res, info] = cmds.(cmd).fun(varargin{:});
   else
     cmds.(cmd).fun(varargin{:});
   end
