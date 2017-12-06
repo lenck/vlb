@@ -8,7 +8,8 @@ opts.binDir = fullfile(opts.rootDir, 'Transform_Covariant_Detector-master/');
 opts.netsDir = fullfile(opts.binDir, 'tensorflow_model');
 opts.runDir = fullfile(opts.binDir, 'tensorflow');
 [opts, varargin] = vl_argparse(opts, varargin);
-opts.point_number = 1000;
+opts.point_number = 4000;
+opts.thr = 1.2;
 opts = vl_argparse(opts, varargin);
 
 res.detName = 'tcdet'; res.args = opts; res.frames = zeros(5, 0);
@@ -32,12 +33,13 @@ scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_eval.py')
 copyfile(scriptPath, opts.runDir);
 scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_rundet.m');
 copyfile(scriptPath, opts.runDir);
-cmd = sprintf('python tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
+cmd = sprintf('env --unset=LD_LIBRARY_PATH python tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
 actpath = pwd;
 try
   cd(opts.runDir);
-  [ret, out] = system(cmd);
-  [res.frames, res.detresponses] = tcdet_rundet(img, featsname);
+  [ret, out] = system(cmd, '-echo');
+  [res.frames, res.detresponses] = tcdet_rundet(img, featsname, ...
+    opts.point_number, opts.thr);
 catch 
   cd(actpath);
 end

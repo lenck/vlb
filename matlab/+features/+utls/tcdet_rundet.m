@@ -1,10 +1,12 @@
-function [frames, score] = tcdet_rundet(imagepath, featspath, point_number)
+function [frames, score] = tcdet_rundet(imagepath, featspath, point_number, thr)
 
 % Source: https://github.com/ColumbiaDVMM/Transform_Covariant_Detector/blob/master/tensorflow/point_extractor.m
 % Author: Xu Zhang
 % Adjusted for a single image calls: Karel Lenc
 
-if ~exist('point_numer', 'var'), point_number = 1000; end;
+if ~exist('point_number', 'var'), point_number = 1000; end
+if ~exist('thr', 'var'), thr = 1000; end
+
 maxsize = 1024*768;
 %Change this to your own vlfeat folder
 
@@ -91,7 +93,7 @@ for p = 1:pyramid_level
     end
   end
   [vote, binary_img] = ApplyNonMax2Score(vote);
-  binary_img = binary_img.*(vote>1.2);
+  binary_img = binary_img.*(vote>thr);
   
   vote = reshape(vote,1,output_width*output_height);
   grid_x = reshape(grid_x,1,output_width*output_height);
