@@ -10,6 +10,8 @@ opts.runDir = fullfile(opts.binDir, 'tensorflow');
 [opts, varargin] = vl_argparse(opts, varargin);
 opts.point_number = 4000;
 opts.thr = 1.2;
+opts.gpu = [];
+opts.unset_ld = false; % Set true if segfaults, has to be false for CUDA
 opts = vl_argparse(opts, varargin);
 
 res.detName = 'tcdet'; res.args = opts; res.frames = zeros(5, 0);
@@ -33,7 +35,10 @@ scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_eval.py')
 copyfile(scriptPath, opts.runDir);
 scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_rundet.m');
 copyfile(scriptPath, opts.runDir);
-cmd = sprintf('env --unset=LD_LIBRARY_PATH python tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
+if iscell(opts.gpu), opts.gpu = strjoin(opts.gpu, ','); end
+addcmd = '';
+if opts.unset_ld, addcmd = '--unset=LD_LIBRARY_PATH '; end;
+cmd = sprintf('env %s CUDA_DEVICE_ORDER="PCI_BUS_ID" CUDA_VISIBLE_DEVICES=%s python tcdet_eval.py "%s" --save_feature "%s"', addcmd, opts.gpu, imname, featsname);
 actpath = pwd;
 try
   cd(opts.runDir);
