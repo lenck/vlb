@@ -1,5 +1,5 @@
 function res = tcdet(img, varargin)
-% Dependecies in Python: tensorflow, scikit-image, opencv-python
+% Dependecies in Python: tensorflow, scikit-image, opencv-python, exifread
 
 opts.url = 'https://codeload.github.com/ColumbiaDVMM/Transform_Covariant_Detector/zip/master';
 opts.rootDir = fullfile(vlb_path('vendor'), 'tcdet');
@@ -34,8 +34,9 @@ copyfile(scriptPath, opts.runDir);
 scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_rundet.m');
 copyfile(scriptPath, opts.runDir);
 
-cmd = sprintf('python tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
-utls.sysrun(cmd, 'runDir', opts.runDir, varargin{:});
+cmd = sprintf('python2 tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
+env = struct(); %env = struct('LD_LIBRARY_PATH', '/users/karel/anaconda3/lib');
+utls.sysrun(cmd, 'runDir', opts.runDir, 'unset_ld', false, 'env', env, varargin{:});
 
 actpath = pwd;
 try
