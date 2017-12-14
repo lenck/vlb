@@ -6,16 +6,22 @@ opts.gpu = [];
 opts.unset_ld = isempty(opts.gpu); % Set true if segfaults, has to be false for CUDA
 opts.runDir = pwd();
 opts.verbose = false;
+opts.env = struct();
 opts = vl_argparse(opts, varargin);
 
 if ~isempty(opts.gpu)
-  opts.gpu = cellfun(@num2str, opts.gpu - 1, 'Uni', false);
+  opts.gpu = arrayfun(@num2str, opts.gpu - 1, 'Uni', false);
   opts.gpu = strjoin(opts.gpu, ',');
 end
+
+env.CUDA_DEVICE_ORDER = 'PCI_BUS_ID';
+env.CUDA_VISIBLE_DEVICES = opts.gpu;
+env = vl_override(env, opts.env);
+envstr = envstring(env);
+
 addcmd = '';
 if opts.unset_ld, addcmd = '--unset=LD_LIBRARY_PATH '; end
-fullcmd = sprintf('env %s CUDA_DEVICE_ORDER="PCI_BUS_ID" CUDA_VISIBLE_DEVICES=%s %s', ...
-  addcmd, opts.gpu, cmd);
+fullcmd = sprintf('env %s %s %s', addcmd, envstr, cmd);
 info.fullcmd = fullcmd;
 
 actpath = pwd;
@@ -42,3 +48,10 @@ end
 
 end
 
+function str = envstring(env)
+flds = fieldnames(env);
+str = '';
+for fi = 1:numel(flds)
+  str = [str flds{fi}, '=', env.(flds{fi}), ' '];
+end
+end

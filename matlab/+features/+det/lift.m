@@ -22,32 +22,34 @@ utls.provision(opts.url, opts.rootDir, 'forceExt', '.zip');
 name = tempname;
 imname = [name, '.png'];
 imwrite(img, imname);
-featsname = [name, '.mat'];
+featsname = [name, '.txt'];
 
-scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_eval.py');
-copyfile(scriptPath, opts.runDir);
-scriptPath = fullfile(vlb_path, 'matlab', '+features', '+utls', 'tcdet_rundet.m');
-copyfile(scriptPath, opts.runDir);
-
-cmd = sprintf('%s tcdet_eval.py "%s" --save_feature "%s"', opts.pythoncmd, imname, featsname);
-utls.sysrun(cmd, 'runDir', opts.runDir, varargin{:});
-
-actpath = pwd;
-try
-  cd(opts.runDir);
-  [res.frames, res.detresponses] = tcdet_rundet(img, featsname, ...
-    opts.point_number, opts.thr);
-catch e
-  cd(actpath);
-  throw(e);
-end
-cd(actpath);
-
-res.frames(1:2,:) = bsxfun(@minus, res.frames(1:2,:), padding');
-res.frames(:, res.frames(1,:) < 0 | res.frames(2,:) < 0) = [];
-res.frames(:, res.frames(1,:) > imsz(2) | res.frames(2,:) > imsz(1)) = [];
-
+cmd = sprintf('%s compute_detector.py "%s" "%s" "%s" 0 1 0 "%s" %d', ...
+  opts.pythoncmd, ...
+  opts.confPath, imname, featsname, opts.modelPath, opts.numKeypoints);
+utls.sysrun(cmd, 'runDir', opts.pythonDir, varargin{:});
+res = frames_read(featsname);
 delete(imname);
 delete(featsname);
+end
 
+
+function [out] = frames_read(framesFile)
+fid = fopen(framesFile, 'r');
+if fid==-1, error('Could not read file: %s\n', framesFile); end
+[header, count] = fscanf(fid, '%f', 2);
+if count ~= 2
+  fclose(fid);
+  error('Invalid frames format.');
+end
+numPoints = header(2);
+[data, count] = fscanf(fid,'%f', [13, numPoints]);
+fclose(fid);
+if count ~= 13 * numPoints, error('Invalid frames format.'); end
+% Transform the frame properly
+% X Y CORNERNESS SCALE/3 ANGLE TYPE LAP EXTR M11 M12 M21 M22
+out.frames = zeros(4, numPoints);
+out.frames(1:2,:) = data(1:2,:) + 1;
+out.frames(3:4,:) = data(3:4, :);
+out.detresponses = data(5, :);
 end

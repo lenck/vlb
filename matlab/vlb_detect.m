@@ -1,10 +1,12 @@
-function dest_feats_name = vlb_detect(imdb, detector, varargin)
+function [dest_feats_name, info] = vlb_detect(imdb, detector, varargin)
 import features.*;
 
 opts.override = false;
 opts.imids = [];
+opts.catchErrs = false;
 [opts, varargin] = vl_argparse(opts, varargin);
 
+info = struct('failed', {{}});
 imdb = dset.factory(imdb);
 if isempty(opts.imids), opts.imids = 1:numel(imdb.images); end
 detector = features.factory('det', detector, varargin{:});
@@ -30,7 +32,16 @@ for si = 1:numel(impaths)
     status(si); continue;
   end
   im = imread(impath);
-  feats = detector.fun(im);
+  if opts.catchErrs
+    try
+      feats = detector.fun(im);  
+    catch e
+      info.failed{end+1} = struct('impath', impath, 'error', e);
+      continue;
+    end
+  else
+    feats = detector.fun(im);
+  end
   utls.features_save(feats_path, feats);
   status(si);
 end
