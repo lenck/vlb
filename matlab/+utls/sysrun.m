@@ -1,4 +1,4 @@
-function [ out ] = sysrun( cmd, varargin )
+function [ out, info ] = sysrun( cmd, varargin )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 opts.gpu = [];
@@ -16,15 +16,20 @@ addcmd = '';
 if opts.unset_ld, addcmd = '--unset=LD_LIBRARY_PATH '; end
 fullcmd = sprintf('env %s CUDA_DEVICE_ORDER="PCI_BUS_ID" CUDA_VISIBLE_DEVICES=%s %s', ...
   addcmd, opts.gpu, cmd);
+info.fullcmd = fullcmd;
 
 actpath = pwd;
 try
   cd(opts.runDir);
   if opts.verbose
     fprintf('Running:\n%s\n', fullcmd);
+    tic;
     [ret, out] = system(fullcmd, '-echo');
+    info.time = toc;
   else
+    tic;
     [ret, out] = system(fullcmd);
+    info.time = toc;
   end
 catch e
   cd(actpath);
