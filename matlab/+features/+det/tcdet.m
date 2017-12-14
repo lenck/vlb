@@ -42,10 +42,10 @@ res.time = info.time;
 actpath = pwd;
 try
   cd(opts.runDir);
-  tic;
+  stime = tic;
   [res.frames, res.detresponses] = tcdet_rundet(img, featsname, ...
     opts.point_number, opts.thr);
-  res.time = res.time + toc;
+  res.dettime = res.time + toc(stime);
 catch e
   cd(actpath);
   throw(e);

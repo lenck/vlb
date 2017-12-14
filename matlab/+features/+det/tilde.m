@@ -34,11 +34,13 @@ if ~exist('ApplyLearnedELLFilter', 'file')
   setup_path;
 end
 
+stime = tic;
 [ binary_res, score ] = ApplyLearnedELLFilter(img, -inf, opts.fullPathFilter, false );
 idx = find(binary_res);
 [I, J] = ind2sub(size(binary_res), idx);
 features = [J I zeros(size(I,1),3) repmat(opts.fixed_scale, size(I,1), 1)]';
 features = mergeScoreImg2Keypoints(features, score);
+res.dettime = stime;
 
 res.detresponses = features(5, :);
 res.frames = [features(1:2, :); features(end, :)];

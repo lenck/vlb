@@ -15,6 +15,7 @@ opts = vl_argparse(opts, varargin);
 res.detName = sprintf('random-%s', opts.frameType); res.args = opts;
 if isempty(img), res.frames = zeros(5, 0); return; end
 
+stime = tic;
 q = RandStream('mt19937ar','Seed', opts.seed);
 
 imgSize = size(img);
@@ -58,6 +59,6 @@ switch opts.frameType
     error('Invalid frame type');
 end
 res.detresponses = rand(1, numFeatures);
-
+res.dettime = toc(stime);
 end
 

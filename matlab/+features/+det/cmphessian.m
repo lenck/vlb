@@ -46,10 +46,8 @@ end
 
 args = [args sprintf(' -i "%s" ',imgFile)];
 cmd = [ BinPath ' ' args];
-[status,msg] = system(cmd);
-if status
-  error('%d: %s: %s', status, cmd, msg) ;
-end
+[~, info] = utls.sysrun(cmd);
+res.dettime = info.time;
 
 res = readFeaturesAffDeNormFile(featFile);
 delete(featFile); delete(imgFile);

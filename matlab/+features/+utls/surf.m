@@ -35,9 +35,9 @@ if ~isempty(feats)
   args = [args ' -p1 ', framesPath];
 end
 cmd = [opts.binPath ' ' args];
-[status, msg] = system(cmd);
-if status ~= 0, error('%d: %s: %s', status, cmd, msg); end
+[~, info] = utls.sysrun(cmd);
 [res.frames, res.descs] = legacy.vgg_features_read(outFeaturesFile,'FloatDesc',true);
+res.time = info.time;
 delete(outFeaturesFile);
 delete(imagePath);
 if ~isempty(feats), delete(framesPath); end;

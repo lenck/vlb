@@ -51,20 +51,15 @@ if opts.threshold >= 0, thr = sprintf('-thres %f', opts.threshold); end
 if ~opts.extended
   detCmd = sprintf('%s %s -%s -i "%s" -o "%s" %s', BIN_PATH, thr, ...
     opts.detector, tmpImgName, framesFile);
-  [status, msg] = system(detCmd);
-  if status
-    error('Error: %d: %s: %s', status, detCmd, msg) ;
-  end
+  [~, info] = utls.sysrun(detCmd);
   frames = legacy.vgg_frames_read(framesFile);
   if strcmp(opts.detector, 'har'), frames([3, 5], :) = 3.5^2; end
   res.frames = frames;
 else
   detCmd = sprintf('%s %s -%s -i "%s" -o2 "%s" %s', BIN_PATH, thr, ...
     opts.detector, tmpImgName, framesFile);
-  [status, msg] = system(detCmd);
-  if status
-    error('Error: %d: %s: %s', status, detCmd, msg) ;
-  end
+  [~, info] = utls.sysrun(detCmd);
   res = legacy.vgg_frames_read_ext(framesFile);
 end
+res.dettime = info.time;
 delete(framesFile); delete(tmpImgName);

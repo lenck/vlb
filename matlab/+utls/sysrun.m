@@ -29,9 +29,9 @@ try
   cd(opts.runDir);
   if opts.verbose
     fprintf('Running:\n%s\n', fullcmd);
-    tic;
+    stime = tic;
     [ret, out] = system(fullcmd, '-echo');
-    info.time = toc;
+    info.time = toc(stime);
   else
     tic;
     [ret, out] = system(fullcmd);

@@ -27,8 +27,9 @@ featsname = [name, '.txt'];
 cmd = sprintf('%s compute_detector.py "%s" "%s" "%s" 0 1 0 "%s" %d', ...
   opts.pythoncmd, ...
   opts.confPath, imname, featsname, opts.modelPath, opts.numKeypoints);
-utls.sysrun(cmd, 'runDir', opts.pythonDir, varargin{:});
+[~, info] = utls.sysrun(cmd, 'runDir', opts.pythonDir, varargin{:});
 res = frames_read(featsname);
+res.dettime = info.time;
 delete(imname);
 delete(featsname);
 end

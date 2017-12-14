@@ -63,9 +63,9 @@ for i = 1:numel(fields)
   if val >= 0, args = [args, ' -', fields{i}, ' ', num2str(val)]; end
 end
 cmd = sprintf('%s %s -i "%s" -o "%s"', BIN_PATH, args, tmpImgName, framesFile);
-[status,msg] = system(cmd);
-if status, error('Error running VGG_MSER: %s: %s', cmd, msg) ; end
+[~, info] = utls.sysrun(cmd);
 frames = legacy.vgg_frames_read(framesFile);
 if ~strcmp(img, tmpImgName), delete(tmpImgName); end;
 delete(framesFile);
 res.frames = frames;
+res.dettime = info.time;

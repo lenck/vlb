@@ -20,7 +20,9 @@ res.detName = sprintf('matdet-%s', opts.detector);
 if isempty(img), res.frames = zeros(6, 0); return; end
 if size(img, 3) > 1, img = rgb2gray(img); end
 
+stime = tic;
 fp = fun(img, varargin{:});
+res.dettime = toc(stime);
 
 res.frames = double(fp.Location');
 if isprop(fp, 'Scale')
