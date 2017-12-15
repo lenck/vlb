@@ -36,6 +36,7 @@ import os
 from skimage.transform import pyramid_gaussian
 import exifread
 import argparse
+import time
 
 def read_image_from_name(file_name):
     """Return the factorial of n, an exact integer >= 0. Image rescaled to no larger than 1024*768
@@ -139,7 +140,7 @@ cnn_model = patch_cnn.PatchCNN(CNNConfig)
 
 saver = tf.train.Saver()
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.8)
-with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options,device_count={'CPU': 1},intra_op_parallelism_threads=1,inter_op_parallelism_threads=1)) as sess:
     try:
         saver.restore(sess, "../tensorflow_model/"+train_name+"_model.ckpt")
         print("Model restored.")
@@ -160,6 +161,7 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
 
     #predict transformation
     output_list = []
+    stime = time.time()
     for (j, resized) in enumerate(pyramid) :
         fetch = {
             "o1": cnn_model.o1
@@ -173,4 +175,4 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
         result_mat = result["o1"].reshape((result["o1"].shape[1],result["o1"].shape[2],result["o1"].shape[3]))
         output_list.append(result_mat)
 
-    sio.savemat(save_feature_name, {'output_list':output_list})
+    sio.savemat(save_feature_name, {'output_list':output_list, 'time': time.time()-stime})

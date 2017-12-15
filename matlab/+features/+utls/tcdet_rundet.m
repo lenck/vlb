@@ -1,4 +1,4 @@
-function [frames, score] = tcdet_rundet(imagepath, featspath, point_number, thr)
+function [frames, score, time] = tcdet_rundet(imagepath, featspath, point_number, thr)
 
 % Source: https://github.com/ColumbiaDVMM/Transform_Covariant_Detector/blob/master/tensorflow/point_extractor.m
 % Author: Xu Zhang
@@ -25,9 +25,13 @@ else
 end
 assert(exist(featspath, 'file') == 2, 'Features not found');
 output = load(featspath);
+if isfield(output, 'time')
+  time.tftime = output.time;
+end
 output = output.output_list;
 if numel(output)==0, error('Invalid features file.'); end
 
+stime = tic;
 scale = 1.0;
 if size(image,1)*size(image,2)>maxsize
   scale = sqrt(maxsize/(size(image,1)*size(image,2)));
@@ -136,4 +140,5 @@ frames = [(feature(:, 3)-1)./scale + 1, ...
   (feature(:, 6) - 1)./scale + 1, ...
   feature(:, 1)./scale]';
 score = score';
+time.dettime = toc(stime);
 end

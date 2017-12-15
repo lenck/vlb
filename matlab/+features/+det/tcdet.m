@@ -36,16 +36,18 @@ copyfile(scriptPath, opts.runDir);
 
 cmd = sprintf('python2 tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
 env = struct(); %env = struct('LD_LIBRARY_PATH', '/users/karel/anaconda3/lib');
-utls.sysrun(cmd, 'runDir', opts.runDir, 'unset_ld', false, 'env', env, varargin{:});
-res.time = info.time; 
+[~, info] = utls.sysrun(cmd, 'runDir', opts.runDir, 'unset_ld', false, 'env', env, varargin{:});
+res.dettime = info.time; 
 
 actpath = pwd;
 try
   cd(opts.runDir);
-  stime = tic;
-  [res.frames, res.detresponses] = tcdet_rundet(img, featsname, ...
+  [res.frames, res.detresponses, time] = tcdet_rundet(img, featsname, ...
     opts.point_number, opts.thr);
-  res.dettime = res.time + toc(stime);
+  if isfield(time, 'tftime') % Needs a hacked python_eval
+    res.dettime = time.tftime;
+  end
+  res.dettime = res.dettime + time.dettime;
 catch e
   cd(actpath);
   throw(e);
