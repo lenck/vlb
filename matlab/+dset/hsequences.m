@@ -47,18 +47,19 @@ for sIdx = 1:numel(sequences)
   for imi_l = 1:NUMIMSEQ
     imPath = getImPath(sequence, imi_l);
     assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
+    imSize =  utls.get_image_size(imPath);
     imdb.images{imi}.id = imi;
     imdb.images{imi}.name = sprintf('%s-%d', sequence, imi_l);
     imdb.images{imi}.path = imPath;
     imdb.images{imi}.seqnum = imi_l;
     imdb.images{imi}.sequence = sequence;
     imdb.images{imi}.category = category;
+    imdb.images{imi}.imsize = imSize;
     if imi_l == 1
       refImSize = utls.get_image_size(imPath);
       imi = imi + 1;
       continue;
     end;
-    imSize =  utls.get_image_size(imPath);
     tfs = utls.read_vgg_homography(fullfile(dataDir, sequence, sprintf('H_1_%d', imi_l)));
     imdb.tasks{end+1} = struct('ima', imdb.images{refim}.name, ...
       'imb', imdb.images{imi}.name, ...
