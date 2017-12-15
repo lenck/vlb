@@ -4,6 +4,7 @@ import features.*;
 opts.override = false;
 opts.imids = [];
 opts.catchErrs = false;
+opts.storeFeatures = true;
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
@@ -42,7 +43,9 @@ for si = 1:numel(impaths)
   else
     feats = detector.fun(im);
   end
-  utls.features_save(feats_path, feats);
+  if opts.storeFeatures
+    utls.features_save(feats_path, feats);
+  end
   if nargout > 1, all_feats{si} = feats; end
   status(si);
 end
