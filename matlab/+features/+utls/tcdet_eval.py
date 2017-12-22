@@ -73,8 +73,8 @@ def read_image_from_name(file_name):
         tags = tags
 
     ratio = 1.0
-    if img.shape[0]*img.shape[1]>1024*768:
-        ratio = (1024*768/float(img.shape[0]*img.shape[1]))**(0.5)
+    if img.shape[0]*img.shape[1]>2100*1600:
+        ratio = (2100*1600/float(img.shape[0]*img.shape[1]))**(0.5)
         img = cv2.resize(img,(int(img.shape[1]*ratio), int(img.shape[0]*ratio)),interpolation = cv2.INTER_CUBIC);
         
     return img, ratio

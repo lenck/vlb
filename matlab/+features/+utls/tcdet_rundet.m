@@ -8,6 +8,7 @@ if ~exist('point_number', 'var'), point_number = 1000; end
 if ~exist('thr', 'var'), thr = 1000; end
 
 maxsize = 1024*768;
+maxsize = 2100*1600;
 %Change this to your own vlfeat folder
 
 %change point number to fix multiscale.
