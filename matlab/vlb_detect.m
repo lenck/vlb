@@ -27,7 +27,7 @@ for si = 1:numel(impaths)
   impath = impaths{si};
   imname = imnames{si};
   feats_path = fullfile(dest_dir, imname);
-  feats = utls.features_load(feats_path, 'checkonly', true, ...
+  feats = utls.features_load(feats_path, 'checkonly', nargout <= 1, ...
     'compulsoryFields', {'frames.csv'});
   if ~isempty(feats) && ~opts.override
     status(si); continue;

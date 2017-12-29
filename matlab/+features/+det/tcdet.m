@@ -36,7 +36,7 @@ copyfile(scriptPath, opts.runDir);
 
 cmd = sprintf('python2 tcdet_eval.py "%s" --save_feature "%s"', imname, featsname);
 env = struct(); %env = struct('LD_LIBRARY_PATH', '/users/karel/anaconda3/lib');
-[~, info] = utls.sysrun(cmd, 'runDir', opts.runDir, 'unset_ld', false, 'env', env, varargin{:});
+[out, info] = utls.sysrun(cmd, 'runDir', opts.runDir, 'unset_ld', false, 'env', env, varargin{:});
 res.dettime = info.time; 
 
 actpath = pwd;
