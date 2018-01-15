@@ -3,13 +3,14 @@ import features.*;
 
 opts.imgExt = '.png';
 opts.override = false;
+opts.imids = [];
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
 if isstruct(featsname), featsname = featsname.name; end;
 if iscell(featsname), featsname = fullfile(featsname); end;
-impaths = {imdb.images.path};
-imnames = {imdb.images.name};
+impaths = {imdb.images(opts.imids).path};
+imnames = {imdb.images(opts.imids).name};
 descriptor = features.factory('desc', descriptor, varargin{:});
 
 dets_dir = vlb_path('features', imdb, struct('name', featsname));
