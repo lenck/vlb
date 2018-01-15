@@ -69,7 +69,7 @@ patches_path = vlb_path('patches', imdb, featsname);
 if ~exist(patches_path, 'dir')
   error('No patches in %s.', patches_path);
 end
-if nargin < 3, error('Imid not specified.'); end;
+if nargin < 3, error('Imid not specified.'); end
 imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
 res = utls.patches_load(fullfile(patches_path, [imname, '.png']));
@@ -136,6 +136,7 @@ end
 
 function res = view_matches(benchname, imdb, featsname, taskid, varargin)
 imdb = dset.factory(imdb);
+if isstruct(featsname), featsname = featsname.name; end;
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
 info_path = fullfile(scoresdir, 'results.mat');
 feats_path = vlb_path('features', imdb, featsname);
@@ -147,8 +148,15 @@ if taskid < 1 || taskid > numel(imdb.tasks)
   error('Invalid task id %d', taskid);
 end
 
+scores = readtable(fullfile(scoresdir, 'results.csv'));
 res = load(info_path);
-res = res.info(taskid);
+if size(scores, 1) == numel(imdb.tasks)
+  scores = scores(taskid, :);
+  res = res.info(taskid);
+else
+  res = res.info;
+end
+display(scores);
 if nargout == 0
   task = imdb.tasks(taskid);
   imaid = dset.utls.getimid(imdb, task.ima);
@@ -157,10 +165,12 @@ if nargout == 0
   subplot(1,2,1);
   imshow(imdb.images(imaid).path); hold on;
 
+  ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
   vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
   vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  vl_plotframe(res.geom.ellb_rep(:, res.matches(1, res.matches~=0)), 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(res.geom.ella(:, res.matches~=0), 'LineWidth', 2, 'Color', 'green');
+  vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
+  vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
+  line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'k', 'LineWidth', 1);
   title(['IM-A ', featsname], 'Interpreter', 'none');
   
   subplot(1,2,2);
@@ -169,8 +179,10 @@ if nargout == 0
   la = [];
   la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
   la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
-  la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  if sum(res.matches~=0) > 0
+    la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
+    la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  end
   title(['IM-B ' featsname], 'Interpreter', 'none');
   legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
 end
@@ -189,7 +201,7 @@ for fi = 1:numel(featsname)
   if ~exist(scores_path, 'file')
     error('Scores file %s does not exist.', scores_path);
   end;
-  res{fi} = readtable(scores_path);
+  res{fi} = readtable(scores_path, 'Delimiter', ',');
 end
 res = vertcat(res{:});
 res_f = res(ismember(res.sequence, sequence), :);
@@ -218,7 +230,7 @@ for fi = 1:numel(featsname)
   if ~exist(scores_path, 'file')
     error('Scores file %s does not exist.', scores_path);
   end;
-  res{fi} = readtable(scores_path);
+  res{fi} = readtable(scores_path, 'Delimiter', ',');
   in = load(info_path); in = in.info;
   assert(numel(in) == numel(imdb.tasks), 'Invalid results.');
   info{fi} = in(taskid);

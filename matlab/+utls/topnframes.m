@@ -2,7 +2,8 @@ function [ feats ] = topnframes( feats, n )
 %TOPNFEATS pick only top-N features based on the detresponses
 %   Detailed explanation goes here
 assert(isfield(feats, 'detresponses'));
-[~, perm] = sort(feats.detresponses, 'descend');
+if isinf(n), return; end
+[~, perm] = sort(abs(feats.detresponses), 'descend');
 perm = perm(1:min(n, numel(perm)));
 feats.frames = feats.frames(:, perm);
 feats.detresponses = feats.detresponses(:, perm);

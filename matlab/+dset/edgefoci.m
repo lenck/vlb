@@ -21,6 +21,8 @@ utls.provision(opts.url, opts.rootDir);
 
 dataDir = fullfile(opts.rootDir, DATADIR);
 getImPath = @(seq, imname) fullfile(dataDir, seq, 'test', opts.impath, imname);
+getHomPath = @(seq, iman, imbn) fullfile(dataDir, seq, 'test', 'homography', sprintf('H%dto%dp', iman, imbn));
+
 sequences = sort(utls.listdirs(dataDir));
 assert(numel(sequences) == NUMSEQUENCES, ...
   'Invalid number of sequences found.');
@@ -48,8 +50,14 @@ for sIdx = 1:numel(sequences)
   for pi = 1:pidx
     ima = imdb.images{ic(pi) + lastim}; imb = imdb.images{ic(pi+pidx) + lastim};
     assert(strcmp(ima.sequence, imb.sequence));
+    tan = regexp(ima.name, 'img(?<num>[\d.]+)', 'names');
+    tbn = regexp(imb.name, 'img(?<num>[\d.]+)', 'names');
+    homp = getHomPath(ima.sequence, str2double(tan.num), str2double(tbn.num));
+    hom = utls.read_vgg_homography(homp);
     imdb.tasks{end+1} = struct(...
-      'ima', ima.name, 'imb', imb.name, 'H', eye(3), ...
+      'ima', ima.name, 'imb', imb.name, ...
+      'ima_id', ic(pi) + lastim, 'imb_id', ic(pi+pidx) + lastim, ...
+      'H', hom, ...
       'ima_size', ima.imsize, 'imb_size', imb.imsize, ...
       'istest', ima.istest, 'isval', imb.isval, 'sequence', sequence, ...
       'description', struct('impair', [pi, pi+pidx]));
@@ -59,7 +67,7 @@ end
 
 imdb.images = cell2mat(imdb.images);
 imdb.tasks = cell2mat(imdb.tasks);
-imdb.name = 'webcam';
+imdb.name = 'edgefoci';
 imdb.matchFramesFun = opts.matchFramesFun;
 imdb.geometry = 'homography';
 imdb.rootdir = opts.rootDir;

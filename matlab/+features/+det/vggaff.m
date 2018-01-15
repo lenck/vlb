@@ -20,6 +20,7 @@ function [ res ] = vggaff( img, varargin )
 
 opts.detector = 'hesaff';
 opts.threshold = -1;
+opts.extended = false;
 opts = vl_argparse(opts, varargin);
 res.detName = sprintf('vggaff-%s', opts.detector); res.args = opts;
 if isempty(img), res.frames = zeros(5, 0); return; end;
@@ -47,13 +48,18 @@ imwrite(img, tmpImgName);
 framesFile = [tempname() '.' opts.detector];
 thr = '';
 if opts.threshold >= 0, thr = sprintf('-thres %f', opts.threshold); end
-detCmd = sprintf('%s %s -%s -i "%s" -o "%s" %s', BIN_PATH, thr, ...
-  opts.detector, tmpImgName, framesFile);
-[status, msg] = system(detCmd);
-if status
-  error('Error: %d: %s: %s', status, detCmd, msg) ;
+if ~opts.extended
+  detCmd = sprintf('%s %s -%s -i "%s" -o "%s" %s', BIN_PATH, thr, ...
+    opts.detector, tmpImgName, framesFile);
+  [~, info] = utls.sysrun(detCmd);
+  frames = legacy.vgg_frames_read(framesFile);
+  if strcmp(opts.detector, 'har'), frames([3, 5], :) = 3.5^2; end
+  res.frames = frames;
+else
+  detCmd = sprintf('%s %s -%s -i "%s" -o2 "%s" %s', BIN_PATH, thr, ...
+    opts.detector, tmpImgName, framesFile);
+  [~, info] = utls.sysrun(detCmd);
+  res = legacy.vgg_frames_read_ext(framesFile);
 end
-frames = legacy.vgg_frames_read(framesFile);
-if strcmp(opts.detector, 'har'), frames([3, 5], :) = 3.5^2; end
+res.dettime = info.time;
 delete(framesFile); delete(tmpImgName);
-res.frames = frames;

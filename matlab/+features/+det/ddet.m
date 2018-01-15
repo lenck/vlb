@@ -24,7 +24,9 @@ if ~exist('DDet.m', 'file')
   delete(fullfile(opts.binDir, '+utls', 'provision.m'));
 end
 net = dagnn.DagNN.loadobj(load(opts.net));
+stime = tic;
 det = DDet(net, 'thr', opts.thr);
+res.dettime = toc(stime);
 
 [frames, ~, info] = det.detect(img);
 res.frames = frames;

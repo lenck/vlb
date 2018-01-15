@@ -4,5 +4,11 @@ assert(size(patches, 3) == 1 || size(patches, 3) == 3, ...
 patchim = vl_imarray(squeeze(patches), 'Layout', [size(patches, 4), 1]);
 [~,~,ext] = fileparts(respath);
 assert(ismember(ext, {'.png', '.jpeg', '.jpg'}));
-imwrite(patchim, respath, 'Comment', sprintf('ScalingFactor:%.6f', scalingFactor));
+try
+  imwrite(patchim, respath, 'Comment', sprintf('ScalingFactor:%.6f', scalingFactor));
+catch e
+  fprintf('Cleaning up %s due to error', respath);
+  if exist(respath, 'file'), delete(respath); end
+  throw(e);
+end
 end

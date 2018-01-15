@@ -1,6 +1,5 @@
 function vlb_extract(imdb, featsname, varargin)
 
-opts.method = @utls.extract_patches_covdet;
 opts.override = false;
 opts.grayscale = true;
 opts.imgExt = '.png';

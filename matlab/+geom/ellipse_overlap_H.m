@@ -52,7 +52,7 @@ opts.normalisedScale = 30;
 opts.magnification = 3;
 opts.warpMethod = 'linearise';
 opts.cropFramesSafetyEdge = [];
-opts = vl_argparse(opts, varargin);
+[opts, varargin] = vl_argparse(opts, varargin);
 
 info = struct(); tcorr = []; corr_score = [];
 overlapThresh = 1 - opts.maxOverlapError;
@@ -109,7 +109,7 @@ end
 [ellipsesPairs, ellipsesOverlaps] = utls.ellipse_overlap_fast(...
   ellb_rep(:, fb_valid), ella(:, fa_valid), ...
   'NormaliseFrames', opts.normaliseFrames, 'MinAreaRatio', overlapThresh,...
-  'NormalisedScale', opts.normalisedScale);
+  'NormalisedScale', opts.normalisedScale, varargin{:});
 
 % Remove frame pairs that have insufficient overlap
 isValid = ellipsesOverlaps > overlapThresh;
