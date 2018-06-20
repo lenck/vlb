@@ -8,6 +8,8 @@ function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 allargs = varargin;
 opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
+opts.loadOnly = false;
+opts.taskids = 1:numel(imdb.tasks);
 [opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
@@ -17,18 +19,27 @@ scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
 scores_path = fullfile(scoresdir, 'results.csv');
 info_path = fullfile(scoresdir, 'results.mat');
-if ~opts.override && exist(scores_path, 'file') && exist(info_path, 'file')
-  scores = readtable(scores_path); info = load(info_path);
+res_exists = exist(scores_path, 'file');
+if nargout > 1
+  res_exists = res_exists && exist(info_path, 'file');
+end
+if ~opts.override && res_exists
+  scores = readtable(scores_path, 'delimiter', ',');
+  if nargout > 1, info = load(info_path); end
   fprintf('Results loaded from %s.\n', scores_path);
   return;
 end
+if opts.loadOnly
+  warning('Results %s not found.', scores_path);
+  scores = table(); info = struct(); return;
+end
 
 fprintf('Running %d tasks of %s on %s for %s features.\n', ...
-  numel(imdb.tasks), opts.benchName, imdb.name, featsname);
+  numel(opts.taskids), opts.benchName, imdb.name, featsname);
 status = utls.textprogressbar(numel(imdb.tasks), 'updatestep', 1);
-scores = cell(1, numel(imdb.tasks)); info = cell(1, numel(imdb.tasks));
-for ti = 1:numel(imdb.tasks)
-  task = imdb.tasks(ti);
+scores = cell(1, numel(opts.taskids)); info = cell(1, numel(opts.taskids));
+for ti = 1:numel(opts.taskids)
+  task = imdb.tasks(opts.taskids(ti));
   fa = getfeats(imdb, featsname, task.ima);
   fb = getfeats(imdb, featsname, task.imb);
   matchGeom = imdb.matchFramesFun(task); % Returns a functor
@@ -44,9 +55,16 @@ for ti = 1:numel(imdb.tasks)
 end
 
 scores = struct2table(cell2mat(scores), 'AsArray', true);
-writetable(scores, scores_path);
-info = cell2mat(info);
-save(info_path, 'info');
+try
+  writetable(scores, scores_path);
+  info = cell2mat(info);
+  save(info_path, 'info');
+catch e
+  fprintf('Cleaning up %s due to error', e.message);
+  if exist(scores_path, 'file'), delete(scores_path); end
+  if exist(info_path, 'file'), delete(info_path); end
+  throw(e);
+end
 
 end
 

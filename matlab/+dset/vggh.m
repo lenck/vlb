@@ -68,6 +68,7 @@ for catIdx = 1:numel(sequences)
   for imi_l = 1:6
     imPath = getImPath(dset, imi_l);
     assert(exist(imPath, 'file') == 2, 'Image %s not found.', imPath);
+    imSize =  utls.get_image_size(imPath);
     imdb.images{imi}.id = imi;
     imdb.images{imi}.name = sprintf('%s-%d', dset.name, imi_l);
     imdb.images{imi}.path = imPath;
@@ -79,7 +80,6 @@ for catIdx = 1:numel(sequences)
         imSizeRef =  utls.get_image_size(imPath);
         continue; 
     end;
-    imSize =  utls.get_image_size(imPath);
     tfs = utls.read_vgg_homography(fullfile(dsetDir, sprintf('H1to%dp', imi_l)));
     imdb.tasks{end+1} = struct('ima', imdb.images{refim}.name, ...
       'imb', imdb.images{imi}.name, ...

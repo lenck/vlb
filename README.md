@@ -1,10 +1,13 @@
 # VLB: VLFeat Local Features Benchmark
 
-A MATLAB framework for local feature evaluation.
+A framework for local feature evaluation.
 Reimplementation of the VLBenchmarks project.
 **Currenlty work in progress** so it has more than few rough edges.
 
-## Getting Started
+MATLAB implementation: [Karel Lenc](https://github.com/lenck)   
+Python implementation: [Xu Zhang](https://github.com/spongezhang)
+
+## Getting Started with MATLAB implementation
 Setup matlab mex environment, before starting to setup vlb.
 
 To setup the VLBenchmarks, run from the vlb path:

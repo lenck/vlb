@@ -43,6 +43,7 @@ opts.normaliseFrames = true ;
 opts.normalisedScale = 30 ;
 opts.minAreaRatio = 0.3;
 opts.frame2frame = false;
+opts.fix = false;
 opts = vl_argparse(opts, varargin) ;
 
 f1 = utls.frame2ellipse(f1);
@@ -73,14 +74,20 @@ if isempty(f1) || isempty(f2), return; end
 %
 %
 for i2 = 1:N2
-  s = opts.normalisedScale / sqrt(a2(i2) / pi)  ;
+  if opts.normaliseFrames
+    s = opts.normalisedScale / sqrt(a2(i2) / pi)  ;
+  else
+    s = 1;
+  end
   
   % Constant 4 is here because it is the maximal elongation of the
   % ellipse in baumberg iteration generally implemnted
   if opts.frame2frame
-    ellipsePairs{i2} = [i2, i2]';
+    ellipsePairs{i2} = [i2*ones(1, size(f1, 2)); 1:size(f1, 2)];
   else
-    canOverlap = sqrt(vl_alldist2(single(f2(1:2, i2)), single(f1(1:2, :)))) < 4 * sqrt(a2(i2) / pi);
+    thr = 4 * sqrt(a2(i2) / pi) ;
+    if opts.fix, thr = thr * s; end
+    canOverlap = sqrt(vl_alldist2(single(f2(1:2, i2)), single(f1(1:2, :)))) < thr;
     maxOverlap = min(a2(i2), a1) ./ max(a2(i2), a1) .* canOverlap ;
     ellipsePairs{i2} = find(maxOverlap > opts.minAreaRatio);
     ellipsePairs{i2} = [repmat(i2, 1, numel(ellipsePairs{i2}));

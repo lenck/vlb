@@ -1,11 +1,21 @@
 function features = features_load( path, varargin )
 %FEATURES_Load Load a features structure at the specified path
 opts.checkonly = false;
+opts.compulsoryFields = {};
 opts = vl_argparse(opts, varargin);
 
 features = struct();
 files = dir([path, '.*.*']);
-if isempty(files), features = []; return; end;
+if isempty(files), features = []; return; end
+% Check whether all required fields are present
+if ~isempty(opts.compulsoryFields)
+  [~, imname] = fileparts(path);
+  compulsoryFnames = cellfun(@(cf) [imname, '.', cf], ...
+    opts.compulsoryFields, 'Uni', false);
+  if any(~ismember(compulsoryFnames, {files.name}))
+     features = []; return;
+  end
+end
 
 for fi = 1:numel(files)
   [~, fname, ext] = fileparts(files(fi).name);

@@ -7,6 +7,7 @@ function [ res, varargin ] = factory( type, name, varargin )
 assert(ismember(type, {'det', 'desc', 'detdesc'}));
 opts.([type, 'Name']) = '';
 opts.([type, 'Args']) = {};
+opts.rootpackage = 'features';
 [opts, varargin] = vl_argparse(opts, varargin);
 funargs = opts.([type, 'Args']);
 
@@ -16,19 +17,24 @@ if isstruct(name)
   assert(isfield(res, 'name') && isfield(res, 'fun'), ...
     'Invalid algorithm structure, must contain `name` and `fun`.');
   return;
-end;
+end
 switch class(name)
   case 'char'
-    fname = ['features.', type, '.' strtrim(name)];
+    fname = [opts.rootpackage '.', type, '.' strtrim(name)];
     fun = str2func(fname);
   case 'function_handle'
     fun = name;
   otherwise
     error('Invalid detdesc');
 end
-assert(nargout(fun) >= 1, 'Feature wrapper does not return meta information.');
+try
+  nout = nargout(fun);
+catch
+  error('Invalid %s: %s - Function not found', type, fname);
+end
+assert(nout >= 1, 'Feature wrapper does not return meta information.');
 func_nargin = nargin(fun);
-if func_nargin < 0, func_nargin = abs(func_nargin) - 1; end;
+if func_nargin < 0, func_nargin = abs(func_nargin) - 1; end
 switch func_nargin
   case 1
     f = fun([], funargs{:});

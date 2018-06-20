@@ -204,7 +204,11 @@ function upd = textprogressbar(n, varargin)
                 return;
             end
             if i > 0
+              if ~isempty(getenv('SGE_TASK_ID'))
+                fprintf('\n');
+              else
                 fprintf(delAll);
+              end
             end
             %pause(1)
             nextRenderPoint = min([nextRenderPoint + updStep, n]);

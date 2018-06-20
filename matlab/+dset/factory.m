@@ -4,8 +4,8 @@ function [ imdb ] = factory( name, varargin )
 dsets = utls.listfiles(fullfile(vlb_path(), 'matlab', '+dset', '*.m'), ...
   'keepext', false, 'fullpath', false);
 dsets = setdiff(dsets, 'factory');
-if nargin == 0, imdb = dsets; return; end;
-if isstruct(name), imdb = name; return; end;
+if nargin == 0, imdb = dsets; return; end
+if isstruct(name), imdb = name; return; end
 
 if ~ismember(name, dsets)
   error('Invalid dataset %s. Valid values are: %s', name, strjoin(dsets, ', '));

@@ -5,6 +5,12 @@ function frames = frame_set_scale(frames, scales)
 % AUTORIGHTS
 import localFeatures.helpers.*;
 
+feats = [];
+if isstruct(frames)
+  feats = frames;
+  frames = frames.frames;
+end
+
 if isempty(frames)
   frames = [];
   return;
@@ -39,5 +45,10 @@ switch size(frames,1)
     end
   otherwise
     error('Invalid frame');
+end
+
+if ~isempty(feats)
+  feats.frames = frames;
+  frames = feats;
 end
 end
