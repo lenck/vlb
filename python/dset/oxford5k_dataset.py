@@ -95,5 +95,5 @@ class oxford5k_Dataset(RetrievalDataset):
 
     
 if __name__ == "__main__":
-    a = oxford5k_Dataset(download_flag = False)
+    a = oxford5k_Dataset(download_flag = True)
 
