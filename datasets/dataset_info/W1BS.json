@@ -1,0 +1,670 @@
+{
+  "Description": "Baseline Stereo Benchmark", 
+  "url": "http://cmp.felk.cvut.cz/wbs/datasets/W1BS_with_patches.tar.gz", 
+  "Dataset Name": "W1BS", 
+  "Sequences": [
+    {
+      "Name": "A", 
+      "Links": [
+        {
+          "source": "arch_1", 
+          "target": "arch_2", 
+          "file": "A/h/arch.txt"
+        }, 
+        {
+          "source": "obama_1", 
+          "target": "obama_2", 
+          "file": "A/h/obama.txt"
+        }, 
+        {
+          "source": "vprice0_1", 
+          "target": "vprice0_2", 
+          "file": "A/h/vprice0.txt"
+        }, 
+        {
+          "source": "vprice1_1", 
+          "target": "vprice1_2", 
+          "file": "A/h/vprice1.txt"
+        }, 
+        {
+          "source": "vprice2_1", 
+          "target": "vprice2_2", 
+          "file": "A/h/vprice2.txt"
+        }, 
+        {
+          "source": "yosemite_1", 
+          "target": "yosemite_2", 
+          "file": "A/h/yosemite.txt"
+        }
+      ], 
+      "Label": "Viewpoint Appearance", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "arch_1", 
+          "file": "A/1/arch.bmp", 
+          "label": "arch_1"
+        }, 
+        {
+          "id": "arch_2", 
+          "file": "A/2/arch.bmp", 
+          "label": "arch_2"
+        }, 
+        {
+          "id": "obama_1", 
+          "file": "A/1/obama.bmp", 
+          "label": "obama_1"
+        }, 
+        {
+          "id": "obama_2", 
+          "file": "A/2/obama.bmp", 
+          "label": "obama_2"
+        }, 
+        {
+          "id": "vprice0_1", 
+          "file": "A/1/vprice0.bmp", 
+          "label": "vprice0_1"
+        }, 
+        {
+          "id": "vprice0_2", 
+          "file": "A/2/vprice0.bmp", 
+          "label": "vprice0_2"
+        }, 
+        {
+          "id": "vprice1_1", 
+          "file": "A/1/vprice1.bmp", 
+          "label": "vprice1_1"
+        }, 
+        {
+          "id": "vprice1_2", 
+          "file": "A/2/vprice1.bmp", 
+          "label": "vprice1_2"
+        }, 
+        {
+          "id": "vprice2_1", 
+          "file": "A/1/vprice2.bmp", 
+          "label": "vprice2_1"
+        }, 
+        {
+          "id": "vprice2_2", 
+          "file": "A/2/vprice2.bmp", 
+          "label": "vprice2_2"
+        }, 
+        {
+          "id": "yosemite_1", 
+          "file": "A/1/yosemite.bmp", 
+          "label": "yosemite_1"
+        }, 
+        {
+          "id": "yosemite_2", 
+          "file": "A/2/yosemite.bmp", 
+          "label": "yosemite_2"
+        }
+      ], 
+      "Image Number": 12, 
+      "Description": "A"
+    }, 
+    {
+      "Name": "G", 
+      "Links": [
+        {
+          "source": "adam_1", 
+          "target": "adam_2", 
+          "file": "G/h/adam.txt"
+        }, 
+        {
+          "source": "boat_1", 
+          "target": "boat_2", 
+          "file": "G/h/boat.txt"
+        }, 
+        {
+          "source": "ExtremeZoomA_1", 
+          "target": "ExtremeZoomA_2", 
+          "file": "G/h/ExtremeZoomA.txt"
+        }, 
+        {
+          "source": "face_1", 
+          "target": "face_2", 
+          "file": "G/h/face.txt"
+        }, 
+        {
+          "source": "fox_1", 
+          "target": "fox_2", 
+          "file": "G/h/fox.txt"
+        }, 
+        {
+          "source": "graf_1", 
+          "target": "graf_2", 
+          "file": "G/h/graf.txt"
+        }, 
+        {
+          "source": "mag_1", 
+          "target": "mag_2", 
+          "file": "G/h/mag.txt"
+        }, 
+        {
+          "source": "shop_1", 
+          "target": "shop_2", 
+          "file": "G/h/shop.txt"
+        }, 
+        {
+          "source": "there_1", 
+          "target": "there_2", 
+          "file": "G/h/there.txt"
+        }, 
+        {
+          "source": "vin_1", 
+          "target": "vin_2", 
+          "file": "G/h/vin.txt"
+        }
+      ], 
+      "Label": "Viewpoint", 
+      "Link Number": 10, 
+      "Images": [
+        {
+          "id": "adam_1", 
+          "file": "G/1/adam.bmp", 
+          "label": "adam_1"
+        }, 
+        {
+          "id": "adam_2", 
+          "file": "G/2/adam.bmp", 
+          "label": "adam_2"
+        }, 
+        {
+          "id": "boat_1", 
+          "file": "G/1/boat.bmp", 
+          "label": "boat_1"
+        }, 
+        {
+          "id": "boat_2", 
+          "file": "G/2/boat.bmp", 
+          "label": "boat_2"
+        }, 
+        {
+          "id": "ExtremeZoomA_1", 
+          "file": "G/1/ExtremeZoomA.bmp", 
+          "label": "ExtremeZoomA_1"
+        }, 
+        {
+          "id": "ExtremeZoomA_2", 
+          "file": "G/2/ExtremeZoomA.bmp", 
+          "label": "ExtremeZoomA_2"
+        }, 
+        {
+          "id": "face_1", 
+          "file": "G/1/face.bmp", 
+          "label": "face_1"
+        }, 
+        {
+          "id": "face_2", 
+          "file": "G/2/face.bmp", 
+          "label": "face_2"
+        }, 
+        {
+          "id": "fox_1", 
+          "file": "G/1/fox.bmp", 
+          "label": "fox_1"
+        }, 
+        {
+          "id": "fox_2", 
+          "file": "G/2/fox.bmp", 
+          "label": "fox_2"
+        }, 
+        {
+          "id": "graf_1", 
+          "file": "G/1/graf.bmp", 
+          "label": "graf_1"
+        }, 
+        {
+          "id": "graf_2", 
+          "file": "G/2/graf.bmp", 
+          "label": "graf_2"
+        }, 
+        {
+          "id": "mag_1", 
+          "file": "G/1/mag.bmp", 
+          "label": "mag_1"
+        }, 
+        {
+          "id": "mag_2", 
+          "file": "G/2/mag.bmp", 
+          "label": "mag_2"
+        }, 
+        {
+          "id": "shop_1", 
+          "file": "G/1/shop.bmp", 
+          "label": "shop_1"
+        }, 
+        {
+          "id": "shop_2", 
+          "file": "G/2/shop.bmp", 
+          "label": "shop_2"
+        }, 
+        {
+          "id": "there_1", 
+          "file": "G/1/there.bmp", 
+          "label": "there_1"
+        }, 
+        {
+          "id": "there_2", 
+          "file": "G/2/there.bmp", 
+          "label": "there_2"
+        }, 
+        {
+          "id": "vin_1", 
+          "file": "G/1/vin.bmp", 
+          "label": "vin_1"
+        }, 
+        {
+          "id": "vin_2", 
+          "file": "G/2/vin.bmp", 
+          "label": "vin_2"
+        }
+      ], 
+      "Image Number": 20, 
+      "Description": "G"
+    }, 
+    {
+      "Name": "L", 
+      "Links": [
+        {
+          "source": "amos1_1", 
+          "target": "amos1_2", 
+          "file": "L/h/amos1.txt"
+        }, 
+        {
+          "source": "bdom_1", 
+          "target": "bdom_2", 
+          "file": "L/h/bdom.txt"
+        }, 
+        {
+          "source": "brugge_square_1", 
+          "target": "brugge_square_2", 
+          "file": "L/h/brugge_square.txt"
+        }, 
+        {
+          "source": "GC2_1", 
+          "target": "GC2_2", 
+          "file": "L/h/GC2.txt"
+        }, 
+        {
+          "source": "light_1", 
+          "target": "light_2", 
+          "file": "L/h/light.txt"
+        }, 
+        {
+          "source": "madrid_1", 
+          "target": "madrid_2", 
+          "file": "L/h/madrid.txt"
+        }, 
+        {
+          "source": "notredame15_1", 
+          "target": "notredame15_2", 
+          "file": "L/h/notredame15.txt"
+        }, 
+        {
+          "source": "paintedladies_1", 
+          "target": "paintedladies_2", 
+          "file": "L/h/paintedladies.txt"
+        }, 
+        {
+          "source": "rushmore_1", 
+          "target": "rushmore_2", 
+          "file": "L/h/rushmore.txt"
+        }, 
+        {
+          "source": "trevi_1", 
+          "target": "trevi_2", 
+          "file": "L/h/trevi.txt"
+        }, 
+        {
+          "source": "vatican_1", 
+          "target": "vatican_2", 
+          "file": "L/h/vatican.txt"
+        }
+      ], 
+      "Label": "ViewPoint Lighting", 
+      "Link Number": 11, 
+      "Images": [
+        {
+          "id": "amos1_1", 
+          "file": "L/1/amos1.bmp", 
+          "label": "amos1_1"
+        }, 
+        {
+          "id": "amos1_2", 
+          "file": "L/2/amos1.bmp", 
+          "label": "amos1_2"
+        }, 
+        {
+          "id": "bdom_1", 
+          "file": "L/1/bdom.bmp", 
+          "label": "bdom_1"
+        }, 
+        {
+          "id": "bdom_2", 
+          "file": "L/2/bdom.bmp", 
+          "label": "bdom_2"
+        }, 
+        {
+          "id": "brugge_square_1", 
+          "file": "L/1/brugge_square.bmp", 
+          "label": "brugge_square_1"
+        }, 
+        {
+          "id": "brugge_square_2", 
+          "file": "L/2/brugge_square.bmp", 
+          "label": "brugge_square_2"
+        }, 
+        {
+          "id": "GC2_1", 
+          "file": "L/1/GC2.bmp", 
+          "label": "GC2_1"
+        }, 
+        {
+          "id": "GC2_2", 
+          "file": "L/2/GC2.bmp", 
+          "label": "GC2_2"
+        }, 
+        {
+          "id": "light_1", 
+          "file": "L/1/light.bmp", 
+          "label": "light_1"
+        }, 
+        {
+          "id": "light_2", 
+          "file": "L/2/light.bmp", 
+          "label": "light_2"
+        }, 
+        {
+          "id": "madrid_1", 
+          "file": "L/1/madrid.bmp", 
+          "label": "madrid_1"
+        }, 
+        {
+          "id": "madrid_2", 
+          "file": "L/2/madrid.bmp", 
+          "label": "madrid_2"
+        }, 
+        {
+          "id": "notredame15_1", 
+          "file": "L/1/notredame15.bmp", 
+          "label": "notredame15_1"
+        }, 
+        {
+          "id": "notredame15_2", 
+          "file": "L/2/notredame15.bmp", 
+          "label": "notredame15_2"
+        }, 
+        {
+          "id": "paintedladies_1", 
+          "file": "L/1/paintedladies.bmp", 
+          "label": "paintedladies_1"
+        }, 
+        {
+          "id": "paintedladies_2", 
+          "file": "L/2/paintedladies.bmp", 
+          "label": "paintedladies_2"
+        }, 
+        {
+          "id": "rushmore_1", 
+          "file": "L/1/rushmore.bmp", 
+          "label": "rushmore_1"
+        }, 
+        {
+          "id": "rushmore_2", 
+          "file": "L/2/rushmore.bmp", 
+          "label": "rushmore_2"
+        }, 
+        {
+          "id": "trevi_1", 
+          "file": "L/1/trevi.bmp", 
+          "label": "trevi_1"
+        }, 
+        {
+          "id": "trevi_2", 
+          "file": "L/2/trevi.bmp", 
+          "label": "trevi_2"
+        }, 
+        {
+          "id": "vatican_1", 
+          "file": "L/1/vatican.bmp", 
+          "label": "vatican_1"
+        }, 
+        {
+          "id": "vatican_2", 
+          "file": "L/2/vatican.bmp", 
+          "label": "vatican_2"
+        }
+      ], 
+      "Image Number": 22, 
+      "Description": "L"
+    }, 
+    {
+      "Name": "map2photo", 
+      "Links": [
+        {
+          "source": "map1_1", 
+          "target": "map1_2", 
+          "file": "map2photo/h/map1.txt"
+        }, 
+        {
+          "source": "map2_1", 
+          "target": "map2_2", 
+          "file": "map2photo/h/map2.txt"
+        }, 
+        {
+          "source": "map3_1", 
+          "target": "map3_2", 
+          "file": "map2photo/h/map3.txt"
+        }, 
+        {
+          "source": "map4_1", 
+          "target": "map4_2", 
+          "file": "map2photo/h/map4.txt"
+        }, 
+        {
+          "source": "map5_1", 
+          "target": "map5_2", 
+          "file": "map2photo/h/map5.txt"
+        }, 
+        {
+          "source": "map6_1", 
+          "target": "map6_2", 
+          "file": "map2photo/h/map6.txt"
+        }
+      ], 
+      "Label": "Map to Photo", 
+      "Link Number": 6, 
+      "Images": [
+        {
+          "id": "map1_1", 
+          "file": "map2photo/1/map1.bmp", 
+          "label": "map1_1"
+        }, 
+        {
+          "id": "map1_2", 
+          "file": "map2photo/2/map1.bmp", 
+          "label": "map1_2"
+        }, 
+        {
+          "id": "map2_1", 
+          "file": "map2photo/1/map2.bmp", 
+          "label": "map2_1"
+        }, 
+        {
+          "id": "map2_2", 
+          "file": "map2photo/2/map2.bmp", 
+          "label": "map2_2"
+        }, 
+        {
+          "id": "map3_1", 
+          "file": "map2photo/1/map3.bmp", 
+          "label": "map3_1"
+        }, 
+        {
+          "id": "map3_2", 
+          "file": "map2photo/2/map3.bmp", 
+          "label": "map3_2"
+        }, 
+        {
+          "id": "map4_1", 
+          "file": "map2photo/1/map4.bmp", 
+          "label": "map4_1"
+        }, 
+        {
+          "id": "map4_2", 
+          "file": "map2photo/2/map4.bmp", 
+          "label": "map4_2"
+        }, 
+        {
+          "id": "map5_1", 
+          "file": "map2photo/1/map5.bmp", 
+          "label": "map5_1"
+        }, 
+        {
+          "id": "map5_2", 
+          "file": "map2photo/2/map5.bmp", 
+          "label": "map5_2"
+        }, 
+        {
+          "id": "map6_1", 
+          "file": "map2photo/1/map6.bmp", 
+          "label": "map6_1"
+        }, 
+        {
+          "id": "map6_2", 
+          "file": "map2photo/2/map6.bmp", 
+          "label": "map6_2"
+        }
+      ], 
+      "Image Number": 12, 
+      "Description": "map2photo"
+    }, 
+    {
+      "Name": "S", 
+      "Links": [
+        {
+          "source": "angiogram_1", 
+          "target": "angiogram_2", 
+          "file": "S/h/angiogram.txt"
+        }, 
+        {
+          "source": "brain1_1", 
+          "target": "brain1_2", 
+          "file": "S/h/brain1.txt"
+        }, 
+        {
+          "source": "EO-IR-2_1", 
+          "target": "EO-IR-2_2", 
+          "file": "S/h/EO-IR-2.txt"
+        }, 
+        {
+          "source": "maunaloa_1", 
+          "target": "maunaloa_2", 
+          "file": "S/h/maunaloa.txt"
+        }, 
+        {
+          "source": "mms68_1", 
+          "target": "mms68_2", 
+          "file": "S/h/mms68.txt"
+        }, 
+        {
+          "source": "mms75_1", 
+          "target": "mms75_2", 
+          "file": "S/h/mms75.txt"
+        }, 
+        {
+          "source": "treebranch_1", 
+          "target": "treebranch_2", 
+          "file": "S/h/treebranch.txt"
+        }
+      ], 
+      "Label": "Modality", 
+      "Link Number": 7, 
+      "Images": [
+        {
+          "id": "angiogram_1", 
+          "file": "S/1/angiogram.bmp", 
+          "label": "angiogram_1"
+        }, 
+        {
+          "id": "angiogram_2", 
+          "file": "S/2/angiogram.bmp", 
+          "label": "angiogram_2"
+        }, 
+        {
+          "id": "brain1_1", 
+          "file": "S/1/brain1.bmp", 
+          "label": "brain1_1"
+        }, 
+        {
+          "id": "brain1_2", 
+          "file": "S/2/brain1.bmp", 
+          "label": "brain1_2"
+        }, 
+        {
+          "id": "EO-IR-2_1", 
+          "file": "S/1/EO-IR-2.bmp", 
+          "label": "EO-IR-2_1"
+        }, 
+        {
+          "id": "EO-IR-2_2", 
+          "file": "S/2/EO-IR-2.bmp", 
+          "label": "EO-IR-2_2"
+        }, 
+        {
+          "id": "maunaloa_1", 
+          "file": "S/1/maunaloa.bmp", 
+          "label": "maunaloa_1"
+        }, 
+        {
+          "id": "maunaloa_2", 
+          "file": "S/2/maunaloa.bmp", 
+          "label": "maunaloa_2"
+        }, 
+        {
+          "id": "mms68_1", 
+          "file": "S/1/mms68.bmp", 
+          "label": "mms68_1"
+        }, 
+        {
+          "id": "mms68_2", 
+          "file": "S/2/mms68.bmp", 
+          "label": "mms68_2"
+        }, 
+        {
+          "id": "mms75_1", 
+          "file": "S/1/mms75.bmp", 
+          "label": "mms75_1"
+        }, 
+        {
+          "id": "mms75_2", 
+          "file": "S/2/mms75.bmp", 
+          "label": "mms75_2"
+        }, 
+        {
+          "id": "treebranch_1", 
+          "file": "S/1/treebranch.bmp", 
+          "label": "treebranch_1"
+        }, 
+        {
+          "id": "treebranch_2", 
+          "file": "S/2/treebranch.bmp", 
+          "label": "treebranch_2"
+        }
+      ], 
+      "Image Number": 14, 
+      "Description": "S"
+    }
+  ], 
+  "Sequence Number": 5, 
+  "Sequence Name List": [
+    "A", 
+    "G", 
+    "L", 
+    "map2photo", 
+    "S"
+  ]
+}
