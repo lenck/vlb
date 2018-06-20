@@ -17,8 +17,8 @@ import hickle as hkl
 
 #import pdb
 
-eng = matlab.engine.start_matlab()
-eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
+#eng = matlab.engine.start_matlab()
+#eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
 
 class Benchmark():
     __metaclass__ = ABCMeta 
@@ -28,7 +28,7 @@ class Benchmark():
         self.tmp_feature_dir = tmp_feature_dir
         self.result_dir = result_dir
     
-    def detect_feature(self, dataset, detector, use_cache = False, save_feature = True):
+    def detect_feature(self, dataset, detector, use_cache = True, save_feature = True):
         feature_dict = {}
         try:
             os.makedirs('{}{}/{}/'.format(self.tmp_feature_dir, dataset.name, detector.name))
@@ -150,12 +150,19 @@ class Benchmark():
     
     #Evaluation warpper
     def evaluate_warpper(self, dataset, detector, result_list, extract_descriptor = False,
-            use_cache = True, save_result = True):
-         
-        if extract_descriptor:
-            feature_dict, descriptor_dict = self.extract_descriptor(dataset, detector, use_cache = use_cache, save_feature = save_result)
+            use_cache = True, save_result = True, custom_extraction = False):
+        
+        if custom_extraction:
+            if extract_descriptor:
+                feature_dict, descriptor_dict = self.extract_descriptor_custom(dataset, detector, use_cache = use_cache, save_feature = save_result)
+            else:
+                feature_dict = self.detect_feature_custom(dataset,detector, use_cache = use_cache, save_feature = save_result)
+
         else:
-            feature_dict = self.detect_feature(dataset,detector, use_cache = use_cache, save_feature = save_result)
+            if extract_descriptor:
+                feature_dict, descriptor_dict = self.extract_descriptor(dataset, detector, use_cache = use_cache, save_feature = save_result)
+            else:
+                feature_dict = self.detect_feature(dataset,detector, use_cache = use_cache, save_feature = save_result)
 
         try:
             os.makedirs('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
@@ -201,9 +208,14 @@ class Benchmark():
                 #for each link
                 for link in sequence.links():
                     link = link[1]
-                    task = link.matlab_task
+                    try:
+                        task = link.matlab_task
+                    except:
+                        task = None
+                    
                     feature_1 = feature_dict['{}_{}'.format(sequence.name, link.source)]
                     feature_2 = feature_dict['{}_{}'.format(sequence.name, link.target)]
+
                     if extract_descriptor:
                         descriptor_1 = descriptor_dict['{}_{}'.format(sequence.name, link.source)]
                         descriptor_2 = descriptor_dict['{}_{}'.format(sequence.name, link.target)]
@@ -215,6 +227,7 @@ class Benchmark():
                     #if sequence.name == 'wall' and link.source=='1' and link.target == '2':
                     #    pdb.set_trace()
                     #simple evaluation function for each test
+
                     if extract_descriptor:
                         result_number_list = self.evaluate_unit((feature_1,descriptor_1), (feature_2,descriptor_2), task)
                     else:
@@ -252,4 +265,12 @@ class Benchmark():
 
     @abstractmethod
     def evaluate_unit(feature_1, feature_2, task):
+        pass
+
+    @abstractmethod
+    def detect_feature_custom(self, dataset, detector, use_cache = False, save_feature = True):
+        pass
+
+    @abstractmethod
+    def extract_descriptor_custom(self, dataset, detector, use_cache = False, save_feature = True):
         pass

@@ -2,8 +2,6 @@ import numpy as np
 import json
 import os
 import cv2
-import cyvlfeat
-import exifread
 import matlab
 from abc import ABCMeta, abstractmethod
 
@@ -38,7 +36,7 @@ class Sequence:
 
 class SequenceDataset():
     __metaclass__ = ABCMeta 
-    def __init__(self, name, root_dir = './datasets/', download_flag = False):
+    def __init__(self, name, root_dir = './datasets/', download_flag = False, matlab_flag = False):
         self.name = name
         self.root_dir = root_dir
         self.load_dataset_info()
@@ -54,7 +52,10 @@ class SequenceDataset():
 
         self.read_image_data()
         self.read_link_data()
-        self.set_matlab_task()
+        #need matlab warpper at this point
+        self.matlab_flag = matlab_flag
+        if matlab_flag:
+            self.set_matlab_task()
 
     def load_dataset_info(self):
         try:
@@ -99,6 +100,7 @@ class SequenceDataset():
                 this_link.target = read_link['target']
                 this_link.filename = None
                 this_link.transform_matrix = None
+
                 this_link.matlab_task = {}
                 
                 try:
@@ -157,8 +159,8 @@ class SequenceDataset():
                             pass
                     sequence.image_dict[image_id].image_data = img
                 except:
-                    print('Cannot read image file: {}. Did you download the dataset correctly?'\
-                            .format(sequence.image_dict[image_id].filename))
+                    print('Cannot read image file: {}{}/{}. Did you download the dataset correctly?'\
+                            .format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
                     exit()
 
 

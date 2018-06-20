@@ -8,7 +8,6 @@ import json
 import os
 import cv2
 import cyvlfeat
-import exifread
 import feature_utils 
 from DetectorDescriptorTemplate import DetectorAndDescriptor
 

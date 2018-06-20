@@ -122,6 +122,54 @@ def print_result(results, term_to_show):
     results_str_list = get_str_list(results, term_to_show)
     print_table(results_str_list)
 
+def print_retrieval_result(results, term_to_show):
+    if len(results) ==0 :
+        return
+    print("")
+    print("Dataset: {}".format(results[0]['dataset_name']))
+    print("Metric: {}".format(term_to_show))
+    results_str_list = get_retrieval_str_list(results, term_to_show)
+
+    print_retrieval_table(results_str_list)
+
+def print_retrieval_table(content_list):
+    if len(content_list)==0:
+        return
+
+    max_detector_name_len = 8
+    max_sequence_name_len = 6
+
+    for content in content_list:
+        if len(content[0])>max_detector_name_len:
+            max_detector_name_len = len(content[0])
+
+    content = content_list[0][1:]
+    for sequence_name in content:
+        if len(sequence_name)>max_sequence_name_len:
+            max_sequence_name_len = len(sequence_name)
+
+    content = content_list[0]
+    title_str = ''
+    for idx, this_str in enumerate(content):
+        if idx == 0:
+            title_str = "|{}|".format(this_str.ljust(max_detector_name_len)[:max_detector_name_len])
+        else:
+            title_str = title_str+"{}|".format(this_str.ljust(max_sequence_name_len)[:max_sequence_name_len]) 
+            
+    print('-'*len(title_str))
+    print(title_str)
+    print('-'*len(title_str))
+    content_str = ''
+    for content in content_list[1:]:
+        for idx, this_str in enumerate(content):
+            if idx == 0:
+                content_str = "|{}|".format(this_str.ljust(max_detector_name_len)[:max_detector_name_len])
+            else:
+                content_str = content_str + "{}|".format(this_str.ljust(max_sequence_name_len)[:max_sequence_name_len])
+        print(content_str)
+
+    print('-'*len(title_str))
+
 def print_table(content_list):
     if len(content_list)==0:
         return
@@ -160,14 +208,21 @@ def print_table(content_list):
 
     print('-'*len(title_str))
 
-def save_result(results,term_to_show, result_dir = './python_scores/'):
+def save_result(results, term_to_show, result_dir = './python_scores/'):
     result_file_csv = csv.writer(open('{}{}/{}/{}_result.csv'.format(result_dir,\
             results[0]['bench_name'], results[0]['dataset_name'], term_to_show), 'w'), delimiter=',')
     results_str_list = get_str_list(results,term_to_show)
     for this_str in results_str_list:
         result_file_csv.writerow(this_str)
 
-def get_str_list(results,term_to_show):
+def save_retrieval_result(results, term_to_show, result_dir = './python_scores/'):
+    result_file_csv = csv.writer(open('{}{}/{}/{}_result.csv'.format(result_dir,\
+            results[0]['bench_name'], results[0]['dataset_name'], term_to_show), 'w'), delimiter=',')
+    results_str_list = get_retrieval_str_list(results, term_to_show)
+    for this_str in results_str_list:
+        result_file_csv.writerow(this_str)
+
+def get_str_list(results, term_to_show):
     max_detector_name_len = 8
     results_str_list = []
     title_str = []
@@ -184,6 +239,23 @@ def get_str_list(results,term_to_show):
         for sequence_result in result['sequence_result']:
             write_str.append(str(sequence_result['ave_{}'.format(term_to_show)]))
         write_str.append(str(result['ave_{}'.format(term_to_show)]))
+        results_str_list.append(write_str)
+        
+    return results_str_list
+
+def get_retrieval_str_list(results, term_to_show):
+    max_detector_name_len = 8
+    results_str_list = []
+    title_str = []
+    title_str.append('Detector')
+    result = results[0]
+    title_str.append('Ave')
+    results_str_list.append(title_str) 
+    
+    for result in results:
+        write_str = []
+        write_str.append(result['detector_name'])
+        write_str.append(str(result[term_to_show]))
         results_str_list.append(write_str)
         
     return results_str_list
