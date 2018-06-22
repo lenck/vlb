@@ -14,6 +14,7 @@ from tqdm import tqdm
 import pickle as pkl
 import nmslib
 import cv2
+import copy
 #import pdb
 
 #eng = matlab.engine.start_matlab()
@@ -63,7 +64,6 @@ class RetrievalBenchmark():
         
         pbar = tqdm(dataset.gallery_list)
         for image_filepath in pbar:
-            image = cv2.imread(image_filepath) 
             directory, filename = os.path.split(image_filepath)
             base_filename = os.path.basename(filename)
             feature_file_name = '{}{}/{}/{}_frame'.format(self.tmp_feature_dir,\
@@ -80,20 +80,24 @@ class RetrievalBenchmark():
                     get_feature_flag = False
                     
             if not get_feature_flag:
-                if detector.csv_flag:
-                    feature_csv_name = './data/{}/{}/{}/{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,\
-                        detector.name, base_filename)
-                    feature = self.load_csv_feature(feature_csv_name)
-                    descriptor_csv_name = './data/{}/{}/{}/{}.descs.csv'.format(self.tmp_feature_dir, dataset.name,\
-                        detector.name, base_filename)
-                    descriptor = self.load_csv_feature(descriptor_csv_name)
+                image = cv2.imread(image_filepath) 
+                if image is None:
+                    feature = []
+                    descriptor = np.array([])
                 else:
-                    if detector.is_both:
-                        feature, descriptor = detector.extract_all(image)
+                    if detector.csv_flag:
+                        feature_csv_name = './data/{}/{}/{}/{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,\
+                            detector.name, base_filename)
+                        feature = self.load_csv_feature(feature_csv_name)
+                        descriptor_csv_name = './data/{}/{}/{}/{}.descs.csv'.format(self.tmp_feature_dir, dataset.name,\
+                            detector.name, base_filename)
+                        descriptor = self.load_csv_feature(descriptor_csv_name)
                     else:
-                        feature = detector.detect_feature(image)
-                        descriptor = detector.extract_descriptor(image, feature = feature)
-
+                        if detector.is_both:
+                            feature, descriptor = detector.extract_all(image)
+                        else:
+                            feature = detector.detect_feature(image)
+                            descriptor = detector.extract_descriptor(image, feature = feature)
                 if save_feature:
                     np.save(feature_file_name,feature)
                     np.save(descriptor_file_name,descriptor)
@@ -126,7 +130,8 @@ class RetrievalBenchmark():
         result = {} 
         if use_cache:
             try:
-                result = pkl.load(open(result_file_name,'r'))
+                sdfadfsdf
+                result = pkl.load(open(result_file_name,'rb'))
                 print('Get cached result from {}'.format(result_file_name))
                 get_result_flag = True
             except:
@@ -158,7 +163,7 @@ class RetrievalBenchmark():
                 directory, filename = os.path.split(image_filepath)
                 base_filename = os.path.basename(filename)
                 kp = feature_dict[base_filename]
-                desc = descriptor_dict[base_filename]
+                desc = copy.copy(descriptor_dict[base_filename])
                 if kp is None or len(kp)==0:
                     filename_list.append(base_filename)
                     image_begin_list.append(feature_index)
@@ -173,6 +178,8 @@ class RetrievalBenchmark():
                     point_list.extend([image_index]*desc.shape[0])
                     if l2_norm:
                         desc = desc.astype(np.float32)
+                        desc /= (desc.sum(axis=1, keepdims=True) + 1e-7)
+                        desc = np.sqrt(desc)
                         desc_p = pow(desc,2)
                         desc /= np.sqrt(desc_p.sum(axis=1, keepdims=True) + 1e-7)
                     for i in range(desc.shape[0]):
@@ -200,9 +207,14 @@ class RetrievalBenchmark():
 
                 directory, filename = os.path.split(image_filepath)
                 base_filename = os.path.basename(filename)
-                kp = feature_dict[base_filename]
-                desc = descriptor_dict[base_filename]
-                
+                kp = feature_dict[base_filename].copy()
+                desc = descriptor_dict[base_filename].copy()
+                if l2_norm:
+                    desc = desc.astype(np.float32)
+                    desc /= (desc.sum(axis=1, keepdims=True) + 1e-7)
+                    desc = np.sqrt(desc)
+                    desc_p = pow(desc,2)
+                    desc /= np.sqrt(desc_p.sum(axis=1, keepdims=True) + 1e-7)
                 if filter_flag:
                     new_kp = []
                     new_desc = []
@@ -226,17 +238,16 @@ class RetrievalBenchmark():
                 flat_I = I.reshape(I.shape[0]*I.shape[1])
                 image_index = [point_list[i] for i in flat_I]
                 flat_D = D.reshape(D.shape[0]*D.shape[1])
-                flat_D = np.maximum(0,pow((1-np.maximum(0,flat_D-0.1)/0.2),3))
 
                 sorted_index, sorted_score, sorted_count, score_dict, count_dict = get_sorted_index_and_score(image_index, flat_D)
                 
                 old_recall = 0.0
-                old_precision = 0.0
+                old_precision = 1.0
                 ap = 0.0
                 good_number = 0
                 total_count = 0
 
-                for idx in sorted_index:
+                for idx_t, idx in enumerate(sorted_index):
                     if filename_list[idx] in dataset.junk_lists[query_idx]:
                         continue
                     total_count += 1
@@ -248,14 +259,14 @@ class RetrievalBenchmark():
                     old_precision = precision
                     old_recall = recall
                 query_result.append(ap)
-
+            
             result['sequence_result'].append(query_result)
 
             for result_name in result_list: 
                 result['m{}'.format(result_name)] = np.mean(np.array(result['sequence_result'][0])) 
 
             if save_result:
-                with open(result_file_name, "w") as output_file:
+                with open(result_file_name, "wb") as output_file:
                     pkl.dump(result, output_file)
         return result
 

@@ -249,7 +249,7 @@ def get_retrieval_str_list(results, term_to_show):
     title_str = []
     title_str.append('Detector')
     result = results[0]
-    title_str.append('Ave')
+    title_str.append(term_to_show)
     results_str_list.append(title_str) 
     
     for result in results:

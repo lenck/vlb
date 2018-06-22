@@ -16,6 +16,7 @@ dependencies:
 - cyvlfeat
 - opencv
 - vlfeat
+- plotly
 - pip:
   - exifread
   - h5py

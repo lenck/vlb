@@ -10,10 +10,10 @@ if sys.version_info[0] >= 3:
 else:
     from urllib import urlretrieve
 
-class oxford5k_Dataset(RetrievalDataset):
+class paris6k_Dataset(RetrievalDataset):
 
     def __init__(self, root_dir = './datasets/', download_flag = False):
-        super(oxford5k_Dataset,self).__init__(name = 'oxford5k', root_dir = root_dir, download_flag = download_flag)
+        super(paris6k_Dataset,self).__init__(name = 'paris6k', root_dir = root_dir, download_flag = download_flag)
 
     def download(self):
         try:
@@ -26,22 +26,30 @@ class oxford5k_Dataset(RetrievalDataset):
         except:
             os.mkdir('{}{}'.format(self.root_dir,self.name))
 
-        print("Download Oxford5K")
-        download_url = "{}{}.tgz".format(self.url, 'oxbuild_images')
-        download_gt_url = "{}{}.tgz".format(self.url, 'gt_files_170407')
-        download_filename = "{}{}/{}.tgz".format(self.root_dir, self.name, 'oxbuild_images')
-        download_gt_filename = "{}{}/{}.tgz".format(self.root_dir, self.name, 'gt_files_170407')
+        print("Download Paris6K")
+        download_url_1 = "{}{}.tgz".format(self.url, 'paris_1')
+        download_url_2 = "{}{}.tgz".format(self.url, 'paris_2')
+        download_gt_url = "{}{}.tgz".format(self.url, 'paris_120310')
+        download_filename_1 = "{}{}/{}.tgz".format(self.root_dir, self.name, 'paris_1')
+        download_filename_2 = "{}{}/{}.tgz".format(self.root_dir, self.name, 'paris_2')
+        download_gt_filename = "{}{}/{}.tgz".format(self.root_dir, self.name, 'paris_120310')
         try:
             os.stat('{}{}'.format(self.root_dir,self.name))
         except:
             os.mkdir('{}{}'.format(self.root_dir,self.name))
 
         try:
-            urlretrieve(download_url, download_filename)
-            tar = tarfile.open(download_filename)
-            tar.extractall('{}{}/images/'.format(self.root_dir,self.name))
+            urlretrieve(download_url_1, download_filename_1)
+            tar = tarfile.open(download_filename_1)
+            tar.extractall('{}{}/'.format(self.root_dir,self.name))
             tar.close()
-            os.remove(download_filename)
+            os.remove(download_filename_1)
+
+            urlretrieve(download_url_2, download_filename_2)
+            tar = tarfile.open(download_filename_2)
+            tar.extractall('{}{}/'.format(self.root_dir,self.name))
+            tar.close()
+            os.remove(download_filename_2)
 
             urlretrieve(download_gt_url, download_gt_filename)
             tar = tarfile.open(download_gt_filename)
@@ -52,7 +60,11 @@ class oxford5k_Dataset(RetrievalDataset):
             print('Cannot download from {}.'.format(self.url))
 
     def read_gallery_list(self):
-        self.gallery_list = glob('{}{}/images/*.jpg'.format(self.root_dir,self.name))
+        self.gallery_list = []
+        for directory in glob('{}{}/paris/*'.format(self.root_dir,self.name)):
+            if os.path.isdir(directory):
+                self.gallery_list.extend(glob('{}/*.jpg'.format(directory)))
+        print(len(self.gallery_list))
 
     def read_query_list(self):
         query_txt_list = glob('{}{}/gt/*query.txt'.format(self.root_dir,self.name))
@@ -67,9 +79,11 @@ class oxford5k_Dataset(RetrievalDataset):
                     top = float(top)
                     right = float(right)
                     bottom = float(bottom)
-                    filename = filename[5:] + '.jpg'
+                    filename = filename + '.jpg'
                     self.query_list.append([filename, left, top, right, bottom])
+            #remove _query.txt
             query_txt = query_txt[:-10]
+            #find positive image set
             pos_txt = query_txt + '_good.txt'
             pos_list = []
             with open(pos_txt, 'r') as fp:
@@ -82,6 +96,7 @@ class oxford5k_Dataset(RetrievalDataset):
                     line = line[:-1]
                     pos_list.append(line+'.jpg')
             self.positive_lists.append(pos_list) 
+            #find junk image set
             junk_txt = query_txt + '_junk.txt'
             junk_list = []
             with open(junk_txt, 'r') as fp:
@@ -92,5 +107,5 @@ class oxford5k_Dataset(RetrievalDataset):
 
     
 if __name__ == "__main__":
-    a = oxford5k_Dataset(download_flag = True)
+    a = paris6k_Dataset(download_flag = True)
 

@@ -21,6 +21,15 @@ def all_to_gray(image):
         image = rgb2gray(image)#cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
     return image
 
+def all_to_gray_cv(image):
+    if len(image.shape)==2:
+        return image
+    if image.shape[2] == 4:
+        image = image[:,:,:3]
+    if image.shape[2] == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) 
+    return image
+
 def all_to_BGR(image):
     if image.shape[2] == 1 :
         image = np.repeat(image, 3, axis = 2)

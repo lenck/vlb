@@ -3,6 +3,11 @@ import urllib
 import tarfile
 import os
 
+if sys.version_info[0] >= 3:
+    from urllib.request import urlretrieve
+else:
+    from urllib import urlretrieve
+
 
 class W1BS_Dataset(SequenceDataset):
 
@@ -23,7 +28,7 @@ class W1BS_Dataset(SequenceDataset):
         download_url = "{}.tar.gz".format(self.url)
         download_filename = "{}/{}.tar.gz".format(self.root_dir, self.name)
         try:
-            urllib.urlretrieve(download_url,download_filename)
+            urlretrieve(download_url,download_filename)
             tar = tarfile.open(download_filename)
             tar.extractall('{}'.format(self.root_dir))
             tar.close()

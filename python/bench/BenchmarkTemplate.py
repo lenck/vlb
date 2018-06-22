@@ -13,10 +13,9 @@ import numpy as np
 from abc import ABCMeta, abstractmethod
 import os
 from tqdm import tqdm
-import hickle as hkl
+import pickle as pkl
 
 #import pdb
-
 #eng = matlab.engine.start_matlab()
 #eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
 
@@ -170,10 +169,10 @@ class Benchmark():
             pass
         
         get_result_flag = False
-        result_file_name = '{}{}/{}/{}/{}.hkl'.format(self.result_dir, self.bench_name, dataset.name, detector.name, self.test_name)
+        result_file_name = '{}{}/{}/{}/{}.pkl'.format(self.result_dir, self.bench_name, dataset.name, detector.name, self.test_name)
         if use_cache:
             try:
-                result = hkl.load(open(result_file_name,'r'))
+                result = pkl.load(open(result_file_name,'rb'))
                 print('Get cached result from {}'.format(result_file_name))
                 get_result_flag = True
             except:
@@ -250,8 +249,8 @@ class Benchmark():
                 #print('ave {} {}'.format(result_name,result['ave_{}'.format(result_name)]))
 
             if save_result:
-                with open(result_file_name, "w") as output_file:
-                    hkl.dump(result, output_file)
+                with open(result_file_name, "wb") as output_file:
+                    pkl.dump(result, output_file)
 
         return result
 

@@ -5,19 +5,16 @@ Author: Xu Zhang
 """
 
 import numpy as np
-import json
 import os
-import hickle as hkl
 import BenchmarkTemplate
 from tqdm import tqdm
 from BenchmarkTemplate import Benchmark
-import csv
 import sys
 
 sys.path.insert(0, './3rdparty/wxbs-descriptors-benchmark/code')
 
 import utils.w1bs
-import pdb
+#import pdb
 
 class W1BSBench(Benchmark):
     def __init__(self, tmp_feature_dir = './features/', result_dir = './python_scores/'):

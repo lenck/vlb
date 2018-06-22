@@ -7,7 +7,6 @@ Author: Xu Zhang
 import numpy as np
 import json
 import os
-import hickle as hkl
 import BenchmarkTemplate
 from BenchmarkTemplate import Benchmark
 import csv
