@@ -81,7 +81,7 @@ end
 
 
 
-function view_matchpair(imdb, taskid, varargin)
+function res = view_matchpair(imdb, taskid, varargin)
 opts.imperrow = ceil(sqrt(numel(taskid)));
 opts = vl_argparse(opts, varargin);
 imdb = dset.factory(imdb);
@@ -112,6 +112,7 @@ if numel(taskid) == 1 % Show a single pair
     otherwise
       error('Unsupported geometry: `%s`', imdb.geometry);
   end
+  res = {ima, imb};
 else % show multiple pairs
   ncols = opts.imperrow;
   nrows = ceil(numel(taskid)/ncols);
@@ -135,6 +136,10 @@ end
 
 
 function res = view_matches(benchname, imdb, featsname, taskid, varargin)
+opts.plot_ref = true;
+opts.plot_repr = true;
+opts.plot_legend = true;
+opts = vl_argparse(opts, varargin);
 imdb = dset.factory(imdb);
 if isstruct(featsname), featsname = featsname.name; end;
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
@@ -157,34 +162,43 @@ else
   res = res.info;
 end
 display(scores);
+
+n_plots = opts.plot_ref + opts.plot_repr;
+
 if nargout == 0
   task = imdb.tasks(taskid);
   imaid = dset.utls.getimid(imdb, task.ima);
   imbid = dset.utls.getimid(imdb, task.imb);
   
-  subplot(1,2,1);
-  imshow(imdb.images(imaid).path); hold on;
-
-  ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
-  vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
-  line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'k', 'LineWidth', 1);
-  title(['IM-A ', featsname], 'Interpreter', 'none');
-  
-  subplot(1,2,2);
-  imshow(imdb.images(imbid).path); hold on;
-  
-  la = [];
-  la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  if sum(res.matches~=0) > 0
-    la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
-    la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  if n_plots > 1, subplot(1,2,1); end
+  if opts.plot_ref
+    imshow(imdb.images(imaid).path); hold on;
+    ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
+    vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', 'c');
+    vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]*3);
+    vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
+    vl_plotframe(ea, 'LineWidth', 3, 'Color', 'black');
+    vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
+    line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'w', 'LineWidth', 1);
+    %title(['IM-A ', featsname], 'Interpreter', 'none');
   end
-  title(['IM-B ' featsname], 'Interpreter', 'none');
-  legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
+  
+  if n_plots > 1, subplot(1,2,2); end
+  if opts.plot_repr
+    imshow(imdb.images(imbid).path); hold on;
+    la = [];
+    la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', 'c');
+    la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]*3);
+    if sum(res.matches~=0) > 0
+      la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
+      la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 3, 'Color', 'black');
+      la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+    end
+    %title(['IM-B ' featsname], 'Interpreter', 'none');
+  end
+  if opts.plot_legend
+    legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
+  end
 end
 end
 

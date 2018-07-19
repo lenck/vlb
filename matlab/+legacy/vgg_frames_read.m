@@ -3,6 +3,14 @@ function frames = vgg_frames_read(framesFile)
 %   FRAMES = VGG_FRAMES_READ(FRAME_FILE_PATH) Reads FRAMES from a file
 %   defined by FRAME_FILE_PATH
 %
+%   Format is:
+%   # HEADER
+%   1.0 # Descriptor length, ignored
+%   128 # Number of points
+%   # List on N points
+%   x y a b c  # T = [X, Y]  - location of interest points
+%              # M = [a,b;b,c] {x + T: x' M x = 1} affine shape 
+%
 %   vl_ubscread cannot be used because some older detectors produce files
 %   which contain length of the descriptors = 1 which the vl_ubcread function
 %   is not able to handle.

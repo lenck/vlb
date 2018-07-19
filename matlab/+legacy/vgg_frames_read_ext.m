@@ -1,7 +1,15 @@
 function [out] = vgg_frames_read_ext(framesFile)
 % VGG_FRAMES_READ Read file exported by some of the older frame detectors.
-%   FRAMES = VGG_FRAMES_READ(FRAME_FILE_PATH) Reads FRAMES from a file
-%   defined by FRAME_FILE_PATH
+%   FRAMES = VGG_FRAMES_READ_EXT(FRAME_FILE_PATH) Reads FRAMES from a file
+%   defined by FRAME_FILE_PATH, probably ad-hoc extended format of KM code.
+%
+%   Format is:
+%   # HEADER
+%   1.0 # Descriptor length, ignored
+%   128 # Number of points
+%   # List on N points, each point 12 values...
+%   x y R S ? T ? ? a11 a12 a21 a22  # P = [X, Y]  - location of interest points
+%              # M = [a,b;b,c] {x + T: x' M x = 1} affine shape 
 %
 %   vl_ubscread cannot be used because some older detectors produce files
 %   which contain length of the descriptors = 1 which the vl_ubcread function
