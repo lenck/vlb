@@ -1,4 +1,16 @@
 function dest_feats_name = vlb_describe(imdb, featsname, descriptor, varargin)
+%VLB_DESCRIBE Compute descriptors for a given features
+%  VLB_DESCRIBE imdb featsname descriptor
+%
+%  Based on descriptor type, uses either full images and a set of frames,
+%  or computes descriptors using extracted patches.
+
+% Copyright (C) 2016-2017 Karel Lenc
+% All rights reserved.
+%
+% This file is part of the VLFeat library and is made available under
+% the terms of the BSD license (see the COPYING file).
+
 import features.*;
 
 opts.imgExt = '.png';

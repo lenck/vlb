@@ -1,4 +1,13 @@
 function [dest_feats_name, feats] = vlb_detect(imdb, detector, varargin)
+%VLB_DETECT Compute features using a given detector
+%  VLB_DETECT imdb detector
+
+% Copyright (C) 2016-2017 Karel Lenc
+% All rights reserved.
+%
+% This file is part of the VLFeat library and is made available under
+% the terms of the BSD license (see the COPYING file).
+
 import features.*;
 
 opts.override = false;

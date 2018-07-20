@@ -1,4 +1,18 @@
 function res = vlb_view(cmd, varargin)
+%VLB_VIEW View benchmark results
+%  `VLB_VIEW patches imdb featsname imid`
+%  `VLB_VIEW detection imdb featsname imid`
+%  `VLB_VIEW detout detname img`
+%  `VLB_VIEW matchpair imdb taskid`
+%  `VLB_VIEW matches benchname imdb featsname taskid`
+%  `VLB_VIEW sequencescores benchName imdb featsname sequence valuename`
+%  `VLB_VIEW descmatchpr imdb featsname taskid`
+
+% Copyright (C) 2016-2017 Karel Lenc
+% All rights reserved.
+%
+% This file is part of the VLFeat library and is made available under
+% the terms of the BSD license (see the COPYING file).
 
 vlb_setup();
 usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb_view');
@@ -54,8 +68,8 @@ if nargout == 0
 end
 end
 
-function feats = view_detout(det, img, varargin)
-det = features.factory('det', det, varargin{:});
+function feats = view_detout(detname, img, varargin)
+det = features.factory('det', detname, varargin{:});
 feats = det.fun(img);
 imshow(img); hold on;
 vl_plotframe(feats.frames, 'LineWidth', 1);

@@ -1,4 +1,12 @@
 function vlb_extract(imdb, featsname, varargin)
+%VLB_EXTRACT Extract patches from all images of an imdb using featsname
+%  VLB_EXTRACT imdb featsname
+
+% Copyright (C) 2016-2017 Karel Lenc
+% All rights reserved.
+%
+% This file is part of the VLFeat library and is made available under
+% the terms of the BSD license (see the COPYING file).
 
 opts.override = false;
 opts.grayscale = true;

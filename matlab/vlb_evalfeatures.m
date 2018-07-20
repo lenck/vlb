@@ -1,4 +1,6 @@
 function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
+%VLB_EVALFEATURES Run local features evaluation
+%   VLB_EVALFEATURES benchfun imdb feats
 
 % Copyright (C) 2017 Karel Lenc
 % All rights reserved.
@@ -77,5 +79,5 @@ featpath = fullfile(featsdir, imname);
 feats = utls.features_load(featpath);
 if isempty(feats)
   error('Unalbe to find %s features for image %s.', featsname, imname);
-end;
+end
 end
