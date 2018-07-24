@@ -8,8 +8,9 @@ function vlb_imagelist(imdb, feats, varargin)
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-opts.targetDir = fullfile(vlb_path(), 'data');
+opts.targetDir = vlb_path('imagelists');
 opts = vl_argparse(opts, varargin);
+vl_xmkdir(opts.targetDir);
 
 imdb = dset.factory(imdb);
 if isstruct(feats), feats = feats.name; end;

@@ -70,6 +70,9 @@ if nargin > 0
     case 'vendor'
       assert(nargin == 1, 'Too many args for vendor');
       root = fullfile(root, 'vendor');
+    case 'imagelists'
+      assert(nargin == 1, 'Too many args for vendor');
+      root = fullfile(dataroot, 'imagelists');
     otherwise
       error('Invalid set %s.', set);
   end
