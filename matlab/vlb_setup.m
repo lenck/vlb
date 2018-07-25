@@ -18,13 +18,16 @@ utls.setup_vlfeat();
 end
 
 function check_and_add(add_folder,all_path)
-    if ispc  % Windows is not case-sensitive
-        onPath = any(strcmpi(add_folder, all_path));
-    else
-        onPath = any(strcmp(add_folder, all_path));
-    end
-    
-    if ~onPath
-        addpath(add_folder);
-    end
+if isdeployed
+  return
+end
+if ispc  % Windows is not case-sensitive
+  onPath = any(strcmpi(add_folder, all_path));
+else
+  onPath = any(strcmp(add_folder, all_path));
+end
+
+if ~onPath
+  addpath(add_folder);
+end
 end

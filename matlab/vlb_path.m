@@ -28,7 +28,12 @@ function root = vlb_path(set, imdb, featsname, benchname)
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
-root = fileparts(fileparts(mfilename('fullpath'))) ;
+env_root = getenv('VLB_ROOT');
+if ~isempty(env_root)
+  root = strtrim(env_root);
+else
+  root = fileparts(fileparts(mfilename('fullpath'))) ;
+end
 
 % Allow to store data per project with a environment variable
 env_scoresroot = getenv('VLB_DATAROOT');

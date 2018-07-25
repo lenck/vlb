@@ -12,6 +12,6 @@ if ~opts.keepext
   for fi = 1:numel(files), [~, files{fi}, ~] = fileparts(files{fi}); end;
 end
 if opts.fullpath
-  files = cellfun(@(a) fullpath(path, a), files, 'Uni', false);
+  files = cellfun(@(a) fullfile(fileparts(path), a), files, 'Uni', false);
 end
 end

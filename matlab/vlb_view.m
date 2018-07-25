@@ -1,7 +1,7 @@
 function res = vlb_view(cmd, varargin)
 %VLB_VIEW View benchmark results
 %  `VLB_VIEW patches imdb featsname imid`
-%  `VLB_VIEW detection imdb featsname imid`
+%  `VLB_VIEW detections imdb featsname imid`
 %  `VLB_VIEW detout detname img`
 %  `VLB_VIEW matchpair imdb taskid`
 %  `VLB_VIEW matches benchname imdb featsname taskid`
@@ -30,7 +30,7 @@ cmds.descmatchpr = struct('fun', @view_descmatchpr, 'help', 'benchFun imdb feats
 cmds.help = struct('fun', @(varargin) usage(cmds, '', varargin{:}));
 if nargin < 1, cmd = nan; end;
 if ~ischar(cmd), usage(cmds); return; end
-if strcmp(cmd, 'commands'), res = cmds; return; end;
+if strcmp(cmd, 'commands'), res = cmds; return; end
 
 if isfield(cmds, cmd) && ~isempty(cmds.(cmd).fun)
   if nargout == 1
@@ -50,10 +50,12 @@ feats_path = vlb_path('features', imdb, featsname);
 if ~exist(feats_path, 'dir')
   error('No detections in %s.', feats_path);
 end
-if nargin < 3, error('Imid not specified.'); end;
+if nargin < 3, error('Imid not specified.'); end
 imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
-feats = utls.features_load(fullfile(feats_path, imname));
+featspath = fullfile(feats_path, imname);
+fprintf('Loading features from %s\n', featspath);
+feats = utls.features_load(featspath);
 if nargout == 0
   imshow(imdb.images(imid).path); hold on;
   if isfield(feats, 'scalingFactor')
@@ -92,13 +94,26 @@ if nargout == 0
 end
 end
 
-
+function taskid_out = gettaskid(imdb, taskid)
+if ischar(taskid)
+  [taskid_out, status] = str2num(taskid);
+  if ~status
+    error('Invalid task id %s', taskid);
+  end
+else
+  taskid_out = taskid;
+end
+if taskid_out > numel(imdb.tasks) || taskid_out < 1
+  error('Invalid task id %d.', imid);
+end
+end
 
 
 function res = view_matchpair(imdb, taskid, varargin)
+imdb = dset.factory(imdb);
+taskid = gettaskid(imdb, taskid);
 opts.imperrow = ceil(sqrt(numel(taskid)));
 opts = vl_argparse(opts, varargin);
-imdb = dset.factory(imdb);
 clf;
 
 if numel(taskid) == 1 % Show a single pair
@@ -155,7 +170,7 @@ opts.plot_repr = true;
 opts.plot_legend = true;
 opts = vl_argparse(opts, varargin);
 imdb = dset.factory(imdb);
-if isstruct(featsname), featsname = featsname.name; end;
+if isstruct(featsname), featsname = featsname.name; end
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
 info_path = fullfile(scoresdir, 'results.mat');
 feats_path = vlb_path('features', imdb, featsname);
@@ -163,9 +178,7 @@ feats_path = vlb_path('features', imdb, featsname);
 if ~exist(info_path, 'file')
   error('Could not find benchamrk results in %s.', info_path);
 end
-if taskid < 1 || taskid > numel(imdb.tasks)
-  error('Invalid task id %d', taskid);
-end
+taskid = gettaskid(imdb, taskid);
 
 scores = readtable(fullfile(scoresdir, 'results.csv'));
 res = load(info_path);
@@ -220,7 +233,7 @@ end
 function res_f = view_sequencescores(benchName, imdb, featsname, sequence, valuename, varargin)
 imdb = dset.factory(imdb);
 assert(ismember(benchName, {'detrep', 'detmatch'}), 'Unsupported benchmark.');
-if ~iscell(featsname), featsname = {featsname}; end;
+if ~iscell(featsname), featsname = {featsname}; end
 
 res = cell(numel(featsname), 1);
 for fi = 1:numel(featsname)
@@ -246,8 +259,8 @@ end
 
 function res = view_descmatchpr(imdb, featsname, taskid, varargin)
 imdb = dset.factory(imdb);
-assert(taskid > 0 && taskid < numel(imdb.tasks), 'Invalid Task ID');
-if ~iscell(featsname), featsname = {featsname}; end;
+taskid = gettaskid(imdb, taskid);
+if ~iscell(featsname), featsname = {featsname}; end
 
 res = cell(numel(featsname), 1);
 info = cell(numel(featsname), 1);
