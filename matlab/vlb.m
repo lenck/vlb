@@ -4,6 +4,9 @@ function [res, info] = vlb(cmd, varargin)
 %     Print this help string.
 %  `VLB help COMMAND`
 %     Print a help string for a COMMAND.
+%   
+%  `VLB view` Various visualisations
+%  `VLB imagelist` Create image list and feature list
 %
 %  `VLB detect`
 %  `VLB extract`

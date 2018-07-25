@@ -22,11 +22,18 @@ fprintf('To reprovision, delete %s.\n', done_file);
 end
 
 function unpack(url, tgt_dir, opts)
-[~,~,ext] = fileparts(url);
-if opts.forceExt, ext = opts.forceExt; end;
+[~,filename,ext] = fileparts(url);
+if opts.forceExt, ext = opts.forceExt; end
+tgt_file = fullfile(tgt_dir, [filename, ext]);
 fprintf(isdeployed+1, ...
   'Downloading %s -> %s, this may take a while...\n',...
-  url, tgt_dir);
+  url, tgt_file);
+
+download(url, tgt_file);
+
+fprintf(isdeployed+1, ...
+  'Unpacking %s -> %s, this may take a while...\n',...
+  tgt_file, tgt_dir);
 switch ext
   case {'.tar', '.gz'}
     untar(url, tgt_dir);
@@ -34,5 +41,28 @@ switch ext
     unzip(url, tgt_dir);
   otherwise
     error('Unknown archive %s', ext);
+end
+end
+
+
+function outfile = download(url, target_file)
+wgetCommand = 'wget %s -O %s'; % Command for downloading archives
+
+[distDir, ~, ~] = fileparts(target_file);
+vl_xmkdir(distDir);
+
+% test if wget works
+[status, ~] = system('wget --help');
+if status ~= 0
+  warning('WGET not found, using MATLAB.');
+  outfile = websave(target_file, url);
+  return;
+end
+  
+wgetC = sprintf(wgetCommand, url, target_file);
+
+[status, msg] = system(wgetC,'-echo');
+if status ~= 0
+  error('Error downloading: %s',msg);
 end
 end
