@@ -51,8 +51,8 @@ status = utls.textprogressbar(numel(imdb.tasks), 'updatestep', 1);
 scores = cell(1, numel(opts.taskids)); info = cell(1, numel(opts.taskids));
 for ti = 1:numel(opts.taskids)
   task = imdb.tasks(opts.taskids(ti));
-  fa = getfeats(imdb, featsname, task.ima);
-  fb = getfeats(imdb, featsname, task.imb);
+  fa = utls.features_get(imdb, featsname, task.ima);
+  fb = utls.features_get(imdb, featsname, task.imb);
   matchGeom = imdb.matchFramesFun(task); % Returns a functor
   [scores{ti}, info{ti}] = benchFun(matchGeom, fa, fb, varargin{:});
   scores{ti}.benchmark = opts.benchName;
@@ -79,14 +79,3 @@ end
 
 end
 
-function feats = getfeats(imdb, featsname, imname)
-featsdir = vlb_path('features', imdb, struct('name', featsname));
-if ~isdir(featsdir)
-    utls.features_not_found(featsdir);
-end
-featpath = fullfile(featsdir, imname);
-feats = utls.features_load(featpath);
-if isempty(feats)
-  error('Unalbe to find %s features for image %s.', featsname, imname);
-end
-end
