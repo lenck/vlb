@@ -7,15 +7,24 @@ function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
 %
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
-allargs = varargin;
-opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
 opts.loadOnly = false;
-opts.taskids = 1:numel(imdb.tasks);
-[opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
-if isstruct(feats), featsname = feats.name; else featsname = feats; end;
+if isstruct(feats)
+  featsname = feats.name;
+  % Allow a feats configuration to set the override parameter
+  if isfield(feats, 'override')
+    opts.override = feats.override;
+  end
+else
+  featsname = feats;
+end
+
+allargs = varargin;
+opts.benchName = strrep(func2str(benchFun), 'bench.', '');
+opts.taskids = 1:numel(imdb.tasks);
+[opts, varargin] = vl_argparse(opts, varargin);
 
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
