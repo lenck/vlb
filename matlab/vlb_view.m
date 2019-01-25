@@ -1,4 +1,18 @@
 function res = vlb_view(cmd, varargin)
+%VLB_VIEW View benchmark results
+%  `VLB_VIEW patches imdb featsname imid`
+%  `VLB_VIEW detections imdb featsname imid`
+%  `VLB_VIEW detout detname img`
+%  `VLB_VIEW matchpair imdb taskid`
+%  `VLB_VIEW matches benchname imdb featsname taskid`
+%  `VLB_VIEW sequencescores benchName imdb featsname sequence valuename`
+%  `VLB_VIEW descmatchpr imdb featsname taskid`
+
+% Copyright (C) 2016-2017 Karel Lenc
+% All rights reserved.
+%
+% This file is part of the VLFeat library and is made available under
+% the terms of the BSD license (see the COPYING file).
 
 vlb_setup();
 usage = @(varargin) utls.helpbuilder(varargin{:}, 'name', 'vlb_view');
@@ -16,7 +30,7 @@ cmds.descmatchpr = struct('fun', @view_descmatchpr, 'help', 'benchFun imdb feats
 cmds.help = struct('fun', @(varargin) usage(cmds, '', varargin{:}));
 if nargin < 1, cmd = nan; end;
 if ~ischar(cmd), usage(cmds); return; end
-if strcmp(cmd, 'commands'), res = cmds; return; end;
+if strcmp(cmd, 'commands'), res = cmds; return; end
 
 if isfield(cmds, cmd) && ~isempty(cmds.(cmd).fun)
   if nargout == 1
@@ -36,10 +50,12 @@ feats_path = vlb_path('features', imdb, featsname);
 if ~exist(feats_path, 'dir')
   error('No detections in %s.', feats_path);
 end
-if nargin < 3, error('Imid not specified.'); end;
+if nargin < 3, error('Imid not specified.'); end
 imid = dset.utls.getimid(imdb, imid);
 imname = imdb.images(imid).name;
-feats = utls.features_load(fullfile(feats_path, imname));
+featspath = fullfile(feats_path, imname);
+fprintf('Loading features from %s\n', featspath);
+feats = utls.features_load(featspath);
 if nargout == 0
   imshow(imdb.images(imid).path); hold on;
   if isfield(feats, 'scalingFactor')
@@ -54,8 +70,8 @@ if nargout == 0
 end
 end
 
-function feats = view_detout(det, img, varargin)
-det = features.factory('det', det, varargin{:});
+function feats = view_detout(detname, img, varargin)
+det = features.factory('det', detname, varargin{:});
 feats = det.fun(img);
 imshow(img); hold on;
 vl_plotframe(feats.frames, 'LineWidth', 1);
@@ -78,13 +94,26 @@ if nargout == 0
 end
 end
 
+function taskid_out = gettaskid(imdb, taskid)
+if ischar(taskid)
+  [taskid_out, status] = str2num(taskid);
+  if ~status
+    error('Invalid task id %s', taskid);
+  end
+else
+  taskid_out = taskid;
+end
+if taskid_out > numel(imdb.tasks) || taskid_out < 1
+  error('Invalid task id %d.', imid);
+end
+end
 
 
-
-function view_matchpair(imdb, taskid, varargin)
+function res = view_matchpair(imdb, taskid, varargin)
+imdb = dset.factory(imdb);
+taskid = gettaskid(imdb, taskid);
 opts.imperrow = ceil(sqrt(numel(taskid)));
 opts = vl_argparse(opts, varargin);
-imdb = dset.factory(imdb);
 clf;
 
 if numel(taskid) == 1 % Show a single pair
@@ -112,6 +141,7 @@ if numel(taskid) == 1 % Show a single pair
     otherwise
       error('Unsupported geometry: `%s`', imdb.geometry);
   end
+  res = {ima, imb};
 else % show multiple pairs
   ncols = opts.imperrow;
   nrows = ceil(numel(taskid)/ncols);
@@ -135,8 +165,12 @@ end
 
 
 function res = view_matches(benchname, imdb, featsname, taskid, varargin)
+opts.plot_ref = true;
+opts.plot_repr = true;
+opts.plot_legend = true;
+opts = vl_argparse(opts, varargin);
 imdb = dset.factory(imdb);
-if isstruct(featsname), featsname = featsname.name; end;
+if isstruct(featsname), featsname = featsname.name; end
 scoresdir = vlb_path('scores', imdb, featsname, benchname);
 info_path = fullfile(scoresdir, 'results.mat');
 feats_path = vlb_path('features', imdb, featsname);
@@ -144,9 +178,7 @@ feats_path = vlb_path('features', imdb, featsname);
 if ~exist(info_path, 'file')
   error('Could not find benchamrk results in %s.', info_path);
 end
-if taskid < 1 || taskid > numel(imdb.tasks)
-  error('Invalid task id %d', taskid);
-end
+taskid = gettaskid(imdb, taskid);
 
 scores = readtable(fullfile(scoresdir, 'results.csv'));
 res = load(info_path);
@@ -157,34 +189,43 @@ else
   res = res.info;
 end
 display(scores);
+
+n_plots = opts.plot_ref + opts.plot_repr;
+
 if nargout == 0
   task = imdb.tasks(taskid);
   imaid = dset.utls.getimid(imdb, task.ima);
   imbid = dset.utls.getimid(imdb, task.imb);
   
-  subplot(1,2,1);
-  imshow(imdb.images(imaid).path); hold on;
-
-  ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
-  vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
-  vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
-  line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'k', 'LineWidth', 1);
-  title(['IM-A ', featsname], 'Interpreter', 'none');
-  
-  subplot(1,2,2);
-  imshow(imdb.images(imbid).path); hold on;
-  
-  la = [];
-  la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', [0.1 0.1 0.1]);
-  la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]);
-  if sum(res.matches~=0) > 0
-    la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
-    la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+  if n_plots > 1, subplot(1,2,1); end
+  if opts.plot_ref
+    imshow(imdb.images(imaid).path); hold on;
+    ea = res.geom.ella(:, res.matches~=0); eb = res.geom.ellb_rep(:, res.matches(1, res.matches~=0));
+    vl_plotframe(res.geom.ella, 'LineWidth', 1, 'Color', 'c');
+    vl_plotframe(res.geom.ellb_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]*3);
+    vl_plotframe(eb, 'LineWidth', 1, 'Color', 'yellow');
+    vl_plotframe(ea, 'LineWidth', 3, 'Color', 'black');
+    vl_plotframe(ea, 'LineWidth', 2, 'Color', 'green');
+    line([ea(1, :); eb(1, :)],  [ea(2, :); eb(2, :)], 'Color', 'w', 'LineWidth', 1);
+    %title(['IM-A ', featsname], 'Interpreter', 'none');
   end
-  title(['IM-B ' featsname], 'Interpreter', 'none');
-  legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
+  
+  if n_plots > 1, subplot(1,2,2); end
+  if opts.plot_repr
+    imshow(imdb.images(imbid).path); hold on;
+    la = [];
+    la(end+1) = vl_plotframe(res.geom.ellb, 'LineWidth', 1, 'Color', 'c');
+    la(end+1) = vl_plotframe(res.geom.ella_rep, 'LineWidth', 1, 'Color', [0.3 0 0.3]*3);
+    if sum(res.matches~=0) > 0
+      la(end+1) = vl_plotframe(res.geom.ella_rep(:, res.matches~=0), 'LineWidth', 1, 'Color', 'yellow');
+      la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 3, 'Color', 'black');
+      la(end+1) = vl_plotframe(res.geom.ellb(:, res.matches(1, res.matches~=0)), 'LineWidth', 2, 'Color', 'green');
+    end
+    %title(['IM-B ' featsname], 'Interpreter', 'none');
+  end
+  if opts.plot_legend
+    legend(la, 'Valid', 'Reproj', 'Matched-Reproj.', 'Matched-Detected');
+  end
 end
 end
 
@@ -192,7 +233,7 @@ end
 function res_f = view_sequencescores(benchName, imdb, featsname, sequence, valuename, varargin)
 imdb = dset.factory(imdb);
 assert(ismember(benchName, {'detrep', 'detmatch'}), 'Unsupported benchmark.');
-if ~iscell(featsname), featsname = {featsname}; end;
+if ~iscell(featsname), featsname = {featsname}; end
 
 res = cell(numel(featsname), 1);
 for fi = 1:numel(featsname)
@@ -218,8 +259,8 @@ end
 
 function res = view_descmatchpr(imdb, featsname, taskid, varargin)
 imdb = dset.factory(imdb);
-assert(taskid > 0 && taskid < numel(imdb.tasks), 'Invalid Task ID');
-if ~iscell(featsname), featsname = {featsname}; end;
+taskid = gettaskid(imdb, taskid);
+if ~iscell(featsname), featsname = {featsname}; end
 
 res = cell(numel(featsname), 1);
 info = cell(numel(featsname), 1);

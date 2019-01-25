@@ -1,19 +1,30 @@
 function [scores, info] = vlb_evalfeatures( benchFun, imdb, feats, varargin )
+%VLB_EVALFEATURES Run local features evaluation
+%   VLB_EVALFEATURES benchfun imdb feats
 
 % Copyright (C) 2017 Karel Lenc
 % All rights reserved.
 %
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
-allargs = varargin;
-opts.benchName = strrep(func2str(benchFun), 'bench.', '');
 opts.override = false;
 opts.loadOnly = false;
-opts.taskids = 1:numel(imdb.tasks);
-[opts, varargin] = vl_argparse(opts, varargin);
 
 imdb = dset.factory(imdb);
-if isstruct(feats), featsname = feats.name; else featsname = feats; end;
+if isstruct(feats)
+  featsname = feats.name;
+  % Allow a feats configuration to set the override parameter
+  if isfield(feats, 'override')
+    opts.override = feats.override;
+  end
+else
+  featsname = feats;
+end
+
+allargs = varargin;
+opts.benchName = strrep(func2str(benchFun), 'bench.', '');
+opts.taskids = 1:numel(imdb.tasks);
+[opts, varargin] = vl_argparse(opts, varargin);
 
 scoresdir = vlb_path('scores', imdb, featsname, opts.benchName);
 vl_xmkdir(scoresdir);
@@ -40,8 +51,8 @@ status = utls.textprogressbar(numel(imdb.tasks), 'updatestep', 1);
 scores = cell(1, numel(opts.taskids)); info = cell(1, numel(opts.taskids));
 for ti = 1:numel(opts.taskids)
   task = imdb.tasks(opts.taskids(ti));
-  fa = getfeats(imdb, featsname, task.ima);
-  fb = getfeats(imdb, featsname, task.imb);
+  fa = utls.features_get(imdb, featsname, task.ima);
+  fb = utls.features_get(imdb, featsname, task.imb);
   matchGeom = imdb.matchFramesFun(task); % Returns a functor
   [scores{ti}, info{ti}] = benchFun(matchGeom, fa, fb, varargin{:});
   scores{ti}.benchmark = opts.benchName;
@@ -68,14 +79,3 @@ end
 
 end
 
-function feats = getfeats(imdb, featsname, imname)
-featsdir = vlb_path('features', imdb, struct('name', featsname));
-if ~isdir(featsdir)
-    utls.features_not_found(featsdir);
-end
-featpath = fullfile(featsdir, imname);
-feats = utls.features_load(featpath);
-if isempty(feats)
-  error('Unalbe to find %s features for image %s.', featsname, imname);
-end;
-end

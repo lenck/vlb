@@ -1,4 +1,5 @@
 function [ res, varargin ] = factory( type, name, varargin )
+%FACTORY Construct a features structure
 
 %   feature name preference:
 %      - 'detName' argumnt

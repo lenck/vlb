@@ -22,7 +22,7 @@ function [ scores, info ] = detrep( matchFrames, feats_a, feats_b, varargin )
 
 opts.normFactor = 'minab';
 opts.topn = inf;
-opts.forceTopn = false;
+opts.forceTopn = true;
 opts.magnifyFrames = [];
 [opts, varargin] = vl_argparse(opts, varargin);
 

@@ -42,6 +42,8 @@ for fi = 1:numel(files)
       case '.mat'
         data = load(fpath);
         features.(field) = data.data;
+      case '.oxf' % Oxford frames format (1.\nNFEATS\nx y a b c\n)
+        features.(field) = legacy.vgg_frames_read(fpath);
     end
   end
 end
