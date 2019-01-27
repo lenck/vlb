@@ -8,9 +8,10 @@ sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/features/'
 sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/bench/')
 
 import vgg_dataset
-import vlsift_matlab
+#import vlsift_matlab
 import vlsift
 import repBench
+import Utils
 
 if __name__ == "__main__":
 
@@ -20,9 +21,10 @@ if __name__ == "__main__":
     bench = repBench.repBench()
     
     #bench.detect_feature(vggh,vlsift_matlab)
-    result = bench.evaluate(vggh,vlsift_all,use_cache = False, save_result = True)
+    result = bench.evaluate(vggh, vlsift_all, use_cache = False, save_result = True)
     result = [result,result]
-    bench.print_result(result)
+    Utils.print_result(result,'repeatability')
+    #bench.print_result(result)
     #bench.print_result_sequence(result,'bikes')
     #bench.save_result(result)
 

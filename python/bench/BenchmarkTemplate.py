@@ -6,8 +6,6 @@ It contains basic wrapper function.
 Author: Xu Zhang
 
 """
-import matlab
-import matlab.engine
 import csv
 import numpy as np
 from abc import ABCMeta, abstractmethod
@@ -15,6 +13,8 @@ import os
 from tqdm import tqdm
 import pickle as pkl
 
+#import matlab
+#import matlab.engine
 #import pdb
 #eng = matlab.engine.start_matlab()
 #eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
@@ -164,9 +164,9 @@ class Benchmark():
                 feature_dict = self.detect_feature(dataset,detector, use_cache = use_cache, save_feature = save_result)
 
         try:
-            os.makedirs('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
+            os.stat('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
         except:
-            pass
+            os.makedirs('{}{}/{}/{}/'.format(self.result_dir, self.bench_name, dataset.name, detector.name))
         
         get_result_flag = False
         result_file_name = '{}{}/{}/{}/{}.pkl'.format(self.result_dir, self.bench_name, dataset.name, detector.name, self.test_name)
