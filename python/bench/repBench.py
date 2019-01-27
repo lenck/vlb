@@ -12,12 +12,11 @@ from BenchmarkTemplate import Benchmark
 import csv
 import scipy.io as sio
 
-#import matlab
-#import matlab.engine
-from vlb_greedy_matching import vlb_greedy_matching
 from ellipse_overlap_H import ellipse_overlap_H
 
-import pdb
+import pyximport
+pyximport.install(setup_args={"include_dirs":np.get_include()})
+import vlb_greedy_matching
 
 class repBench(Benchmark):
     def __init__(self, tmp_feature_dir = './features/', result_dir = './python_scores/'):
@@ -35,33 +34,34 @@ class repBench(Benchmark):
             option = {}
             option['maxOverlapError'] = 0.5
             geo_info = task
-            #sio.savemat('data.mat',{'geom':geo_info, 'feata':feature_1, 'featb':feature_2, 'opt':option})
+
             tcorr, corr_score, info = ellipse_overlap_H(geo_info, feature_1, feature_2, option)
             #tcorr, corr_score, info = BenchmarkTemplate.eng.geom.ellipse_overlap_H(task, matlab.double(np.transpose(feature_1).tolist()),\
             #        matlab.double(np.transpose(feature_2).tolist()), 'maxOverlapError', 0.5, nargout=3)
-            corr_score = np.squeeze(np.array(corr_score))
+            #corr_score = np.squeeze(np.array(corr_score))
+
             if corr_score.size==0:
                 rep = 0.0
                 num_cor = 0
             else:
                 #have to use stable sort method
                 perm_index = np.argsort(1-corr_score,kind='mergesort')
+                tcorr_s = tcorr[perm_index,:]
                 #tcorr = np.array(tcorr)
                 #tcorr_s = np.transpose(tcorr[:,perm_index])
-                tcorr_s = tcorr[perm_index,:]
+
                 fa_valid = np.squeeze(np.array(info['fa_valid']))
                 fb_valid = np.squeeze(np.array(info['fb_valid']))
                 fa_num = np.sum(fa_valid)
                 fb_num = np.sum(fb_valid)
 
-                matches,_ = vlb_greedy_matching(fa_num, fb_num, tcorr_s)
+                matches,_ = vlb_greedy_matching.vlb_greedy_matching(fa_num, fb_num, tcorr_s)
+                overlapped_num = np.sum(matches[:,0]>-1)
                 #matches = BenchmarkTemplate.eng.vlb_greedy_matching(float(fa_num), float(fb_num), matlab.double(tcorr_s.tolist()))
                 #matches = np.transpose(np.array(matches))
-                #pdb.set_trace()
-                overlapped_num = np.sum(matches[:,0]>-1)
                 #overlapped_num = np.sum(matches[:,0]>0)
-                num_cor = overlapped_num
 
+                num_cor = overlapped_num
                 if self.norm_factor == 'minab':
                     rep = overlapped_num/float(min(fa_num,fb_num))
                 elif self.norm_factor == 'a':

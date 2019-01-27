@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Jan 27 16:06:45 2019
+#  Last Modified: Sun Jan 27 17:13:36 2019
 #
 #  Usage: python ellipse_overlap_H.py 
 #  Description:
@@ -20,7 +20,9 @@ from parse_arg import parse_arg
 import numpy as np
 import copy
 import scipy.spatial.distance
-from vgg_compute_ellipse_overlap import vgg_compute_ellipse_overlap
+import pyximport
+pyximport.install(setup_args={"include_dirs":np.get_include()})
+import vgg_compute_ellipse_overlap
 import math
 import scipy.io as sio
 import pdb
@@ -213,7 +215,7 @@ def ellipse_overlap_fast(f1, f2, options):
         else:
             lhsEllipse = vggEll2[[i2]]
             rhsEllipse = vggEll1[pairs]
-        _, tw, _, _ = vgg_compute_ellipse_overlap(lhsEllipse, rhsEllipse, -1)
+        _, tw, _, _ = vgg_compute_ellipse_overlap.vgg_compute_ellipse_overlap(lhsEllipse, rhsEllipse, -1)
         scores.extend((1 - tw/100).tolist()[0])
     return np.array(ellipsePairs), np.array(scores)
 
