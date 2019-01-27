@@ -59,10 +59,10 @@ void mexFunction(int nlhs,       mxArray *plhs[],
 
   /* av: tover is temporary space */
 
-  float *feat1a = new float[9];
-  float *feat2a = new float[9];
-  float *tdesc_out = new float[dims2[1]*dims1[1]];
-  float *tover_out = new float[dims2[1]*dims1[1]];
+  double *feat1a = new double[9];
+  double *feat2a = new double[9];
+  double *tdesc_out = new double[dims2[1]*dims1[1]];
+  double *tover_out = new double[dims2[1]*dims1[1]];
 
   int common_part=(int)flag[0];
 
@@ -82,7 +82,7 @@ void mexFunction(int nlhs,       mxArray *plhs[],
   }
   */
 
-  float max_dist,fac,dist,dx,dy,bna,bua,descd,ov;
+  double max_dist,fac,dist,dx,dy,bna,bua,descd,ov;
   for(int j=0,f1=0;j<dims1[1];j++,f1+=dims1[0]){
     max_dist=sqrt(feat1[f1+5]*feat1[f1+6]);
     if(common_part>0)fac=30/max_dist;
@@ -130,22 +130,22 @@ void mexFunction(int nlhs,       mxArray *plhs[],
         feat2a[7] = sqrt(feat2a[4]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
         feat2a[8] = sqrt(feat2a[2]/(feat2a[2]*feat2a[4] - feat2a[3]*feat2a[3]));
         //find the largest eigenvalue
-        float maxx=ceil((feat1a[7]>(dx+feat2a[7]))?feat1a[7]:(dx+feat2a[7]));
-        float minx=floor((-feat1a[7]<(dx-feat2a[7]))?(-feat1a[7]):(dx-feat2a[7]));
-        float maxy=ceil((feat1a[8]>(dy+feat2a[8]))?feat1a[8]:(dy+feat2a[8]));
-        float miny=floor((-feat1a[8]<(dy-feat2a[8]))?(-feat1a[8]):(dy-feat2a[8]));
+        double maxx=ceil((feat1a[7]>(dx+feat2a[7]))?feat1a[7]:(dx+feat2a[7]));
+        double minx=floor((-feat1a[7]<(dx-feat2a[7]))?(-feat1a[7]):(dx-feat2a[7]));
+        double maxy=ceil((feat1a[8]>(dy+feat2a[8]))?feat1a[8]:(dy+feat2a[8]));
+        double miny=floor((-feat1a[8]<(dy-feat2a[8]))?(-feat1a[8]):(dy-feat2a[8]));
 
-        float mina=(maxx-minx)<(maxy-miny)?(maxx-minx):(maxy-miny);
-        float dr=mina/50.0;
+        double mina=(maxx-minx)<(maxy-miny)?(maxx-minx):(maxy-miny);
+        double dr=mina/50.0;
         bua=0;bna=0;int t1=0,t2=0;
         //compute the area
-        for(float rx=minx;rx<=maxx;rx+=dr){
-          float rx2=rx-dx;t1++;
-          for(float ry=miny;ry<=maxy;ry+=dr){
-            float ry2=ry-dy;
+        for(double rx=minx;rx<=maxx;rx+=dr){
+          double rx2=rx-dx;t1++;
+          for(double ry=miny;ry<=maxy;ry+=dr){
+            double ry2=ry-dy;
             //compute the distance from the ellipse center
-            float a=feat1a[2]*rx*rx+2*feat1a[3]*rx*ry+feat1a[4]*ry*ry;
-            float b=feat2a[2]*rx2*rx2+2*feat2a[3]*rx2*ry2+feat2a[4]*ry2*ry2;
+            double a=feat1a[2]*rx*rx+2*feat1a[3]*rx*ry+feat1a[4]*ry*ry;
+            double b=feat2a[2]*rx2*rx2+2*feat2a[3]*rx2*ry2+feat2a[4]*ry2*ry2;
             //compute the area
             if(a<1 && b<1)bna++;
             if(a<1 || b<1)bua++;
@@ -187,7 +187,7 @@ void mexFunction(int nlhs,       mxArray *plhs[],
     }
   }
 
-  float minr=100;
+  double minr=100;
   int mini=0;
   int minj=0;
   do{
