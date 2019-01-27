@@ -2,10 +2,10 @@ import numpy as np
 import json
 import os
 import cv2
-import matlab
 from abc import ABCMeta, abstractmethod
 
 import scipy.ndimage
+#import matlab
 
 class Image:
     idx = ''
@@ -129,12 +129,12 @@ class SequenceDataset():
         for sequence_name in self.sequence_name_list:
             sequence = self.sequences[sequence_name]
             for image_id in sequence.image_id_list:
+                img = scipy.ndimage.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
                 try:
                     #opencv image read cause issue when read pgm file
                     #img = cv2.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
                     img = scipy.ndimage.imread('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
                     #print('{}{}/{}'.format(self.root_dir, self.name, sequence.image_dict[image_id].filename))
-                    #print(img.shape)
                     if len(img.shape) == 3:
                         if img.shape[2] == 4:
                             img = img[:,:,:3]
@@ -208,13 +208,13 @@ class SequenceDataset():
                 except:
                     imgb_ch = 1
 
-                this_link.matlab_task['ima_size'] = matlab.double([image_a.image_data.shape[0], image_a.image_data.shape[1], imga_ch])
-                this_link.matlab_task['imb_size'] = matlab.double([image_b.image_data.shape[0], image_b.image_data.shape[1], imgb_ch])
-                #print(this_link.transform_matrix.tolist())
-                ##for bad test
-                #this_link.transform_matrix = np.eye(3)
-                #print(this_link.transform_matrix)
-                this_link.matlab_task['H'] = matlab.double(this_link.transform_matrix.tolist())
+                #this_link.matlab_task['ima_size'] = matlab.double([image_a.image_data.shape[0], image_a.image_data.shape[1], imga_ch])
+                #this_link.matlab_task['imb_size'] = matlab.double([image_b.image_data.shape[0], image_b.image_data.shape[1], imgb_ch])
+                this_link.matlab_task['ima_size'] = [image_a.image_data.shape[0], image_a.image_data.shape[1], imga_ch]
+                this_link.matlab_task['imb_size'] = [image_b.image_data.shape[0], image_b.image_data.shape[1], imgb_ch]
+
+                #this_link.matlab_task['H'] = matlab.double(this_link.transform_matrix.tolist())
+                this_link.matlab_task['H'] = this_link.transform_matrix
                 this_link.matlab_task['name'] = str(sequence.name)
                 this_link.matlab_task['description'] = {}
                 this_link.matlab_task['description']['impair'] = [str(image_a.idx), str(image_b.idx)]

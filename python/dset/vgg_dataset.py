@@ -2,6 +2,7 @@ from dataset import SequenceDataset
 import urllib
 import tarfile
 import os
+import sys
 
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve

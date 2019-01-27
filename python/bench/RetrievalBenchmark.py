@@ -15,10 +15,6 @@ import pickle as pkl
 import nmslib
 import cv2
 import copy
-#import pdb
-
-#eng = matlab.engine.start_matlab()
-#eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)
 
 def get_sorted_index_and_score(image_index, flat_D):
     uidx, counts = np.unique(np.array(image_index), return_counts=True)

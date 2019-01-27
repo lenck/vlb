@@ -126,4 +126,9 @@ class MatchingScoreBench(Benchmark):
         result['norm_factor'] = norm_factor
         result['bench_name'] = self.bench_name
         return result
-    
+
+    def detect_feature_custom(self, dataset, detector, use_cache = False, save_feature = True):
+        pass
+
+    def extract_descriptor_custom(self, dataset, detector, use_cache = False, save_feature = True):
+        pass 
