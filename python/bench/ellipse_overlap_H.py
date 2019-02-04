@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Jan 27 17:13:36 2019
+#  Last Modified: Mon Jan 28 00:19:42 2019
 #
 #  Usage: python ellipse_overlap_H.py 
 #  Description:
@@ -20,11 +20,14 @@ from parse_arg import parse_arg
 import numpy as np
 import copy
 import scipy.spatial.distance
+import math
+import scipy.io as sio
+
 import pyximport
 pyximport.install(setup_args={"include_dirs":np.get_include()})
 import vgg_compute_ellipse_overlap
-import math
-import scipy.io as sio
+import vlb_greedy_matching
+
 import pdb
 
 def frame2ellipse(fa):
@@ -55,7 +58,7 @@ def frame2ellipse(fa):
 
 def ellipse_warp(H, ell_o, method):
     ell = copy.copy(ell_o)
-    ell[:,0:2] = ell[:,0:2] - 1 ;
+    ell[:,0:2] = ell[:,0:2] - 1
     well = np.zeros(ell.shape, dtype = np.double)
 
     for i in range(ell.shape[0]):
@@ -71,7 +74,7 @@ def ellipse_warp(H, ell_o, method):
             well[i, 2:5] = np.array([S_[0,0], S_[0,1], S_[1,1]])
     
         elif method == 'linearise':
-            Mi1=[[ell[i,2],ell[i,3]],[ell[i,3],ell[i,4]]];
+            Mi1=[[ell[i,2],ell[i,3]],[ell[i,3],ell[i,4]]]
             x = ell[i,0]
             y = ell[i,1]
             h11=H[0,0]
@@ -193,7 +196,7 @@ def ellipse_overlap_fast(f1, f2, options):
         if opts['normaliseFrames']:
             s = opts['normalisedScale'] /np.sqrt(a2[i2]/np.pi)
         else:
-            s = 1;
+            s = 1
   
         if opts['frame2frame']:
             ellipsePairs[i2] = np.hstack[i2*np.ones((f1.shape[0],1), dtype = np.int), np.xrange(f1.shape[0])]
@@ -206,7 +209,7 @@ def ellipse_overlap_fast(f1, f2, options):
             _, pairs = np.where(maxOverlap>opts['minAreaRatio'])
             ellipsePairs.extend(zip([i2]*pairs.shape[0], pairs.tolist()))  
         if len(pairs) == 0:
-            continue; 
+            continue
 
         if opts['normaliseFrames']:
             vggS = np.array([1,1,1/s**2,1/s**2,1/s**2,s,s,s,s])
@@ -293,6 +296,28 @@ def ellipse_overlap_H(geom, fa, fb, options):
     corr_score = ellipsesOverlaps[isValid]
     return tcorr, corr_score, info
 
+def match_greedy(data, qdata):
+    dists = scipy.spatial.distance.cdist(data, qdata, 'euclidean')
+    dists = dists.reshape((data.shape[0]*qdata.shape[0],))
+    data_ind = np.repeat(np.arange(data.shape[0]).reshape((data.shape[0],1)), qdata.shape[0], axis=1)
+    data_ind = data_ind.reshape((data.shape[0]*qdata.shape[0],1))
+    qdata_ind = np.repeat(np.arange(qdata.shape[0]).reshape((qdata.shape[0],1)), data.shape[0], axis=1)
+    qdata_ind = np.transpose(qdata_ind)
+    qdata_ind = qdata_ind.reshape((data.shape[0]*qdata.shape[0],1))
+    ind_matrix = np.hstack((data_ind, qdata_ind))
+    perm_index = np.argsort(dists,kind='mergesort')
+
+    dists = dists[perm_index]
+    ind_matrix = ind_matrix[perm_index,:]
+
+    matches,_ = vlb_greedy_matching.vlb_greedy_matching(data.shape[0], qdata.shape[0], ind_matrix)
+    matches = matches[:,0]
+    matches = matches.reshape((data.shape[0],1))
+    matches = np.hstack((np.arange(data.shape[0]).reshape((data.shape[0],1)),matches))
+    matches = matches[matches[:,1]>-1,:]
+
+    return matches
+
 def main():
     data = sio.loadmat('data.mat')
     #feature_1 = np.array([[14.8277397,5.3841510e+02,2.0014350,4.4456816]])
@@ -322,5 +347,4 @@ def main():
     print(tcorr, corr_score)
 
 
-if __name__ == '__main__':
-    main()
+

@@ -10,14 +10,20 @@ import os
 import BenchmarkTemplate
 from BenchmarkTemplate import Benchmark
 import csv
-#import pdb
+import ellipse_overlap_H
+import pyximport
+pyximport.install(setup_args={"include_dirs":np.get_include()})
+import vlb_greedy_matching
 
-import matlab
-import matlab.engine
+import scipy.io as sio
+import pdb
+#import matlab
+#import matlab.engine
 
 class MatchingScoreBench(Benchmark):
     def __init__(self, tmp_feature_dir = './features/', result_dir = './python_scores/', matchGeometry = True):
-        super(MatchingScoreBench,self).__init__(name = 'Matching Score', tmp_feature_dir = tmp_feature_dir, result_dir = result_dir)
+        super(MatchingScoreBench,self).__init__(name = 'Matching Score',\
+                tmp_feature_dir = tmp_feature_dir, result_dir = result_dir)
         self.matchGeometry = matchGeometry
         self.bench_name = 'decmatch'
         self.test_name = 'matching_score'
@@ -40,10 +46,15 @@ class MatchingScoreBench(Benchmark):
             rep = 0.0
             num_cor = 0
         else:
-            tcorr, corr_score, info = BenchmarkTemplate.eng.geom.ellipse_overlap_H(\
-                    task, matlab.double(np.transpose(feature_1).tolist()),\
-                    matlab.double(np.transpose(feature_2).tolist()), 'maxOverlapError', 0.5, nargout=3)
-            corr_score = np.squeeze(np.array(corr_score))
+            #tcorr, corr_score, info = BenchmarkTemplate.eng.geom.ellipse_overlap_H(\
+            #        task, matlab.double(np.transpose(feature_1).tolist()),\
+            #        matlab.double(np.transpose(feature_2).tolist()), 'maxOverlapError', 0.5, nargout=3)
+            #corr_score = np.squeeze(np.array(corr_score))
+            option = {}
+            option['maxOverlapError'] = 0.5
+            geo_info = task
+            tcorr, corr_score, info = ellipse_overlap_H.ellipse_overlap_H(geo_info, feature_1, feature_2, option)
+
             if corr_score.size==0:
                 ms = 0.0
                 num_matches = 0
@@ -52,18 +63,23 @@ class MatchingScoreBench(Benchmark):
             else:
                 #have to use stable sort method, otherwise, result will not be correct
                 perm_index = np.argsort(1-corr_score,kind='mergesort')
-                tcorr = np.array(tcorr)
-                tcorr_s = np.transpose(tcorr[:,perm_index])
-                fa_valid = np.squeeze(np.array(info['fa_valid']))
-                fb_valid = np.squeeze(np.array(info['fb_valid']))
+                tcorr_s = tcorr[perm_index,:]
+                fa_valid = info['fa_valid']
+                fb_valid = info['fb_valid']
+                #tcorr = np.array(tcorr)
+                #tcorr_s = np.transpose(tcorr[:,perm_index])
+                #fa_valid = np.squeeze(np.array(info['fa_valid']))
+                #fb_valid = np.squeeze(np.array(info['fb_valid']))
+
                 fa_num = np.sum(fa_valid)
                 fb_num = np.sum(fb_valid)
-                geoMatches = BenchmarkTemplate.eng.vlb_greedy_matching(float(fa_num),\
-                        float(fb_num), matlab.double(tcorr_s.tolist()))
-                geoMatches = np.array(geoMatches)
-                #print(geoMatches[:,:10])
-                overlapped_num = sum(geoMatches[0,:]>0)
-                geoMatches = geoMatches[0,:]
+                geoMatches,_ = vlb_greedy_matching.vlb_greedy_matching(fa_num, fb_num, tcorr_s)
+                overlapped_num = sum(geoMatches[:,0]>-1)
+                #geoMatches = BenchmarkTemplate.eng.vlb_greedy_matching(float(fa_num),\
+                #        float(fb_num), matlab.double(tcorr_s.tolist()))
+                #geoMatches = np.transpose(np.array(geoMatches))
+                #overlapped_num = sum(geoMatches[:,0]>0)
+                geoMatches = geoMatches[:,0]
                 num_cor = overlapped_num
 
                 if self.norm_factor == 'minab':
@@ -73,21 +89,25 @@ class MatchingScoreBench(Benchmark):
                 elif self.norm_factor == 'b':
                     rep = overlapped_num/float(fb_num)
                
-                #pdb.set_trace()
                 feature_1 = feature_1[fa_valid,:]
                 descriptor_1 = descriptor_1[fa_valid,:]
                 feature_2 = feature_2[fb_valid,:]
                 descriptor_2 = descriptor_2[fb_valid,:]
+                descriptor_1.astype(np.float)
+                descriptor_2.astype(np.float)
                 
-                descMatchEdges = BenchmarkTemplate.eng.utls.match_greedy(\
-                        matlab.double(np.transpose(descriptor_2).tolist()),\
-                        matlab.double(np.transpose(descriptor_1).tolist()))
-                descMatchEdges = np.array(descMatchEdges)
-                descMatches = np.zeros((descriptor_1.shape[0],))
-                
+                descMatches = np.zeros((descriptor_1.shape[0],),dtype = np.int)
+                #descMatchEdges = BenchmarkTemplate.eng.utls.match_greedy(\
+                #        matlab.double(np.transpose(descriptor_2).tolist()),\
+                #        matlab.double(np.transpose(descriptor_1).tolist()))
+                #descMatchEdges = np.array(descMatchEdges)
                 #Align with matlab index
-                for edge in np.transpose(descMatchEdges):
-                    descMatches[int(edge[1])-1] = int(edge[0])
+                #for edge in np.transpose(descMatchEdges):
+                #    descMatches[int(edge[1])-1] = int(edge[0])
+
+                descMatchEdges = ellipse_overlap_H.match_greedy(descriptor_2,descriptor_1)
+                for edge in descMatchEdges:
+                    descMatches[edge[1]] = edge[0]
 
                 if self.matchGeometry:
                     matches = descMatches
