@@ -20,7 +20,7 @@ class vlsift(DetectorAndDescriptor):
 
     def detect_feature(self, image):
         image = feature_utils.all_to_gray_cv(image)
-        feature = cyvlfeat.sift.sift(image, peak_thresh=self.peak_thresh, magnification = 5.0 )#
+        feature = cyvlfeat.sift.sift(image, peak_thresh=self.peak_thresh, magnification = 5.0)#
         return feature
 
     def extract_descriptor(self, image, feature):
