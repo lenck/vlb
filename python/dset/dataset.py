@@ -29,10 +29,10 @@ class Sequence:
     link_dict = None
     
     def images(self):
-        return self.image_dict.iteritems()
+        return self.image_dict.items()
 
     def links(self):
-        return self.link_dict.iteritems()
+        return self.link_dict.items()
 
 class SequenceDataset():
     __metaclass__ = ABCMeta 
