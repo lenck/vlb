@@ -23,7 +23,7 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 import plotly.plotly as py
 
-def print_result_sequence(results, sequence_name, term_to_show, figure_num = 1, result_dir = './python_scores/'):
+def draw_sequence_result(results, sequence_name, term_to_show, figure_num = 1, result_dir = './python_scores/'):
     if len(results) == 0:
         return
     sequence_index = -1
@@ -60,6 +60,7 @@ def print_result_sequence(results, sequence_name, term_to_show, figure_num = 1, 
             else:
                 print('Detector {} miss link {} for sequence {}'.format(result['detector_name'],link_id_list[idx],sequence_name))
         score_list.append(cur_score_list)
+    print(score_list)
 
     color = ['r','g','b','k','y','c']
 
@@ -113,9 +114,30 @@ def draw_feature(dataset, sequence_name, image_idx, detector, use_cache = True, 
 
     cv2.imwrite(image_file_name, draw_image)
 
+def print_sequence_result(results, sequence_name,  term_to_show):
+    if len(results) ==0 :
+        return
+    sequence_index = -1
+    result = results[0]
+    for idx, sequence_result in enumerate(result['sequence_result']):
+        if sequence_name == sequence_result['sequence_name']:
+            sequence_index = idx
+
+    if sequence_index<0:
+        print("No {} sequence in the results!".format(sequence_name))
+        return
+
+    print("")
+    print("Dataset: {}, Sequence: {}".format(results[0]['dataset_name'], sequence_name))
+    print("Metric: {}".format(term_to_show))
+
+    results_str_list = get_sequence_str_list(results, sequence_name, term_to_show)
+    print_table(results_str_list)
+
 def print_result(results, term_to_show):
     if len(results) ==0 :
         return
+
     print("")
     print("Dataset: {}".format(results[0]['dataset_name']))
     print("Metric: {}".format(term_to_show))
@@ -215,6 +237,25 @@ def save_result(results, term_to_show, result_dir = './python_scores/'):
     for this_str in results_str_list:
         result_file_csv.writerow(this_str)
 
+def save_sequence_result(results, sequence_name, term_to_show, result_dir = './python_scores/'):
+    if len(results) ==0 :
+        return
+    sequence_index = -1
+    result = results[0]
+    for idx, sequence_result in enumerate(result['sequence_result']):
+        if sequence_name == sequence_result['sequence_name']:
+            sequence_index = idx
+
+    if sequence_index<0:
+        print("No {} sequence in the results!".format(sequence_name))
+        return
+
+    result_file_csv = csv.writer(open('{}{}/{}/{}_{}_result.csv'.format(result_dir,\
+            results[0]['bench_name'], results[0]['dataset_name'], sequence_name, term_to_show), 'w'), delimiter=',')
+    results_str_list = get_sequence_str_list(results, sequence_name, term_to_show)
+    for this_str in results_str_list:
+        result_file_csv.writerow(this_str)
+
 def save_retrieval_result(results, term_to_show, result_dir = './python_scores/'):
     result_file_csv = csv.writer(open('{}{}/{}/{}_result.csv'.format(result_dir,\
             results[0]['bench_name'], results[0]['dataset_name'], term_to_show), 'w'), delimiter=',')
@@ -239,6 +280,38 @@ def get_str_list(results, term_to_show):
         for sequence_result in result['sequence_result']:
             write_str.append(str(sequence_result['ave_{}'.format(term_to_show)]))
         write_str.append(str(result['ave_{}'.format(term_to_show)]))
+        results_str_list.append(write_str)
+        
+    return results_str_list
+
+def get_sequence_str_list(results, sequence_name, term_to_show):
+    sequence_index = -1
+    result = results[0]
+    for idx, sequence_result in enumerate(result['sequence_result']):
+        if sequence_name == sequence_result['sequence_name']:
+            sequence_index = idx
+
+    max_detector_name_len = 8
+    results_str_list = []
+    title_str = []
+    title_str.append('Detector')
+        
+    link_id_list = sequence_result['result_link_id_list']
+    sorted_index = sorted(range(len(link_id_list)),key=link_id_list.__getitem__)
+    link_id_list  = [link_id_list[i] for i in sorted_index]
+    for link_id in link_id_list:
+        title_str.append(str(link_id))
+
+    title_str.append('Ave')
+    results_str_list.append(title_str) 
+
+    for result in results:
+        write_str = []
+        write_str.append(result['detector_name'])
+        sequence_result = result['sequence_result'][sequence_index]
+        for sorted_idx in sorted_index: 
+            write_str.append(str(sequence_result[term_to_show][sorted_idx]))
+        write_str.append(str(sequence_result['ave_{}'.format(term_to_show)]))
         results_str_list.append(write_str)
         
     return results_str_list

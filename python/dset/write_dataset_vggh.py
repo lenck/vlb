@@ -39,7 +39,7 @@ for idx, sequence_name in enumerate(sequence_name_list):
         image['label'] = str(image_label)
         sequence['Images'].append(image)
 
-    sequence['Link Number'] = 6
+    sequence['Link Number'] = 5
     sequence['Links'] = []
     for i in range(1,6):
         link = {}

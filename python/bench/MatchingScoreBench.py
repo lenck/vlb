@@ -96,7 +96,7 @@ class MatchingScoreBench(Benchmark):
                 descriptor_1.astype(np.float)
                 descriptor_2.astype(np.float)
                 
-                descMatches = np.zeros((descriptor_1.shape[0],),dtype = np.int)
+                descMatches = np.zeros((descriptor_1.shape[0],),dtype = np.int)-1
                 #descMatchEdges = BenchmarkTemplate.eng.utls.match_greedy(\
                 #        matlab.double(np.transpose(descriptor_2).tolist()),\
                 #        matlab.double(np.transpose(descriptor_1).tolist()))
@@ -108,12 +108,12 @@ class MatchingScoreBench(Benchmark):
                 descMatchEdges = ellipse_overlap_H.match_greedy(descriptor_2,descriptor_1)
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]
-
+                
                 if self.matchGeometry:
                     matches = descMatches
                     for idx, (match, geoMatch) in enumerate(zip(matches,geoMatches)):
                         if match != geoMatch:
-                            matches[idx] = 0
+                            matches[idx] = -1
                 else:
                     geoMatchesList = tcorr.tolist()
                     descMatchesEdgeList = descMatchEdges.tolist()
@@ -123,11 +123,11 @@ class MatchingScoreBench(Benchmark):
                         if tmpMatch in geoMatch: 
                             intersection.append(tmpMatch)
 
-                    matches = np.zeros((descriptor_1.shape[0],))
+                    matches = np.zeros((descriptor_1.shape[0],))-1
                     for edge in intersection:
                         matches[edge[0]] = edge[1]
 
-                num_matches = sum(matches[:]>0.5)
+                num_matches = sum(matches[:]>-0.5)
                 #print(matches)
                 #print(num_matches)
                 if self.norm_factor == 'minab':

@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Mon Jan 28 00:19:42 2019
+#  Last Modified: Mon Feb  4 18:40:56 2019
 #
 #  Usage: python ellipse_overlap_H.py 
 #  Description:
@@ -28,7 +28,6 @@ pyximport.install(setup_args={"include_dirs":np.get_include()})
 import vgg_compute_ellipse_overlap
 import vlb_greedy_matching
 
-import pdb
 
 def frame2ellipse(fa):
     if fa is None or fa.shape[0] == 0:
@@ -297,7 +296,7 @@ def ellipse_overlap_H(geom, fa, fb, options):
     return tcorr, corr_score, info
 
 def match_greedy(data, qdata):
-    dists = scipy.spatial.distance.cdist(data, qdata, 'euclidean')
+    dists = scipy.spatial.distance.cdist(data, qdata, 'sqeuclidean')
     dists = dists.reshape((data.shape[0]*qdata.shape[0],))
     data_ind = np.repeat(np.arange(data.shape[0]).reshape((data.shape[0],1)), qdata.shape[0], axis=1)
     data_ind = data_ind.reshape((data.shape[0]*qdata.shape[0],1))
