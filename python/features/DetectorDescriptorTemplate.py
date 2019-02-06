@@ -5,17 +5,18 @@ Author: Xu Zhang
 """
 
 import numpy as np
-import json
-import os
 import cv2
 import cyvlfeat
 import exifread
 
 from abc import ABCMeta, abstractmethod
 
+
 class DetectorAndDescriptor():
-    __metaclass__ = ABCMeta 
-    def __init__(self, name, is_detector = False, is_descriptor = False, is_both = True, csv_flag = False, patch_input = False):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, name, is_detector=False, is_descriptor=False,
+                 is_both=True, csv_flag=False, patch_input=False):
         self.name = name
         self.is_detector = is_detector
         self.is_descriptor = is_descriptor
@@ -59,7 +60,8 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
     def extract_descriptor(self, image, feature):
         descriptor_vector = []
         if self.descriptor.is_descriptor:
-            descriptor_vector = self.descriptor.extract_descriptor(image, feature)
+            descriptor_vector = self.descriptor.extract_descriptor(
+                image, feature)
         return descriptor_vector
 
     def extract_all(self, image):
@@ -71,6 +73,7 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
 
         descriptor_vector = []
         if self.descriptor.is_descriptor:
-            descriptor_vector = self.descriptor.extract_descriptor(image, feature)
-        
+            descriptor_vector = self.descriptor.extract_descriptor(
+                image, feature)
+
         return feature, descriptor_vector

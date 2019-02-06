@@ -1,6 +1,6 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*- 
-#===========================================================
+# -*- coding: utf-8 -*-
+# ===========================================================
 #  File Name: parse_arg.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
@@ -11,10 +11,11 @@
 #
 #  Copyright (C) 2018 Xu Zhang
 #  All rights reserved.
-# 
+#
 #  This file is made available under
 #  the terms of the BSD license (see the COPYING file).
-#===========================================================
+# ===========================================================
+
 
 def parse_arg(opts, option):
     for key in option:
