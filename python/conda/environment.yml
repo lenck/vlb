@@ -1,26 +1,73 @@
 name: vlb
 channels:
-- conda-forge
 - anaconda
+- conda-forge
 - menpo
 - defaults
 dependencies:
-- python=3.4
-- blas
-- scipy
-- bzip2
-- openblas
-- matplotlib
-- numpy
-- tqdm
-- cyvlfeat
-- opencv
-- vlfeat
-- plotly
-- pip:
-  - exifread
-  - h5py
-  - hickle
-  - pybind11
-  - nmslib
-  - pipreqs
+- cython=0.25.2=py34_0
+- fontconfig=2.11.1=6
+- freetype=2.5.5=2
+- libgcc=7.2.0=h69d50b8_2
+- libgcc-ng=7.2.0=hdf63c60_3
+- libgfortran=3.0.0=1
+- libstdcxx-ng=7.2.0=hdf63c60_3
+- matplotlib=1.5.1=np111py34_0
+- pillow=4.0.0=py34_0
+- pyqt=4.11.4=py34_4
+- qt=4.8.7=3
+- backports_abc=0.5=py34_0
+- bzip2=1.0.6=1
+- ca-certificates=2018.4.16=0
+- certifi=2017.1.23=py34_0
+- cycler=0.10.0=py34_0
+- dbus=1.13.0=h3a4f0e9_0
+- expat=2.2.5=0
+- gettext=0.19.8.1=0
+- glib=2.55.0=0
+- gst-plugins-base=1.8.0=0
+- gstreamer=1.8.0=1
+- hdf5=1.8.17=11
+- icu=58.2=0
+- jasper=1.900.1=4
+- jpeg=9b=2
+- libffi=3.2.1=3
+- libiconv=1.15=0
+- libpng=1.6.34=0
+- libtiff=4.0.9=0
+- libxcb=1.13=0
+- libxml2=2.9.8=0
+- ncurses=5.9=10
+- openblas=0.2.19=2
+- opencv=3.1.0=np111py34_1
+- openssl=1.0.2o=0
+- pcre=8.41=1
+- pip=9.0.1=py34_0
+- pyparsing=2.1.10=py34_0
+- python=3.4.5=2
+- python-dateutil=2.7.3=py_0
+- pytz=2018.4=py_0
+- readline=6.2=0
+- setuptools=32.3.1=py34_0
+- sip=4.18=py34_1
+- six=1.10.0=py34_1
+- sqlite=3.13.0=1
+- tk=8.5.19=2
+- tornado=4.4.2=py34_0
+- tqdm=4.23.4=py_0
+- vlfeat=0.9.20=1
+- wheel=0.29.0=py34_0
+- xorg-libxau=1.0.8=3
+- xorg-libxdmcp=1.1.2=3
+- xz=5.2.3=0
+- zlib=1.2.11=h470a237_3
+- blas=1.0=mkl
+- intel-openmp=2018.0.3=0
+- mkl=2017.0.4=h4c4d0af_0
+- numpy=1.11.3=py34_0
+- plotly=1.12.9=py34_0
+- requests=2.14.2=py34_0
+- scipy=0.18.1=np111py34_1
+- cyvlfeat=0.4.5=py34_0
+prefix: /data/xuzhang/anaconda3/envs/vlb
+
