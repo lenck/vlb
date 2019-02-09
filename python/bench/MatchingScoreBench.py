@@ -1,8 +1,19 @@
-"""
-The module is the matching score benchmark
-
-Author: Xu Zhang
-"""
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: MatchingScoreBench.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 10:54:48 2019
+#
+#  Description: Matching score benchmark
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
 
 import numpy as np
 import BenchmarkTemplate

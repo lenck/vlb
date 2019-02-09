@@ -1,11 +1,20 @@
-"""
-The module is the basic interface for benchmark
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: RetrievalBenchmark.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:04:32 2019
+#
+#  Description: retrieval benchmark
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
 
-It contains basic wrapper function.
-
-Author: Xu Zhang
-
-"""
 import numpy as np
 from abc import ABCMeta
 import os

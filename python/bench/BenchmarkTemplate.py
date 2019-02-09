@@ -1,11 +1,20 @@
-"""
-The module is the basic interface for benchmark
+#!/usr/bin/python
+#-*- coding: utf-8 -*- 
+#===========================================================
+#  File Name: BenchmarkTemplate.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-26-2019
+#  Last Modified: Sat Feb  9 11:03:38 2019
+#
+#  Description: Standard benchmark template
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+# 
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+#===========================================================
 
-It contains basic wrapper function.
-
-Author: Xu Zhang
-
-"""
 import numpy as np
 from abc import ABCMeta, abstractmethod
 import os

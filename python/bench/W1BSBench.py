@@ -1,9 +1,19 @@
-import utils.w1bs
-"""
-The module is the wide baseline matching benchmark
-
-Author: Xu Zhang
-"""
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: W1BSBench.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:05:17 2019
+#
+#  Description:Wide baseline matching benchmark
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
 
 import numpy as np
 import os
@@ -14,7 +24,7 @@ import sys
 
 sys.path.insert(0, './3rdparty/wxbs-descriptors-benchmark/code')
 
-#import pdb
+import utils.w1bs
 
 
 class W1BSBench(Benchmark):

@@ -1,8 +1,20 @@
-"""
-The module defines all print and draw function for showing the result
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: Util.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:04:50 2019
+#
+#  Description: Writing and printing functions
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
 
-Author: Xu Zhang
-"""
 import numpy as np
 import os
 import hickle as hkl

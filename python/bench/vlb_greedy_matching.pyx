@@ -6,8 +6,7 @@
 #  Creation Date: 01-26-2019
 #  Last Modified: Sat Jan 26 22:40:12 2019
 #
-#  Usage: python vlb_greedy_matching.py -h
-#  Description:
+#  Description: A cython implementation of vlb_greedy_matching
 #
 #  Copyright (C) 2018 Xu Zhang
 #  All rights reserved.

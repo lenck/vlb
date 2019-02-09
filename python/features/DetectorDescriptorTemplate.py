@@ -1,8 +1,19 @@
-"""
-The module is the detector and descriptor wrapper
-
-Author: Xu Zhang
-"""
+#!/usr/bin/python
+#-*- coding: utf-8 -*- 
+#===========================================================
+#  File Name: DetectorDescriptorTemplate.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-26-2019
+#  Last Modified: Sat Feb  9 11:06:36 2019
+#
+#  Description: Detector and descriptor template
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+# 
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+#===========================================================
 
 import numpy as np
 import cv2

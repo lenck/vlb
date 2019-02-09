@@ -1,20 +1,21 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*- 
-#===========================================================
-#  File Name: vgg_compute_ellipse_overlap.py
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: W1BSBench.py
 #  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-26-2019
-#  Last Modified: Sat Jan 26 15:28:47 2019
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 10:57:07 2019
 #
-#  Usage: python vgg_compute_ellipse_overlap.py -h
-#  Description:
+#  Description:Wide baseline matching benchmark
 #
 #  Copyright (C) 2018 Xu Zhang
 #  All rights reserved.
-# 
+#
 #  This file is made available under
 #  the terms of the BSD license (see the COPYING file).
-#===========================================================
+# ===========================================================
+
+
 import numpy as np
 cimport numpy as np
 import math

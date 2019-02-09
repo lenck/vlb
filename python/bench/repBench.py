@@ -1,8 +1,19 @@
-"""
-The module is the repeatability benchmark
-
-Author: Xu Zhang
-"""
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: repBench.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:04:14 2019
+#
+#  Description:repeatability benchmark
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
 
 import numpy as np
 import BenchmarkTemplate

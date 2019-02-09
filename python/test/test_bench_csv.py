@@ -1,3 +1,21 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: test_bench_csv.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:10:52 2019
+#
+#  Usage: python test_bench_csv.py
+#  Description:test repeatability benchmark from csv feature.
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
+
 import sys
 sys.path.insert(0, '/home/xuzhang/project/Medifor/code/vlb/python/dset/')
 sys.path.insert(0, '/home/xuzhang/project/Medifor/code/vlb/python/features/')

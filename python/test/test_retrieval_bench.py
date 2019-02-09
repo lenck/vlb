@@ -1,3 +1,21 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ===========================================================
+#  File Name: test_retrieval_bench.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-25-2019
+#  Last Modified: Sat Feb  9 11:12:10 2019
+#
+#  Usage: python test_retrieval_bench.py
+#  Description: Test retrieval benchmark
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+#
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+# ===========================================================
+
 import os
 import sys
 
