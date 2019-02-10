@@ -1,26 +1,39 @@
-"""
-The module is the detector and descriptor wrapper
-
-Author: Xu Zhang
-"""
+#!/usr/bin/python
+#-*- coding: utf-8 -*- 
+#===========================================================
+#  File Name: DetectorDescriptorTemplate.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 01-26-2019
+#  Last Modified: Sat Feb  9 11:06:36 2019
+#
+#  Description: Detector and descriptor template
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+# 
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+#===========================================================
 
 import numpy as np
-import json
-import os
 import cv2
 import cyvlfeat
 import exifread
 
 from abc import ABCMeta, abstractmethod
 
+
 class DetectorAndDescriptor():
-    __metaclass__ = ABCMeta 
-    def __init__(self, name, is_detector = False, is_descriptor = False, is_both = True, csv_flag = False):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, name, is_detector=False, is_descriptor=False,
+                 is_both=True, csv_flag=False, patch_input=False):
         self.name = name
         self.is_detector = is_detector
         self.is_descriptor = is_descriptor
         self.is_both = is_both
         self.csv_flag = csv_flag
+        self.patch_input = patch_input
 
     @abstractmethod
     def detect_feature(self, image):
@@ -58,7 +71,8 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
     def extract_descriptor(self, image, feature):
         descriptor_vector = []
         if self.descriptor.is_descriptor:
-            descriptor_vector = self.descriptor.extract_descriptor(image, feature)
+            descriptor_vector = self.descriptor.extract_descriptor(
+                image, feature)
         return descriptor_vector
 
     def extract_all(self, image):
@@ -70,6 +84,7 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
 
         descriptor_vector = []
         if self.descriptor.is_descriptor:
-            descriptor_vector = self.descriptor.extract_descriptor(image, feature)
-        
+            descriptor_vector = self.descriptor.extract_descriptor(
+                image, feature)
+
         return feature, descriptor_vector

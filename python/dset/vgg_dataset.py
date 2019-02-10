@@ -2,12 +2,18 @@ from dataset import SequenceDataset
 import urllib
 import tarfile
 import os
+import sys
+
+if sys.version_info[0] >= 3:
+    from urllib.request import urlretrieve
+else:
+    from urllib import urlretrieve
 
 
 class vggh_Dataset(SequenceDataset):
 
     def __init__(self,root_dir = './datasets/', download_flag = False):
-        super(vggh_Dataset,self).__init__(name = 'vggh', root_dir = root_dir, download_flag = download_flag)
+        super(vggh_Dataset,self).__init__(name = 'vggh', root_dir = root_dir, download_flag = download_flag, matlab_flag = True)
 
     def download(self):
         try:
@@ -30,7 +36,7 @@ class vggh_Dataset(SequenceDataset):
                 os.mkdir('{}{}/{}'.format(self.root_dir,self.name,sequence_name))
 
             try:
-                urllib.urlretrieve(download_url,download_filename)
+                urlretrieve(download_url,download_filename)
                 tar = tarfile.open(download_filename)
                 tar.extractall('{}{}/{}'.format(self.root_dir,self.name,sequence_name))
                 tar.close()

@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: draw_frame.py
+#  File Name: test_W1BS_Bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:09:58 2019
+#  Last Modified: Sat Feb  9 11:14:17 2019
 #
-#  Usage: python draw_frame.py
-#  Description: Draw frame of the feature
+#  Usage: python test_W1BS_Bench.py
+#  Description: Test baseline matching benchmark
 #
 #  Copyright (C) 2018 Xu Zhang
 #  All rights reserved.
@@ -17,20 +17,23 @@
 # ===========================================================
 
 import sys
-
 sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/dset/')
 sys.path.insert(
     0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/features/')
 sys.path.insert(0, '/Users/Xu/program/Image_Genealogy/code/vlb/python/bench/')
 
 import Utils
-import vlsift_matlab
-import vlsift
-import vgg_dataset
+import W1BSBench
+import np_sift
+import W1BS_dataset
 
 
 if __name__ == "__main__":
 
-    a = vgg_dataset.vggh_Dataset()
-    vlsift_matlab = vlsift_matlab.vlsift_matlab()
-    Utils.draw_feature(a, 'bikes', '1', vlsift_matlab)
+    w1bs = W1BS_dataset.W1BS_Dataset()
+    np_sift = np_sift.np_sift()
+    bench = W1BSBench.W1BSBench()
+
+    result = bench.evaluate(w1bs, np_sift, use_cache=True, save_result=True)
+    result = [result]
+    Utils.print_result(result, 'ap')

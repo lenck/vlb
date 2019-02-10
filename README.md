@@ -72,15 +72,47 @@ To run the tests, call:
 
 ## Python Interface
 ### Requirement
-Rightnow, our python interface is based on some scripts in matlab. We will remove the dependences later. To run our python code, [python-matlab engine](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html) should be installed.
-
-Install other requirements
+We recommend to use conda to install all the requirements all at once. 
 
 ```
-pip install -r ./python/requirements.txt 
+conda env create -f ./python/conda/environment.yml
 ```
 
 ###Test the code
+
+Test repeatability benchmark
+
+```
+python ./python/test/test_rep_bench.py
+```
+
+
+Test matching score benchmark
+
 ```
 python ./python/test/test_ms_bench.py
+```
+
+Test image retrieval benchmark
+
+```
+python ./python/test/test_retrieval_bench.py
+```
+
+Test wide baseline matching benchmark
+
+```
+python ./python/test/test_W1BS_Bench.py
+```
+
+Test feature extraction
+
+```
+python ./python/test/test_feature_extraction.py
+```
+
+Test draw feature
+
+```
+python ./python/test/draw_frame.py
 ```
