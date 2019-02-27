@@ -4,7 +4,7 @@
 #  File Name: test_W1BS_Bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Wed Feb 20 19:33:15 2019
+#  Last Modified: Tue Feb 26 22:21:45 2019
 #
 #  Usage: python test_W1BS_Bench.py
 #  Description: Test baseline matching benchmark
@@ -27,18 +27,12 @@ sys.path.insert(0, '{}/python/bench/'.format(cwd))
 import Utils
 import W1BSBench
 import np_sift
-#import cyvlsift_official
-#import cyvlsift_official_old
-#import vlsift_python
 import W1BS_dataset
 
 
 if __name__ == "__main__":
 
     w1bs = W1BS_dataset.W1BS_Dataset()
-    #vlsift_py_old = cyvlsift_official_old.cyvlsift_official_old()
-    #vlsift_py = cyvlsift_official.cyvlsift_official()
-    #vlsift_python = vlsift_python.vlsift_python(peak_thresh = 0.005)
     np_sift_py = np_sift.np_sift()
     bench = W1BSBench.W1BSBench()
 

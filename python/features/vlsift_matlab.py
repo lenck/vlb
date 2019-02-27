@@ -10,8 +10,8 @@ import matlab
 import matlab.engine
 from DetectorDescriptorTemplate import DetectorAndDescriptor
 
-eng = matlab.engine.start_matlab('-c /home/xuzhang/tool/Mathworks_Matlab_R2015a_Linux/fixr2015arel/Standalone.lic -nodisplay')
-eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/', nargout=0)
+eng = matlab.engine.start_matlab()
+eng.addpath(r'./matlab/', nargout=0)
 
 
 class vlsift_matlab(DetectorAndDescriptor):
