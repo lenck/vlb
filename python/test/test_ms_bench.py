@@ -4,7 +4,7 @@
 #  File Name: test_ms_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Mon Feb 18 12:10:13 2019
+#  Last Modified: Tue Feb 26 22:19:42 2019
 #
 #  Usage: python test_ms_bench.py
 #  Description:test matching score benchmark
@@ -27,7 +27,6 @@ import Utils
 import MatchingScoreBench
 import repBench
 import cyvlsift_official
-import vlsift_python
 import vlsift_load_matlab
 import vgg_dataset
 
@@ -36,20 +35,16 @@ if __name__ == "__main__":
 
     vggh = vgg_dataset.vggh_Dataset()
     vlsift_py = cyvlsift_official.cyvlsift_official()
-    vlsift_python = vlsift_python.vlsift_python(peak_thresh = 0.01)
     vlsift_load_matlab = vlsift_load_matlab.vlsift_load_matlab()
     ms_bench = MatchingScoreBench.MatchingScoreBench()
 
     ms_result_py = ms_bench.evaluate(
         vggh, vlsift_py, use_cache=True, save_result=True)
 
-    ms_result_python = ms_bench.evaluate(
-        vggh, vlsift_python, use_cache=False, save_result=True)
-    
     ms_result_matlab = ms_bench.evaluate(
         vggh, vlsift_load_matlab, use_cache=True, save_result=True)
 
-    ms_result = [ms_result_py, ms_result_python, ms_result_matlab]
+    ms_result = [ms_result_py, ms_result_matlab]
     for result_term in ms_result[0]['result_term_list']:
         Utils.print_result(ms_result, result_term)
         #Utils.save_result(ms_result, result_term)
