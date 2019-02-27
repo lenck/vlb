@@ -4,7 +4,7 @@
 #  File Name: test_rep_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:10:55 2019
+#  Last Modified: Tue Feb 26 22:21:02 2019
 #
 #  Usage: python test_rep_bench.py
 #  Description:test repeatability benchmark
@@ -25,14 +25,14 @@ sys.path.insert(0, '{}/python/bench/'.format(cwd))
 
 import Utils
 import repBench
-import vlsift
+import cyvlsift_official
 import vgg_dataset
 
 
 if __name__ == "__main__":
 
     vggh = vgg_dataset.vggh_Dataset()
-    vlsift_py = vlsift.vlsift()
+    vlsift_py = cyvlsift_official.cyvlsift_official()
     rep_bench = repBench.repBench()
 
     rep_result_py = rep_bench.evaluate(

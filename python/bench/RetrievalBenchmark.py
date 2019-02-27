@@ -4,7 +4,7 @@
 #  File Name: RetrievalBenchmark.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:04:32 2019
+#  Last Modified: Tue Feb 19 14:11:04 2019
 #
 #  Description: retrieval benchmark
 #
@@ -142,7 +142,6 @@ class RetrievalBenchmark():
         result = {}
         if use_cache:
             try:
-                sdfadfsdf
                 result = pkl.load(open(result_file_name, 'rb'))
                 print('Get cached result from {}'.format(result_file_name))
                 get_result_flag = True

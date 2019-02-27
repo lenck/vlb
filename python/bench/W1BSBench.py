@@ -4,7 +4,7 @@
 #  File Name: W1BSBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:05:17 2019
+#  Last Modified: Wed Feb 20 17:41:06 2019
 #
 #  Description:Wide baseline matching benchmark
 #
@@ -93,7 +93,7 @@ class W1BSBench(Benchmark):
                         descriptor = self.load_csv_feature(descriptor_csv_name)
                     else:
                         h, w = image.image_data.shape
-                        n_patches = h / w
+                        n_patches = h // w
                         patches_set = np.zeros((n_patches, w, w, 1))
                         for i in range(n_patches):
                             patches_set[i, :, :, 0] = image.image_data[i *

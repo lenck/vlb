@@ -4,7 +4,7 @@
 #  File Name: feature_util.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-26-2019
-#  Last Modified: Sat Feb  9 11:07:28 2019
+#  Last Modified: Mon Feb 18 10:31:14 2019
 #
 #  Description: Detector and descriptor util function
 #
@@ -71,6 +71,7 @@ def extract_patch(img, kp, patch_sz=32, rectigy_flag=False):
 
 def rgb2gray(img):
     # pdb.set_trace()
-    img_gray = np.average(img, weights=[0.2989, 0.5870, 0.1140], axis=2)
+    #img_gray = np.average(img, weights=[0.2989, 0.5870, 0.1140], axis=2)
+    img_gray = np.average(img, weights=[0.1140, 0.5870, 0.2989], axis=2)
     #img_gray = img_gray.astype(np.uint8)
     return img_gray

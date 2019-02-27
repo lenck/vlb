@@ -5,15 +5,13 @@ Author: Xu Zhang
 
 import numpy as np
 import cv2
-import cyvlfeat
-import exifread
 import feature_utils
 import matlab
 import matlab.engine
 from DetectorDescriptorTemplate import DetectorAndDescriptor
 
 eng = matlab.engine.start_matlab()
-eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/', nargout=0)
+eng.addpath(r'./matlab/', nargout=0)
 
 
 class vlsift_matlab(DetectorAndDescriptor):

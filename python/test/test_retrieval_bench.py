@@ -4,7 +4,7 @@
 #  File Name: test_retrieval_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:12:10 2019
+#  Last Modified: Tue Feb 26 22:15:46 2019
 #
 #  Usage: python test_retrieval_bench.py
 #  Description: Test retrieval benchmark
@@ -27,16 +27,15 @@ sys.path.insert(0, '{}/python/bench/'.format(cwd))
 import Utils
 import RetrievalBenchmark
 import repBench
-import vlsift
+import cyvlsift_official
 import oxford5k_dataset
 import paris6k_dataset
-
 
 if __name__ == "__main__":
 
     paris6k = paris6k_dataset.paris6k_Dataset()
     oxford5k = oxford5k_dataset.oxford5k_Dataset()
-    vlsift_py = vlsift.vlsift()
+    vlsift_py = cyvlsift_official.cyvlsift_official()
     retrieval_bench = RetrievalBenchmark.RetrievalBenchmark()
 
     map_result_py = retrieval_bench.evaluate(
