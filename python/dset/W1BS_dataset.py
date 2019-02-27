@@ -2,6 +2,7 @@ from dataset import SequenceDataset
 import urllib
 import tarfile
 import os
+import sys
 
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve
@@ -25,15 +26,16 @@ class W1BS_Dataset(SequenceDataset):
         except:
             os.mkdir('{}{}'.format(self.root_dir,self.name))
 
-        download_url = "{}.tar.gz".format(self.url)
-        download_filename = "{}/{}.tar.gz".format(self.root_dir, self.name)
+        download_url = "{}".format(self.url)
+        download_filename = "{}{}/{}.tar.gz".format(self.root_dir, self.name, self.name)
         try:
             urlretrieve(download_url,download_filename)
             tar = tarfile.open(download_filename)
             tar.extractall('{}'.format(self.root_dir))
             tar.close()
             os.remove(download_filename)
-        except:
+        except Exception as e:
+            print(str(e))
             print('Cannot download from {}.'.format(download_url))
     
     def read_image_data(self):

@@ -4,7 +4,7 @@
 #  File Name: Util.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:04:50 2019
+#  Last Modified: Mon Feb 18 11:44:56 2019
 #
 #  Description: Writing and printing functions
 #
@@ -375,6 +375,10 @@ def get_sequence_str_list(results, sequence_name, term_to_show):
         write_str = []
         write_str.append(result['detector_name'])
         sequence_result = result['sequence_result'][sequence_index]
+        link_id_list = sequence_result['result_link_id_list']
+        sorted_index = sorted(
+            range(len(link_id_list)),
+            key=link_id_list.__getitem__)
         for sorted_idx in sorted_index:
             write_str.append(str(sequence_result[term_to_show][sorted_idx]))
         write_str.append(str(sequence_result['ave_{}'.format(term_to_show)]))
