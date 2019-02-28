@@ -20,8 +20,6 @@ import os
 import hickle as hkl
 import BenchmarkTemplate
 from BenchmarkTemplate import Benchmark
-import matlab.engine
-import matlab
 import csv
 from tqdm import tqdm
 import cv2
