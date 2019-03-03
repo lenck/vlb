@@ -4,7 +4,7 @@
 #  File Name: Util.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Mon Feb 18 11:44:56 2019
+#  Last Modified: Sun Mar  3 16:43:16 2019
 #
 #  Description: Writing and printing functions
 #
@@ -18,8 +18,6 @@
 import numpy as np
 import os
 import hickle as hkl
-import BenchmarkTemplate
-from BenchmarkTemplate import Benchmark
 import csv
 from tqdm import tqdm
 import cv2

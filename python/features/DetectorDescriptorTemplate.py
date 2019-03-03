@@ -4,7 +4,7 @@
 #  File Name: DetectorDescriptorTemplate.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-26-2019
-#  Last Modified: Sat Feb  9 11:06:36 2019
+#  Last Modified: Sat Mar  2 13:46:34 2019
 #
 #  Description: Detector and descriptor template
 #
@@ -15,6 +15,11 @@
 #  the terms of the BSD license (see the COPYING file).
 #===========================================================
 
+
+"""
+This module describe basic detector and descriptor
+"""
+
 import numpy as np
 import cv2
 import cyvlfeat
@@ -24,6 +29,25 @@ from abc import ABCMeta, abstractmethod
 
 
 class DetectorAndDescriptor():
+    """Basic template class for detector and descriptor.
+
+    Attributes 
+    ----------
+
+    name: str
+        Name of the detector
+    is_detector: boolean, optional
+        Is the module is a detector or not
+    is_descriptor: boolean, optional
+        Is the module is a descriptor or not
+    is_both: boolean, optional
+        Is the module is both a detector and a decritpor or not
+    csv_flag: boolean, optional
+        Can the module load feature from csv file or not
+    patch_input: boolean, optional
+        Do the module take patch instead of full image as input or not
+    """
+
     __metaclass__ = ABCMeta
 
     def __init__(self, name, is_detector=False, is_descriptor=False,
@@ -37,18 +61,59 @@ class DetectorAndDescriptor():
 
     @abstractmethod
     def detect_feature(self, image):
+        """
+        Extract feature from image.
+        
+        :param image: The image
+        :type image: array
+        :returns: feature
+        :rtype: array(n*d)        
+        """
         pass
 
     @abstractmethod
     def extract_descriptor(self, image, feature):
+        """
+        Extract descriptor from image with feature.
+
+        :param image: The image
+        :type image: array
+        :param feature: The feature output by detector
+        :type feature: array
+        :returns: descriptor
+        :rtype: array(n*d)
+        """
         pass
 
     @abstractmethod
     def extract_all(self, image):
+        """
+        Extract feature and descriptor from image.
+        
+        :param image: The image
+        :type image: array
+        :returns: feature, descriptor
+        :rtype: array(n*d)     
+        """
         pass
 
 
 class DetectorDescriptorBundle(DetectorAndDescriptor):
+    """
+    Combine a detector and a descriptor to make a new detector+descriptor. 
+    For paper only focuses on either detector or descriptor.
+    
+    Attributes 
+    ----------
+
+    name: str
+        Name of the Bundle
+    detector: DetectorAndDescriptor
+        The detector to combine
+    descriptor: DetectorAndDescriptor
+        The descriptor to combine
+    """
+
     def __init__(self, detector, descriptor):
         self.name = "{}_{}".format(detector.name, descriptor.name)
         self.detector = detector
@@ -61,6 +126,15 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
             exit()
 
     def detect_feature(self, image):
+        """
+        Extract feature from image.
+        
+        :param image: The image
+        :type image: array
+        :returns: feature
+        :rtype: array(n*d)
+        """
+
         feature = []
         if self.detector.is_detector:
             feature = detector.detect_feature(image)
@@ -69,6 +143,17 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
         return feature
 
     def extract_descriptor(self, image, feature):
+        """
+        Extract descriptor from image with feature.
+
+        :param image: The image
+        :type image: array
+        :param feature: The feature output by detector
+        :type feature: array
+        :returns: descriptor
+        :rtype: array(n*d)
+        """
+
         descriptor_vector = []
         if self.descriptor.is_descriptor:
             descriptor_vector = self.descriptor.extract_descriptor(
@@ -76,6 +161,15 @@ class DetectorDescriptorBundle(DetectorAndDescriptor):
         return descriptor_vector
 
     def extract_all(self, image):
+        """
+        Extract feature and descriptor from image.
+        
+        :param image: The image
+        :type image: array
+        :returns: feature, descriptor
+        :rtype: array(n*d)     
+        """
+
         feature = []
         if self.detector.is_detector:
             feature = detector.detect_feature(image)

@@ -4,7 +4,7 @@
 #  File Name: RetrievalBenchmark.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb 19 14:11:04 2019
+#  Last Modified: Sun Mar  3 16:29:30 2019
 #
 #  Description: retrieval benchmark
 #
@@ -14,6 +14,10 @@
 #  This file is made available under
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
+
+"""
+This module describe benchmark for image retrieval.
+"""
 
 import numpy as np
 from abc import ABCMeta
@@ -25,32 +29,21 @@ import cv2
 import copy
 
 
-def get_sorted_index_and_score(image_index, flat_D):
-    uidx, counts = np.unique(np.array(image_index), return_counts=True)
-    count_dict = dict(zip(uidx, counts))
-    score_idx = dict(zip(uidx, range(len(uidx))))
-    score_list = np.zeros(len(uidx))
-
-    flat_D = np.maximum(0, pow((1 - np.maximum(0, flat_D - 0.1) / 0.2), 3))
-
-    for temp_idx, dis in zip(image_index, flat_D):
-        ind_t = score_idx[temp_idx]
-        score_list[ind_t] = score_list[ind_t] + dis
-    score_dict = dict(zip(uidx, score_list.tolist()))
-    neg_score_list = -1 * score_list
-
-    ridx = range(len(uidx))
-    ridx = list(ridx)
-    ridx.sort(key=(neg_score_list.tolist().__getitem__))
-    sorted_score = score_list[ridx].tolist()
-    sorted_count = counts[ridx].tolist()
-    sorted_index = uidx[ridx].tolist()
-
-    return sorted_index, sorted_score, sorted_count, score_dict, count_dict
-
-
 class RetrievalBenchmark():
     __metaclass__ = ABCMeta
+    
+    """Retrieval Benchmark 
+    
+    Attributes
+    ----------
+
+    name: str
+        Name of the dataset
+    tmp_feature_dir: str
+        Directory for saving the feature
+    result_dir: str
+        Directory for saving the final result
+    """
 
     def __init__(self, tmp_feature_dir='./data/features/',
                  result_dir='./python_scores/'):
@@ -62,6 +55,21 @@ class RetrievalBenchmark():
 
     def extract_descriptor(self, dataset, detector,
                            use_cache=False, save_feature=True):
+        """
+        Extract descriptors from images.
+        
+        :param dataset: Dataset to extract the descriptor
+        :type dataset: RetrievalDataset
+        :param detector: Detector used to extract the descriptor
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_feature: Save computated feature or not
+        :type save_feature: boolean
+        :returns: feature, descriptor 
+        :rtype: dict, dict
+        """
+
         feature_dict = {}
         descriptor_dict = {}
 
@@ -117,6 +125,14 @@ class RetrievalBenchmark():
         return feature_dict, descriptor_dict
 
     def load_csv_feature(self, csv_feature_file):
+        """
+        Load feature from csvfile.
+        
+        :param csv_feature_file: csv file to load feature
+        :type csv_feature_file: str
+        :returns: feature
+        :rtype: array
+        """
         feature = []
         with open(csv_feature_file) as f:
             for line in f:
@@ -128,6 +144,47 @@ class RetrievalBenchmark():
     # Evaluation warpper
     def evaluate_warpper(self, dataset, detector, result_list, l2_norm=True,
                          use_cache=True, save_result=True, custom_extraction=False):
+
+        """
+        Load descriptor from cached file. If failed, extract descriptor from image.
+
+        **Structure of the result:**
+
+        result['dataset_name']: name of the dataset
+
+        result['result_term_list']: list of metrics for evaluation
+
+        result['task_name']: name of the task
+
+        result['detector_name']: name of the dataset
+
+        result['ave_{}']: average value for each metric over all sequences
+
+
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param result_list: Metric to calculate
+        :type result_list: list
+        :param l2_norm: Perform l2 normalization to descriptor or not
+        :type l2_norm: boolean
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_result: Save result or not
+        :type save_result: boolean
+        :param custom_extraction: Use custom extraction method or not. See also  and extract_descriptor_custom
+        :type custom_extraction: boolean
+        :returns: result 
+        :rtype: dict
+
+        See Also
+        --------
+
+        detect_feature_custom: Extract feature with customized method (special evaluation).
+        extract_descriptor_custom: Extract descriptor with customized (special evaluation).
+
+        """
 
         get_result_flag = False
         result_file_name = '{}{}/{}/{}/{}.pkl'.format(
@@ -293,19 +350,78 @@ class RetrievalBenchmark():
         return result
 
     def print_and_save_result(results):
+        """
+        Print and save result.
+
+        :param results: Result to show
+        :type results: dict
+        """
+
         self.print_retrieval_result(results, 'ap')
         self.save_retrieval_result(results, 'ap')
 
     def evaluate(self, dataset, detector, use_cache=True, save_result=True):
+        """
+        Main function to run the evaluation wrapper. It could be different for different evaluation
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_result: Save result or not
+        :type save_result: boolean
+
+        See Also
+        --------
+
+        evaluate_warpper:
+        """
+
         result = self.evaluate_warpper(dataset, detector, ['ap'],
                                        use_cache=use_cache, save_result=save_result)
         result['bench_name'] = self.bench_name
         return result
+    
+    def get_sorted_index_and_score(self, image_index, flat_D):
+        """
+        Given local feature to image index and distance to each local features, return image score
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_result: Save result or not
+        :type save_result: boolean
+        
+        :returns: sorted_index, sorted_score, sorted_count, score_dict, count_dict 
+        :rtype: array, array, array, dict, dict
 
-    def detect_feature_custom(self, dataset, detector,
-                              use_cache=False, save_feature=True):
-        pass
+        return sorted image index based on score, sorted score, sorted number of matched point, 
+        dict of image id to score, dict of image id to number of matched points.
 
-    def extract_descriptor_custom(
-            self, dataset, detector, use_cache=False, save_feature=True):
-        pass
+        """
+        uidx, counts = np.unique(np.array(image_index), return_counts=True)
+        count_dict = dict(zip(uidx, counts))
+        score_idx = dict(zip(uidx, range(len(uidx))))
+        score_list = np.zeros(len(uidx))
+
+        flat_D = np.maximum(0, pow((1 - np.maximum(0, flat_D - 0.1) / 0.2), 3))
+
+        for temp_idx, dis in zip(image_index, flat_D):
+            ind_t = score_idx[temp_idx]
+            score_list[ind_t] = score_list[ind_t] + dis
+        score_dict = dict(zip(uidx, score_list.tolist()))
+        neg_score_list = -1 * score_list
+
+        ridx = range(len(uidx))
+        ridx = list(ridx)
+        ridx.sort(key=(neg_score_list.tolist().__getitem__))
+        sorted_score = score_list[ridx].tolist()
+        sorted_count = counts[ridx].tolist()
+        sorted_index = uidx[ridx].tolist()
+
+        return sorted_index, sorted_score, sorted_count, score_dict, count_dict

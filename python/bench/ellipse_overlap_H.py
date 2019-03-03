@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb  5 15:34:39 2019
+#  Last Modified: Sat Mar  2 12:44:09 2019
 #
 #  Usage: python ellipse_overlap_H.py
 #  Description:
@@ -16,7 +16,7 @@
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
 
-from parse_arg import parse_arg
+from bench.parse_arg import parse_arg
 import numpy as np
 import copy
 import scipy.spatial.distance
@@ -25,8 +25,8 @@ import scipy.io as sio
 import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
 
-import vlb_greedy_matching
-import vgg_compute_ellipse_overlap
+import bench.vlb_greedy_matching
+import bench.vgg_compute_ellipse_overlap
 
 
 def frame2ellipse(fa):
