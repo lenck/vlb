@@ -4,7 +4,7 @@
 #  File Name: repBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 11:04:14 2019
+#  Last Modified: Sun Mar  3 16:12:04 2019
 #
 #  Description:repeatability benchmark
 #
@@ -15,19 +15,27 @@
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
 
+"""
+This module describe benchmark for repeatability. 
+"""
+
 import numpy as np
-import BenchmarkTemplate
-from BenchmarkTemplate import Benchmark
+import bench.BenchmarkTemplate
+from bench.BenchmarkTemplate import Benchmark
 import scipy.io as sio
 
-from ellipse_overlap_H import ellipse_overlap_H
+from bench.ellipse_overlap_H import ellipse_overlap_H
 
 import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
-import vlb_greedy_matching
+import bench.vlb_greedy_matching
 
 
 class repBench(Benchmark):
+    """
+    Repeatability Template
+    Return repeatability score and number of correspondence
+    """
     def __init__(self, tmp_feature_dir='./features/',
                  result_dir='./python_scores/'):
         super(repBench, self).__init__(name='Repeatability',
@@ -36,6 +44,24 @@ class repBench(Benchmark):
         self.test_name = 'repeatability'
 
     def evaluate_unit(self, feature_1, feature_2, task):
+        """
+        Single evaluation unit. Given two features, return the repeatability.
+        
+        :param feature_1: Feature to run. 
+        :type feature_1: array 
+        :param feature_2: Feature to run. 
+        :type feature_2: array
+        :param task: What to run
+        :type task: dict
+        
+        See Also
+        --------
+
+        evaluate_warpper: How to run the unit.
+        dset.dataset.Link: definition of task.
+
+        """
+
         rep = 0.0
         num_cor = 0
         if feature_1 is None or feature_2 is None or feature_1.shape[
@@ -77,6 +103,29 @@ class repBench(Benchmark):
 
     def evaluate(self, dataset, detector, use_cache=True,
                  save_result=True, norm_factor='minab'):
+        """
+        Main function to call the evaluation wrapper. It could be different for different evaluation
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_result: Save result or not
+        :type save_result: boolean
+        :param norm_factor: How to normalize the repeatability. Option: minab, a, b
+        :type norm_factor: str
+        :returns: result 
+        :rtype: dict
+
+        See Also
+        --------
+        
+        bench.Benchmark
+        bench.Benchmark.evaluate_warpper:
+        """
+
         self.norm_factor = norm_factor
         result = self.evaluate_warpper(dataset, detector, ['repeatability', 'num_cor'], extract_descriptor=False,
                                        use_cache=use_cache, save_result=save_result)
@@ -86,8 +135,40 @@ class repBench(Benchmark):
 
     def detect_feature_custom(self, dataset, detector,
                               use_cache=False, save_feature=True):
+        """
+        Customized feature extraction method. For special task. 
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_feature: Save computated feature or not
+        :type save_feature: boolean
+        :returns: feature 
+        :rtype: dict
+
+        """
+
         pass
 
     def extract_descriptor_custom(
             self, dataset, detector, use_cache=False, save_feature=True):
+        """
+        Customized description extraction method. For special task. 
+        
+        :param dataset: Dataset to extract the descriptor
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the descriptor
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_feature: Save computated feature or not
+        :type save_feature: boolean
+        :returns: feature 
+        :rtype: dict
+
+        """
+
         pass

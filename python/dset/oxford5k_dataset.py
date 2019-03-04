@@ -1,4 +1,21 @@
-from retrieval_dataset import RetrievalDataset
+#!/usr/bin/python
+#-*- coding: utf-8 -*- 
+#===========================================================
+#  File Name: oxford5k_dataset.py
+#  Author: Xu Zhang, Columbia University
+#  Creation Date: 09-26-2017
+#  Last Modified: Sat Mar  2 20:49:57 2019
+#
+#  Description:Oxford 5K dataset
+#
+#  Copyright (C) 2018 Xu Zhang
+#  All rights reserved.
+# 
+#  This file is made available under
+#  the terms of the BSD license (see the COPYING file).
+#===========================================================
+
+from dset.retrieval_dataset import RetrievalDataset
 import urllib
 import tarfile
 import os
@@ -11,11 +28,17 @@ else:
     from urllib import urlretrieve
 
 class oxford5k_Dataset(RetrievalDataset):
+    """
+    Oxford 5K dataset
+    """
 
     def __init__(self, root_dir = './datasets/', download_flag = False):
         super(oxford5k_Dataset,self).__init__(name = 'oxford5k', root_dir = root_dir, download_flag = download_flag)
 
     def download(self):
+        """
+        Download data
+        """
         try:
             os.stat(self.root_dir)
         except:
@@ -52,9 +75,15 @@ class oxford5k_Dataset(RetrievalDataset):
             print('Cannot download from {}.'.format(self.url))
 
     def read_gallery_list(self):
+        """
+        Load gallery image list
+        """
         self.gallery_list = glob('{}{}/images/*.jpg'.format(self.root_dir,self.name))
 
     def read_query_list(self):
+        """
+        Load query image list
+        """
         query_txt_list = glob('{}{}/gt/*query.txt'.format(self.root_dir,self.name))
         self.query_list = []
         self.positive_lists = []

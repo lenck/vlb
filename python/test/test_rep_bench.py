@@ -4,7 +4,7 @@
 #  File Name: test_rep_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb 26 22:21:02 2019
+#  Last Modified: Sun Mar  3 18:11:21 2019
 #
 #  Usage: python test_rep_bench.py
 #  Description:test repeatability benchmark
@@ -19,32 +19,40 @@
 import os
 import sys
 cwd = os.getcwd()
-sys.path.insert(0, '{}/python/dset/'.format(cwd))
-sys.path.insert(0, '{}/python/features/'.format(cwd))
-sys.path.insert(0, '{}/python/bench/'.format(cwd))
+sys.path.insert(0, '{}/python/'.format(cwd))
 
-import Utils
-import repBench
-import cyvlsift_official
-import vgg_dataset
+import bench.Utils
+import bench.repBench
+import features.cyvlsift_official
+import dset.vgg_dataset
 
 
 if __name__ == "__main__":
 
-    vggh = vgg_dataset.vggh_Dataset()
-    vlsift_py = cyvlsift_official.cyvlsift_official()
-    rep_bench = repBench.repBench()
+    # Define repeatability benchmark
+    rep_bench = bench.repBench.repBench()
+    
+    # Define feature 
+    vlsift_py = features.cyvlsift_official.cyvlsift_official()
 
+    # Define dataset
+    vggh = dset.vgg_dataset.vggh_Dataset()
+
+    # Do the evaluation
     rep_result_py = rep_bench.evaluate(
         vggh, vlsift_py, use_cache=False, save_result=True)
 
+    # Make the results from different detectors as a list. 
+    # (Only one here, but you can add more)
     rep_result = [rep_result_py]
-    for result_term in rep_result[0]['result_term_list']:
-        Utils.print_result(rep_result, result_term)
-        Utils.save_result(rep_result, result_term)
 
-    #show result for different sequences
+    # Show the result
+    for result_term in rep_result[0]['result_term_list']:
+        bench.Utils.print_result(rep_result, result_term)
+        bench.Utils.save_result(rep_result, result_term)
+
+    #Show result for different sequences
     for sequence in vggh.sequence_name_list:
         for result_term in rep_result[0]['result_term_list']:
-            Utils.print_sequence_result(rep_result, sequence, result_term)
-            Utils.save_sequence_result(rep_result, sequence, result_term)
+            bench.Utils.print_sequence_result(rep_result, sequence, result_term)
+            bench.Utils.save_sequence_result(rep_result, sequence, result_term)

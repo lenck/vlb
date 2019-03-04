@@ -1,3 +1,3 @@
-[submodule "3rdparty/wxbs-descriptors-benchmark"]
-	path = 3rdparty/wxbs-descriptors-benchmark
+[submodule "python/other_benchmarks/wxbs_descriptors_benchmark"]
+	path = python/other_benchmarks/wxbs_descriptors_benchmark
 	url = git@github.com:spongezhang/wxbs-descriptors-benchmark.git
