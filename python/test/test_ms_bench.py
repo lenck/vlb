@@ -4,7 +4,7 @@
 #  File Name: test_ms_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Mar  2 12:47:41 2019
+#  Last Modified: Sun Mar  3 18:09:44 2019
 #
 #  Usage: python test_ms_bench.py
 #  Description:test matching score benchmark
@@ -30,27 +30,36 @@ import dset.vgg_dataset
 
 
 if __name__ == "__main__":
-
-    vggh = dset.vgg_dataset.vggh_Dataset()
-    vlsift_py = features.cyvlsift_official.cyvlsift_official()
-    vlsift_load_matlab = features.vlsift_load_matlab.vlsift_load_matlab()
+    
+    # Define matching score benchmark
     ms_bench = bench.MatchingScoreBench.MatchingScoreBench()
 
+    # Define feature 1
+    vlsift_py = features.cyvlsift_official.cyvlsift_official()
+
+    # Define feature 2
+    vlsift_load_matlab = features.vlsift_load_matlab.vlsift_load_matlab()
+    
+    # Define dataset
+    vggh = dset.vgg_dataset.vggh_Dataset()
+
+    # Do the evaluation
     ms_result_py = ms_bench.evaluate(
         vggh, vlsift_py, use_cache=True, save_result=True)
 
     ms_result_matlab = ms_bench.evaluate(
         vggh, vlsift_load_matlab, use_cache=True, save_result=True)
-
+    
+    # Make the results from different detectors as a list. 
     ms_result = [ms_result_py, ms_result_matlab]
+
+    # Show the result
     for result_term in ms_result[0]['result_term_list']:
         bench.Utils.print_result(ms_result, result_term)
-        #Utils.save_result(ms_result, result_term)
+        bench.Utils.save_result(ms_result, result_term)
 
     #show result for different sequences
     for sequence in vggh.sequence_name_list:
-        if sequence != 'graf':
-            continue
         for result_term in ms_result[0]['result_term_list']:
             bench.Utils.print_sequence_result(ms_result, sequence, result_term)
             bench.Utils.save_sequence_result(ms_result, sequence, result_term)

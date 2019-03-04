@@ -10,11 +10,26 @@ Welcome to VL Benchmark's documentation!
     Contents:
 
 .. toctree::
+    :caption: Introduction
     :maxdepth: 1
     
     intro 
 
+.. toctree::
+    :caption: How to write test code
+    :maxdepth: 1
+    
+    test_match
+    test_retrieval
+    test_baseline_matching
 
+.. toctree::
+    :caption: How to create your own feature, dataset and benchmark
+    :maxdepth: 1
+    
+    new_feature
+
+ 
 .. toctree::
     :caption: The Modules
     :maxdepth: 2
@@ -22,8 +37,6 @@ Welcome to VL Benchmark's documentation!
     feature
     dataset
     benchmark
-
-
 
 
 Indices and tables

@@ -10,7 +10,7 @@ from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 
 
 class cyvlsift_official(DetectorAndDescriptor):
-    """A warpper for cyvlsift
+    """A warpper for cyvlsift.
     
     Attributes 
     ----------
