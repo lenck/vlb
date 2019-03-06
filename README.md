@@ -72,6 +72,13 @@ To run the tests, call:
 
 ## Python Interface
 ### Requirement
+Make a complete clone operation to pull the submodule.
+
+```
+git clone --recursive git@github.com:lenck/vlb.git
+```
+ 
+
 We recommend to use conda to install all the requirements all at once. 
 
 ```
@@ -90,6 +97,8 @@ python ./python/test/test_rep_bench.py
 
 
 Test matching score benchmark
+
+Download [vlsift\_load\_matlab.zip](https://drive.google.com/open?id=1-D_v1LV64FPQf1Kb9RXQYa9zvYzHvtTu) and extract it to ./data/features/vggh/. Then run
 
 ```
 python ./python/test/test_ms_bench.py
