@@ -40,7 +40,7 @@ class cyvlsift_official(DetectorAndDescriptor):
         """
         new_image = image.astype(np.float32)
         new_image = new_image/255.0
-        new_image = feature_utils.all_to_gray(new_image)
+        new_image = features.feature_utils.all_to_gray(new_image)
         feature = cyvlfeat.sift.sift(
             new_image, peak_thresh=self.peak_thresh, magnification=5.0)
         return feature
@@ -58,7 +58,7 @@ class cyvlsift_official(DetectorAndDescriptor):
         """
         new_image = image.astype(np.float32)
         new_image = new_image/255.0
-        new_image = feature_utils.all_to_gray(new_image)
+        new_image = features.feature_utils.all_to_gray(new_image)
         feature, descriptor = cyvlfeat.sift.sift(
             new_image, peak_thresh=self.peak_thresh, frames=feature, magnification=5.0, compute_descriptor=True)
         return descriptor
@@ -75,7 +75,7 @@ class cyvlsift_official(DetectorAndDescriptor):
 
         new_image = image.astype(np.float32)
         new_image = new_image/255.0
-        new_image = feature_utils.all_to_gray(new_image)
+        new_image = features.feature_utils.all_to_gray(new_image)
         feature, descriptor_vector = cyvlfeat.sift.sift(
             new_image, peak_thresh=self.peak_thresh, magnification=5.0, compute_descriptor=True)
         return feature, descriptor_vector

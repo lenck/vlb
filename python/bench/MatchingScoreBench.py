@@ -4,7 +4,7 @@
 #  File Name: MatchingScoreBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 16:41:13 2019
+#  Last Modified: Tue Mar  5 21:46:46 2019
 #
 #  Description: Matching score benchmark
 #
@@ -33,7 +33,7 @@ class MatchingScoreBench(Benchmark):
     Matching score benchmark
     Return repeatability score, number of correspondence, matching score and number of matches
     """
-    def __init__(self, tmp_feature_dir='./features/',
+    def __init__(self, tmp_feature_dir='./data/features/',
                  result_dir='./python_scores/', matchGeometry=True):
         super(MatchingScoreBench, self).__init__(name='Matching Score',
                                                  tmp_feature_dir=tmp_feature_dir, result_dir=result_dir)
@@ -80,7 +80,7 @@ class MatchingScoreBench(Benchmark):
             option = {}
             option['maxOverlapError'] = 0.5
             geo_info = task
-            tcorr, corr_score, info = ellipse_overlap_H.ellipse_overlap_H(
+            tcorr, corr_score, info = bench.ellipse_overlap_H.ellipse_overlap_H(
                 geo_info, feature_1, feature_2, option)
 
             if corr_score.size == 0:
@@ -98,7 +98,7 @@ class MatchingScoreBench(Benchmark):
 
                 fa_num = np.sum(fa_valid)
                 fb_num = np.sum(fb_valid)
-                geoMatches, _ = vlb_greedy_matching.vlb_greedy_matching(
+                geoMatches, _ = bench.vlb_greedy_matching.vlb_greedy_matching(
                     fa_num, fb_num, tcorr_s)
                 overlapped_num = sum(geoMatches[:, 0] > -1)
                 geoMatches = geoMatches[:, 0]
@@ -121,7 +121,7 @@ class MatchingScoreBench(Benchmark):
                 descMatches = np.zeros(
                     (descriptor_1.shape[0],), dtype=np.int) - 1
 
-                descMatchEdges = ellipse_overlap_H.match_greedy(
+                descMatchEdges = bench.ellipse_overlap_H.match_greedy(
                     descriptor_2, descriptor_1)
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]

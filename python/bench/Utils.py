@@ -17,7 +17,6 @@
 
 import numpy as np
 import os
-import hickle as hkl
 import csv
 from tqdm import tqdm
 import cv2

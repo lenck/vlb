@@ -76,6 +76,8 @@ We recommend to use conda to install all the requirements all at once.
 
 ```
 conda env create -f ./python/conda/environment.yml
+source activate vlb
+pip install nmslib
 ```
 
 ###Test the code

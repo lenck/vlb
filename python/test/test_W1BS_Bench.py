@@ -31,7 +31,7 @@ import dset.W1BS_dataset
 if __name__ == "__main__":
     
     # Define baseline benchmark
-    bench = bench.W1BSBench.W1BSBench()
+    w1bs_bench = bench.W1BSBench.W1BSBench()
     
     # Define feature
     np_sift_py = features.np_sift.np_sift()
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     w1bs = dset.W1BS_dataset.W1BS_Dataset()
     
     # Do the evaluation
-    result_py = bench.evaluate(w1bs, np_sift_py, use_cache=True, save_result=True)
+    result_py = w1bs_bench.evaluate(w1bs, np_sift_py, use_cache=True, save_result=True)
 
     # Make the results from different detectors as a list. 
     result_list = [result_py]

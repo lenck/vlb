@@ -4,12 +4,9 @@ Author: Xu Zhang
 """
 
 import numpy as np
-import cv2
-import cyvlfeat
-import exifread
 import features.feature_utils
-import matlab
-import matlab.engine
+#import matlab
+#import matlab.engine
 from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 
 #eng = matlab.engine.start_matlab()

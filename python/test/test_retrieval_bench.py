@@ -59,5 +59,5 @@ if __name__ == "__main__":
         oxford5k, vlsift_py, use_cache=True, save_result=True)
     map_result = [map_result_py]
     for result_term in map_result[0]['result_term_list']:
-        Utils.print_retrieval_result(map_result, 'm' + result_term)
-        Utils.save_retrieval_result(map_result, 'm' + result_term)
+        bench.Utils.print_retrieval_result(map_result, 'm' + result_term)
+        bench.Utils.save_retrieval_result(map_result, 'm' + result_term)

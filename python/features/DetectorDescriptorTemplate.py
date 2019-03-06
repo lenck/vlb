@@ -23,7 +23,6 @@ This module describe basic detector and descriptor
 import numpy as np
 import cv2
 import cyvlfeat
-import exifread
 
 from abc import ABCMeta, abstractmethod
 

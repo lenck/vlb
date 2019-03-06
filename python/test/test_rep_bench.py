@@ -4,7 +4,7 @@
 #  File Name: test_rep_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 18:11:21 2019
+#  Last Modified: Tue Mar  5 00:03:28 2019
 #
 #  Usage: python test_rep_bench.py
 #  Description:test repeatability benchmark
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     # Do the evaluation
     rep_result_py = rep_bench.evaluate(
-        vggh, vlsift_py, use_cache=False, save_result=True)
+        vggh, vlsift_py, use_cache=True, save_result=True)
 
     # Make the results from different detectors as a list. 
     # (Only one here, but you can add more)

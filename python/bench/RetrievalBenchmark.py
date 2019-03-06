@@ -4,7 +4,7 @@
 #  File Name: RetrievalBenchmark.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 16:29:30 2019
+#  Last Modified: Tue Mar  5 14:11:40 2019
 #
 #  Description: retrieval benchmark
 #
@@ -314,7 +314,7 @@ class RetrievalBenchmark():
                 image_index = [point_list[i] for i in flat_I]
                 flat_D = D.reshape(D.shape[0] * D.shape[1])
 
-                sorted_index, sorted_score, sorted_count, score_dict, count_dict = get_sorted_index_and_score(
+                sorted_index, sorted_score, sorted_count, score_dict, count_dict = self.get_sorted_index_and_score(
                     image_index, flat_D)
 
                 old_recall = 0.0

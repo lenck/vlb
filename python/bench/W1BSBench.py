@@ -4,7 +4,7 @@
 #  File Name: W1BSBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 16:51:21 2019
+#  Last Modified: Tue Mar  5 22:58:54 2019
 #
 #  Description:Wide baseline matching benchmark
 #
@@ -68,7 +68,7 @@ class W1BSBench(Benchmark):
                                                                 metric="L2", batch_size=256)
         is_correct = (match_matrix[:, 0] ==
                       match_matrix[:, 1]).astype(np.float32)
-        r, p, ap = utils.w1bs.get_recall_and_pecision(match_matrix[:, 3], is_correct, n_pts=100,
+        r, p, ap = w1bs.get_recall_and_pecision(match_matrix[:, 3], is_correct, n_pts=100,
                                                       smaller_is_better=True)
         return [ap]
 
