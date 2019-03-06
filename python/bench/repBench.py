@@ -4,7 +4,7 @@
 #  File Name: repBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 16:12:04 2019
+#  Last Modified: Tue Mar  5 21:46:25 2019
 #
 #  Description:repeatability benchmark
 #
@@ -36,7 +36,7 @@ class repBench(Benchmark):
     Repeatability Template
     Return repeatability score and number of correspondence
     """
-    def __init__(self, tmp_feature_dir='./features/',
+    def __init__(self, tmp_feature_dir='./data/features/',
                  result_dir='./python_scores/'):
         super(repBench, self).__init__(name='Repeatability',
                                        tmp_feature_dir=tmp_feature_dir, result_dir=result_dir)
@@ -87,7 +87,7 @@ class repBench(Benchmark):
 
                 fa_num = np.sum(fa_valid)
                 fb_num = np.sum(fb_valid)
-                matches, _ = vlb_greedy_matching.vlb_greedy_matching(
+                matches, _ = bench.vlb_greedy_matching.vlb_greedy_matching(
                     fa_num, fb_num, tcorr_s)
                 overlapped_num = np.sum(matches[:, 0] > -1)
                 num_cor = overlapped_num

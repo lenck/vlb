@@ -1,17 +1,8 @@
-from numpy_sift import SIFTDescriptor
-"""
-vlsift cython version
-Author: Xu Zhang
-"""
+from features.numpy_sift import SIFTDescriptor
 
 import numpy as np
-import feature_utils
-from DetectorDescriptorTemplate import DetectorAndDescriptor
-import sys
-
-sys.path.insert(
-    0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
-
+import features.feature_utils
+from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 
 class np_sift(DetectorAndDescriptor):
     def __init__(self, peak_thresh=10.0):
@@ -43,7 +34,7 @@ class np_sift(DetectorAndDescriptor):
             self.descriptor = SIFTDescriptor(w)
         descriptors = np.zeros((patch_num, 128))
         for i in range(patch_num):
-            patch = feature_utils.all_to_gray(patches[i, :, :, :])
+            patch = features.feature_utils.all_to_gray(patches[i, :, :, :])
             patch = patch[:, :, 0]
             descriptors[i, :] = self.descriptor.describe(patch).flatten()
         return descriptors
