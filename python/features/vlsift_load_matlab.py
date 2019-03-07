@@ -4,13 +4,10 @@ Author: Xu Zhang
 """
 
 import numpy as np
-import cv2
-import cyvlfeat
-import exifread
-import feature_utils
-import matlab
-import matlab.engine
-from DetectorDescriptorTemplate import DetectorAndDescriptor
+import features.feature_utils
+#import matlab
+#import matlab.engine
+from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 
 #eng = matlab.engine.start_matlab()
 # eng.addpath(r'/Users/Xu/program/Image_Genealogy/code/vlb/matlab/',nargout=0)

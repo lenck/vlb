@@ -4,7 +4,7 @@
 #  File Name: test_retrieval_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb 26 22:15:46 2019
+#  Last Modified: Sun Mar  3 17:58:13 2019
 #
 #  Usage: python test_retrieval_bench.py
 #  Description: Test retrieval benchmark
@@ -20,34 +20,44 @@ import os
 import sys
 
 cwd = os.getcwd()
-sys.path.insert(0, '{}/python/dset/'.format(cwd))
-sys.path.insert(0, '{}/python/features/'.format(cwd))
-sys.path.insert(0, '{}/python/bench/'.format(cwd))
+sys.path.insert(0, '{}/python/'.format(cwd))
 
-import Utils
-import RetrievalBenchmark
-import repBench
-import cyvlsift_official
-import oxford5k_dataset
-import paris6k_dataset
+import bench.RetrievalBenchmark
+import features.cyvlsift_official
+import dset.oxford5k_dataset
+import dset.paris6k_dataset
+import bench.Utils
 
 if __name__ == "__main__":
 
-    paris6k = paris6k_dataset.paris6k_Dataset()
-    oxford5k = oxford5k_dataset.oxford5k_Dataset()
-    vlsift_py = cyvlsift_official.cyvlsift_official()
-    retrieval_bench = RetrievalBenchmark.RetrievalBenchmark()
+    # Define retrieval benchmark
+    retrieval_bench = bench.RetrievalBenchmark.RetrievalBenchmark()
 
+    # Define feature
+    vlsift_py = features.cyvlsift_official.cyvlsift_official()
+    
+    # Define dataset
+    paris6k = dset.paris6k_dataset.paris6k_Dataset()
+
+    # Do the test
     map_result_py = retrieval_bench.evaluate(
         paris6k, vlsift_py, use_cache=True, save_result=True)
-    map_result = [map_result_py]
-    for result_term in map_result[0]['result_term_list']:
-        Utils.print_retrieval_result(map_result, 'm' + result_term)
-        Utils.save_retrieval_result(map_result, 'm' + result_term)
 
+    # Make the results from different detectors as a list. 
+    # (Only one here, but you can add more)
+    map_result = [map_result_py]
+
+    # Show the result
+    for result_term in map_result[0]['result_term_list']:
+        bench.Utils.print_retrieval_result(map_result, 'm' + result_term)
+        bench.Utils.save_retrieval_result(map_result, 'm' + result_term)
+
+    
+    # Another dataset
+    oxford5k = dset.oxford5k_dataset.oxford5k_Dataset()
     map_result_py = retrieval_bench.evaluate(
         oxford5k, vlsift_py, use_cache=True, save_result=True)
     map_result = [map_result_py]
     for result_term in map_result[0]['result_term_list']:
-        Utils.print_retrieval_result(map_result, 'm' + result_term)
-        Utils.save_retrieval_result(map_result, 'm' + result_term)
+        bench.Utils.print_retrieval_result(map_result, 'm' + result_term)
+        bench.Utils.save_retrieval_result(map_result, 'm' + result_term)

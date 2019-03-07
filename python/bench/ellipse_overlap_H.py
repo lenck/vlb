@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb  5 15:34:39 2019
+#  Last Modified: Tue Mar  5 00:02:37 2019
 #
 #  Usage: python ellipse_overlap_H.py
 #  Description:
@@ -16,7 +16,7 @@
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
 
-from parse_arg import parse_arg
+from bench.parse_arg import parse_arg
 import numpy as np
 import copy
 import scipy.spatial.distance
@@ -25,8 +25,8 @@ import scipy.io as sio
 import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
 
-import vlb_greedy_matching
-import vgg_compute_ellipse_overlap
+import bench.vlb_greedy_matching
+import bench.vgg_compute_ellipse_overlap
 
 
 def frame2ellipse(fa):
@@ -244,7 +244,7 @@ def ellipse_overlap_fast(f1, f2, options):
         else:
             lhsEllipse = vggEll2[[i2]]
             rhsEllipse = vggEll1[pairs]
-        _, tw, _, _ = vgg_compute_ellipse_overlap.vgg_compute_ellipse_overlap(
+        _, tw, _, _ = bench.vgg_compute_ellipse_overlap.vgg_compute_ellipse_overlap(
             lhsEllipse, rhsEllipse, -1)
         scores.extend((1 - tw / 100).tolist()[0])
     return np.array(ellipsePairs), np.array(scores)
@@ -354,7 +354,7 @@ def match_greedy(data, qdata):
     dists = dists[perm_index]
     ind_matrix = ind_matrix[perm_index, :]
 
-    matches, _ = vlb_greedy_matching.vlb_greedy_matching(
+    matches, _ = bench.vlb_greedy_matching.vlb_greedy_matching(
         data.shape[0], qdata.shape[0], ind_matrix)
     matches = matches[:, 0]
     matches = matches.reshape((data.shape[0], 1))

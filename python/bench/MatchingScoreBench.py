@@ -4,7 +4,7 @@
 #  File Name: MatchingScoreBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Feb  9 10:54:48 2019
+#  Last Modified: Tue Mar  5 21:46:46 2019
 #
 #  Description: Matching score benchmark
 #
@@ -15,17 +15,25 @@
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
 
+"""
+This module describe benchmark for matching score. 
+"""
+
 import numpy as np
-import BenchmarkTemplate
-from BenchmarkTemplate import Benchmark
-import ellipse_overlap_H
+import bench.BenchmarkTemplate
+from bench.BenchmarkTemplate import Benchmark
+import bench.ellipse_overlap_H
 import scipy.io as sio
 import pyximport
 pyximport.install(setup_args={"include_dirs": np.get_include()})
-import vlb_greedy_matching
+import bench.vlb_greedy_matching
 
 class MatchingScoreBench(Benchmark):
-    def __init__(self, tmp_feature_dir='./features/',
+    """
+    Matching score benchmark
+    Return repeatability score, number of correspondence, matching score and number of matches
+    """
+    def __init__(self, tmp_feature_dir='./data/features/',
                  result_dir='./python_scores/', matchGeometry=True):
         super(MatchingScoreBench, self).__init__(name='Matching Score',
                                                  tmp_feature_dir=tmp_feature_dir, result_dir=result_dir)
@@ -34,6 +42,24 @@ class MatchingScoreBench(Benchmark):
         self.test_name = 'matching_score'
 
     def evaluate_unit(self, feature_1, feature_2, task):
+        """
+        Single evaluation unit. Given two features, return the repeatability.
+        
+        :param feature_1: Feature and descriptor to run.
+        :type feature_1: list of array [feature, descriptor] 
+        :param feature_2: Feature and descriptor to run. 
+        :type feature_2: list of array [feature, descriptor]
+        :param task: What to run
+        :type task: dict
+        
+        See Also
+        --------
+
+        evaluate_warpper: How to run the unit.
+        dset.dataset.Link: definition of task.
+
+        """
+
         ms = 0.0
         num_matches = 0
         rep = 0.0
@@ -51,14 +77,10 @@ class MatchingScoreBench(Benchmark):
             rep = 0.0
             num_cor = 0
         else:
-            # tcorr, corr_score, info = BenchmarkTemplate.eng.geom.ellipse_overlap_H(\
-            #        task, matlab.double(np.transpose(feature_1).tolist()),\
-            #        matlab.double(np.transpose(feature_2).tolist()), 'maxOverlapError', 0.5, nargout=3)
-            #corr_score = np.squeeze(np.array(corr_score))
             option = {}
             option['maxOverlapError'] = 0.5
             geo_info = task
-            tcorr, corr_score, info = ellipse_overlap_H.ellipse_overlap_H(
+            tcorr, corr_score, info = bench.ellipse_overlap_H.ellipse_overlap_H(
                 geo_info, feature_1, feature_2, option)
 
             if corr_score.size == 0:
@@ -73,20 +95,12 @@ class MatchingScoreBench(Benchmark):
                 tcorr_s = tcorr[perm_index, :]
                 fa_valid = info['fa_valid']
                 fb_valid = info['fb_valid']
-                #tcorr = np.array(tcorr)
-                #tcorr_s = np.transpose(tcorr[:,perm_index])
-                #fa_valid = np.squeeze(np.array(info['fa_valid']))
-                #fb_valid = np.squeeze(np.array(info['fb_valid']))
 
                 fa_num = np.sum(fa_valid)
                 fb_num = np.sum(fb_valid)
-                geoMatches, _ = vlb_greedy_matching.vlb_greedy_matching(
+                geoMatches, _ = bench.vlb_greedy_matching.vlb_greedy_matching(
                     fa_num, fb_num, tcorr_s)
                 overlapped_num = sum(geoMatches[:, 0] > -1)
-                # geoMatches = BenchmarkTemplate.eng.vlb_greedy_matching(float(fa_num),\
-                #        float(fb_num), matlab.double(tcorr_s.tolist()))
-                #geoMatches = np.transpose(np.array(geoMatches))
-                #overlapped_num = sum(geoMatches[:,0]>0)
                 geoMatches = geoMatches[:, 0]
                 num_cor = overlapped_num
 
@@ -106,15 +120,8 @@ class MatchingScoreBench(Benchmark):
 
                 descMatches = np.zeros(
                     (descriptor_1.shape[0],), dtype=np.int) - 1
-                # descMatchEdges = BenchmarkTemplate.eng.utls.match_greedy(\
-                #        matlab.double(np.transpose(descriptor_2).tolist()),\
-                #        matlab.double(np.transpose(descriptor_1).tolist()))
-                #descMatchEdges = np.array(descMatchEdges)
-                # Align with matlab index
-                # for edge in np.transpose(descMatchEdges):
-                #    descMatches[int(edge[1])-1] = int(edge[0])
 
-                descMatchEdges = ellipse_overlap_H.match_greedy(
+                descMatchEdges = bench.ellipse_overlap_H.match_greedy(
                     descriptor_2, descriptor_1)
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]
@@ -152,6 +159,29 @@ class MatchingScoreBench(Benchmark):
 
     def evaluate(self, dataset, detector, use_cache=True,
                  save_result=True, norm_factor='minab'):
+        """
+        Main function to call the evaluation wrapper. It could be different for different evaluation
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_result: Save result or not
+        :type save_result: boolean
+        :param norm_factor: How to normalize the repeatability. Option: minab, a, b
+        :type norm_factor: str
+        :returns: result 
+        :rtype: dict
+
+        See Also
+        --------
+        
+        bench.Benchmark
+        bench.Benchmark.evaluate_warpper:
+        """
+
         self.norm_factor = norm_factor
         result = self.evaluate_warpper(dataset, detector, ['repeatability', 'num_cor', 'matching_score', 'num_matches'],
                                        extract_descriptor=True, use_cache=use_cache, save_result=save_result)
@@ -161,8 +191,40 @@ class MatchingScoreBench(Benchmark):
 
     def detect_feature_custom(self, dataset, detector,
                               use_cache=False, save_feature=True):
+        """
+        Customized feature extraction method. For special task. 
+        
+        :param dataset: Dataset to extract the feature
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the feature
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_feature: Save computated feature or not
+        :type save_feature: boolean
+        :returns: feature 
+        :rtype: dict
+
+        """
+
         pass
 
     def extract_descriptor_custom(
             self, dataset, detector, use_cache=False, save_feature=True):
+        """
+        Customized description extraction method. For special task. 
+        
+        :param dataset: Dataset to extract the descriptor
+        :type dataset: SequenceDataset
+        :param detector: Detector used to extract the descriptor
+        :type detector: DetectorAndDescriptor
+        :param use_cache: Load cached feature and result or not
+        :type use_cache: boolean
+        :param save_feature: Save computated feature or not
+        :type save_feature: boolean
+        :returns: feature 
+        :rtype: dict
+
+        """
+
         pass

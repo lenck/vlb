@@ -4,7 +4,7 @@
 #  File Name: test_W1BS_Bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Feb 26 22:21:45 2019
+#  Last Modified: Sun Mar  3 22:43:21 2019
 #
 #  Usage: python test_W1BS_Bench.py
 #  Description: Test baseline matching benchmark
@@ -20,22 +20,30 @@ import sys
 import os
 
 cwd = os.getcwd()
-sys.path.insert(0, '{}/python/dset/'.format(cwd))
-sys.path.insert(0, '{}/python/features/'.format(cwd))
-sys.path.insert(0, '{}/python/bench/'.format(cwd))
+sys.path.insert(0, '{}/python/'.format(cwd))
 
-import Utils
-import W1BSBench
-import np_sift
-import W1BS_dataset
+import bench.Utils
+import bench.W1BSBench
+import features.np_sift
+import dset.W1BS_dataset
 
 
 if __name__ == "__main__":
+    
+    # Define baseline benchmark
+    w1bs_bench = bench.W1BSBench.W1BSBench()
+    
+    # Define feature
+    np_sift_py = features.np_sift.np_sift()
 
-    w1bs = W1BS_dataset.W1BS_Dataset()
-    np_sift_py = np_sift.np_sift()
-    bench = W1BSBench.W1BSBench()
+    # Define dataset
+    w1bs = dset.W1BS_dataset.W1BS_Dataset()
+    
+    # Do the evaluation
+    result_py = w1bs_bench.evaluate(w1bs, np_sift_py, use_cache=True, save_result=True)
 
-    result_py = bench.evaluate(w1bs, np_sift_py, use_cache=True, save_result=True)
+    # Make the results from different detectors as a list. 
     result_list = [result_py]
-    Utils.print_result(result_list, 'ap')
+
+    # Show the result
+    bench.Utils.print_result(result_list, 'ap')
