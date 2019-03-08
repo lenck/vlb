@@ -6,3 +6,5 @@ datasets
 *.o
 .build
 vlfeat
+*.pyc
+python_scores/
