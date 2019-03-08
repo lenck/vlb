@@ -1,12 +1,10 @@
+"""
+OpenCV BRISK Implementation
+Author: Alex Butenko
+"""
 import cv2
-"""
-vlsift cython version
-Author: Xu Zhang
-"""
-
 import numpy as np
-import feature_utils
-from DetectorDescriptorTemplate import DetectorAndDescriptor
+from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 import sys
 
 sys.path.insert(
@@ -16,7 +14,7 @@ sys.path.insert(
 class cv_brisk(DetectorAndDescriptor):
     def __init__(self):
         super(
-            cv_orb,
+            cv_brisk,
             self).__init__(
             name='cv_brisk',
             is_detector=True,
@@ -28,7 +26,8 @@ class cv_brisk(DetectorAndDescriptor):
     def detect_feature(self, image):
         brisk = cv2.BRISK_create()
         features =  brisk.detect(image,None)
-        return features
+        pts = np.array([features[idx].pt for idx in range(len(features))])
+        return pts
 
     def extract_descriptor(self, image, feature):
         brisk = cv2.BRISK_create()
@@ -38,7 +37,8 @@ class cv_brisk(DetectorAndDescriptor):
     def extract_all(self, image):
         brisk = cv2.BRISK_create()
         feature , descriptors =  brisk.compute(image, feature)
-        return (feature, descriptors)
+        pts = np.array([features[idx].pt for idx in range(len(features))])
+        return (pts, descriptors)
 
     def extract_descriptor_from_patch(self, patches):
         pass

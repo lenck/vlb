@@ -1,12 +1,10 @@
+"""
+OpenCV MSER Implementation
+Author: Alex Butenko
+"""
 import cv2
-"""
-vlsift cython version
-Author: Xu Zhang
-"""
-
 import numpy as np
-import feature_utils
-from DetectorDescriptorTemplate import DetectorAndDescriptor
+from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 import sys
 
 sys.path.insert(
@@ -16,7 +14,7 @@ sys.path.insert(
 class cv_mser(DetectorAndDescriptor):
     def __init__(self):
         super(
-            cv_orb,
+            cv_mser,
             self).__init__(
             name='cv_mser',
             is_detector=True,
@@ -27,8 +25,9 @@ class cv_mser(DetectorAndDescriptor):
 
     def detect_feature(self, image):
         mser = cv2.MSER_create()
-        features =  orb.detect(image,None)
-        return features
+        features =  mser.detect(image,None)
+        pts = np.array([features[idx].pt for idx in range(len(features))])
+        return pts
 
     def extract_descriptor(self, image, feature):
         pass

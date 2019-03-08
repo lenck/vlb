@@ -1,5 +1,5 @@
 """
-OpenCV ORB Implementation
+OpenCV FAST Implementation
 Author: Alex Butenko
 """
 import cv2
@@ -11,34 +11,29 @@ sys.path.insert(
     0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
 
 
-class cv_orb(DetectorAndDescriptor):
+class cv_fast(DetectorAndDescriptor):
     def __init__(self):
         super(
-            cv_orb,
+            cv_fast,
             self).__init__(
-            name='cv_orb',
+            name='cv_fast',
             is_detector=True,
-            is_descriptor=True,
-            is_both=True,
+            is_descriptor=False,
+            is_both=False,
             patch_input=True)
         self.descriptor = None
 
     def detect_feature(self, image):
-        orb = cv2.ORB_create()
-        features =  orb.detect(image,None)
+        fast = cv2.FastFeatureDetector_create()
+        features =  fast.detect(image,None)
         pts = np.array([features[idx].pt for idx in range(len(features))])
         return pts
 
     def extract_descriptor(self, image, feature):
-        orb = cv2.ORB_create()
-        _ , descriptors = cv2.compute(image, features)
-        return descriptors
+        pass
 
     def extract_all(self, image):
-        orb = cv2.ORB_create()
-        features , descriptors = cv2.compute(image, features)
-        pts = np.array([kpts[idx].pt for idx in range(len(kpts))])
-        return (pts, descriptors)
+        pass
 
     def extract_descriptor_from_patch(self, patches):
         pass
