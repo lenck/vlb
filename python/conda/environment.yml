@@ -85,3 +85,4 @@ dependencies:
 - urllib3
 - wheel
 - cyvlfeat
+- pytorch
