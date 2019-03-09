@@ -10,8 +10,6 @@ import torch
 import sys
 import os
 
-sys.path.insert(
-    0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
 
 dirname = os.path.dirname(__file__)
 class SuperPoint(DetectorAndDescriptor):
