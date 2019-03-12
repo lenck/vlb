@@ -1,5 +1,5 @@
 """
-OpenCV ORB Implementation
+Pretrained SuperPoint Implementation (Pytorch)
 Author: Alex Butenko
 """
 import cv2
@@ -9,9 +9,7 @@ import features.feature_utils as fu
 import torch
 import sys
 import os
-
-sys.path.insert(
-    0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
+import urllib.request
 
 dirname = os.path.dirname(__file__)
 class SuperPoint(DetectorAndDescriptor):
@@ -26,6 +24,7 @@ class SuperPoint(DetectorAndDescriptor):
             patch_input=True)
         self.descriptor = None
         self.opt = SuperPointConfig()
+        self._download_weights()
         self.fe = SuperPointFrontend(weights_path=self.opt.weights_path,
 									nms_dist=self.opt.nms_dist,
 									conf_thresh=self.opt.conf_thresh,
@@ -40,15 +39,28 @@ class SuperPoint(DetectorAndDescriptor):
     def extract_descriptor(self, image, feature):
         img = np.array(fu.all_to_gray(image), dtype='float32')
         _, desc, _ = self.fe.run(img)
+
+        if desc is not None:
+            desc = desc.T
+
         return desc
 
     def extract_all(self, image):
         img = np.array(fu.all_to_gray(image), dtype='float32')
         pts, desc, heatmap = self.fe.run(img)
+        pts = pts[:2,:].T
+
+        if desc is not None:
+            desc = desc.T
+
         return (pts, desc)
 
     def extract_descriptor_from_patch(self, patches):
         pass
+
+    def _download_weights(self):
+        if not os.path.exists(os.path.join(dirname,'superpoint_v1.pth')):
+            file, _ = urllib.request.urlretrieve("https://github.com/MagicLeapResearch/SuperPointPretrainedNetwork/raw/master/superpoint_v1.pth",os.path.join(dirname,'superpoint_v1.pth'))
 
 
 
