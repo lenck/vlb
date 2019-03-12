@@ -7,10 +7,6 @@ import numpy as np
 from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 import sys
 
-sys.path.insert(
-    0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
-
-
 class cv_brisk(DetectorAndDescriptor):
     def __init__(self):
         super(
@@ -31,12 +27,14 @@ class cv_brisk(DetectorAndDescriptor):
 
     def extract_descriptor(self, image, feature):
         brisk = cv2.BRISK_create()
-        _ , descriptors =  brisk.compute(image, feature)
+        features =  brisk.detect(image,None)
+        _ , descriptors =  brisk.compute(image, features)
         return descriptors
 
     def extract_all(self, image):
         brisk = cv2.BRISK_create()
-        feature , descriptors =  brisk.compute(image, feature)
+        features =  brisk.detect(image,None)
+        features , descriptors =  brisk.compute(image, features)
         pts = np.array([features[idx].pt for idx in range(len(features))])
         return (pts, descriptors)
 
