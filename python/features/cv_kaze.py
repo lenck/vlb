@@ -31,12 +31,14 @@ class cv_kaze(DetectorAndDescriptor):
 
     def extract_descriptor(self, image, feature):
         kaze = cv2.KAZE_create()
-        _ , descriptors =  kaze.compute(image, feature)
+        features =  kaze.detect(image,None)
+        _ , descriptors =  kaze.compute(image, features)
         return descriptors
 
     def extract_all(self, image):
         kaze = cv2.KAZE_create()
-        feature , descriptors =  kaze.compute(image, feature)
+        features =  kaze.detect(image,None)
+        features , descriptors =  kaze.compute(image, features)
         pts = np.array([features[idx].pt for idx in range(len(features))])
         return (pts, descriptors)
 
