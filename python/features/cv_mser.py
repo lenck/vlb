@@ -25,7 +25,7 @@ class cv_mser(DetectorAndDescriptor):
 
     def detect_feature(self, image):
         mser = cv2.MSER_create()
-        features =  mser.detect(image,None)
+        features =  mser.detect(image, None)
         pts = np.array([features[idx].pt for idx in range(len(features))])
         return pts
 
