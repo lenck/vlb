@@ -9,7 +9,11 @@ import features.feature_utils as fu
 import torch
 import sys
 import os
+<<<<<<< HEAD
 import urllib.request
+=======
+
+>>>>>>> eb646e8913abc57fec701bd54369d2b8244a813f
 
 dirname = os.path.dirname(__file__)
 class SuperPoint(DetectorAndDescriptor):

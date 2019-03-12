@@ -3,6 +3,7 @@ channels:
 - anaconda
 - conda-forge
 - menpo
+- pytorch
 - defaults
 dependencies:
 - freetype

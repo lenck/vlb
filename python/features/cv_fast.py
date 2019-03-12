@@ -7,9 +7,6 @@ import numpy as np
 from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 import sys
 
-sys.path.insert(
-    0, './3rdparty/wxbs-descriptors-benchmark/code/descriptors/aux/')
-
 
 class cv_fast(DetectorAndDescriptor):
     def __init__(self):
