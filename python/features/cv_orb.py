@@ -31,13 +31,15 @@ class cv_orb(DetectorAndDescriptor):
 
     def extract_descriptor(self, image, feature):
         orb = cv2.ORB_create()
-        _ , descriptors = cv2.compute(image, features)
+        features =  orb.detect(image,None)
+        _ , descriptors = orb.compute(image, features)
         return descriptors
 
     def extract_all(self, image):
         orb = cv2.ORB_create()
-        features , descriptors = cv2.compute(image, features)
-        pts = np.array([kpts[idx].pt for idx in range(len(kpts))])
+        features =  orb.detect(image,None)
+        features, descriptors = orb.compute(image, features)
+        pts = np.array([features[idx].pt for idx in range(len(features))])
         return (pts, descriptors)
 
     def extract_descriptor_from_patch(self, patches):
