@@ -7,11 +7,6 @@ import numpy as np
 from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 import sys
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> eb646e8913abc57fec701bd54369d2b8244a813f
 class cv_brisk(DetectorAndDescriptor):
     def __init__(self):
         super(
