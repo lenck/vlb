@@ -26,32 +26,56 @@ import bench.MatchingScoreBench
 import bench.repBench
 import features.cyvlsift_official
 import features.vlsift_load_matlab
+import features.cv_orb
+import features.cv_mser
+import features.cv_brisk
+import features.cv_fast
+import features.cv_akaze
+import features.cv_kaze
+import features.superpoint
 import dset.vgg_dataset
 
 
 if __name__ == "__main__":
-    
+
     # Define matching score benchmark
     ms_bench = bench.MatchingScoreBench.MatchingScoreBench()
 
-    # Define feature 1
+    # Define features
     vlsift_py = features.cyvlsift_official.cyvlsift_official()
+    cv_orb = features.cv_orb.cv_orb()
+    cv_brisk = features.cv_brisk.cv_brisk()
+    cv_fast = features.cv_fast.cv_fast()
+    cv_akaze = features.cv_akaze.cv_akaze()
+    cv_kaze = features.cv_kaze.cv_kaze()
+    superpoint = features.superpoint.SuperPoint()
 
-    # Define feature 2
-    vlsift_load_matlab = features.vlsift_load_matlab.vlsift_load_matlab()
-    
     # Define dataset
     vggh = dset.vgg_dataset.vggh_Dataset()
 
     # Do the evaluation
-    ms_result_py = ms_bench.evaluate(
+    ms_result_vlsift = ms_bench.evaluate(
         vggh, vlsift_py, use_cache=True, save_result=True)
 
-    ms_result_matlab = ms_bench.evaluate(
-        vggh, vlsift_load_matlab, use_cache=True, save_result=True)
-    
-    # Make the results from different detectors as a list. 
-    ms_result = [ms_result_py, ms_result_matlab]
+    ms_result_cv_orb = ms_bench.evaluate(
+        vggh, cv_orb, use_cache=True, save_result=True)
+
+    ms_result_cv_brisk = ms_bench.evaluate(
+        vggh, cv_brisk, use_cache=True, save_result=True)
+
+    ms_result_cv_kaze = ms_bench.evaluate(
+        vggh, cv_kaze, use_cache=True, save_result=True)
+
+    ms_result_cv_akaze = ms_bench.evaluate(
+        vggh, cv_akaze, use_cache=True, save_result=True)
+
+    ms_result_superpoint = ms_bench.evaluate(
+        vggh, superpoint, use_cache=True, save_result=True)
+
+    # Make the results from different detectors as a list.
+    ms_result = [ms_result_vlsift, ms_result_cv_orb,
+                 ms_result_cv_brisk, ms_result_cv_kaze,
+                 ms_result_cv_akaze, ms_result_superpoint]
 
     # Show the result
     for result_term in ms_result[0]['result_term_list']:

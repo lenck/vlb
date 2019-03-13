@@ -57,6 +57,18 @@ def frame2ellipse(fa):
 
 
 def ellipse_warp(H, ell_o, method):
+    """
+    TODO: Xu, could you add a description here?
+        Can we also add inline comments?
+
+        Args:
+        -   H:
+        -   ell_o:
+        -   method:
+
+        Returns:
+        -   well
+    """
     ell = copy.copy(ell_o)
     ell[:, 0:2] = ell[:, 0:2] - 1
     well = np.zeros(ell.shape, dtype=np.double)
@@ -67,15 +79,7 @@ def ellipse_warp(H, ell_o, method):
                          ell[i, 3], ell[i, 4], 0], [0, 0, -1]])
             T = np.array([[1, 0, ell[i, 0]], [0, 1, ell[i, 1]], [0, 0, 1]])
 
-            M = np.matmul(
-                np.matmul(
-                    np.matmul(
-                        np.matmul(
-                            H,
-                            T),
-                        S),
-                    T.transpose()),
-                H.transpose())
+            M = H.dot(T).dot(S).dot(T.T).dot(H.T)
             M = -M / M[2, 2]
             t_ = -M[0:2, [2]]
             S_ = M[0:2, 0:2] + np.matmul(t_, t_.transpose())

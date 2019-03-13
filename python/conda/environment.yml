@@ -3,6 +3,7 @@ channels:
 - anaconda
 - conda-forge
 - menpo
+- pytorch
 - defaults
 dependencies:
 - freetype
@@ -85,3 +86,4 @@ dependencies:
 - urllib3
 - wheel
 - cyvlfeat
+- pytorch
