@@ -20,7 +20,7 @@ import os
 import sys
 cwd = os.getcwd()
 sys.path.insert(0, '{}/python/'.format(cwd))
-
+print(cwd)
 import bench.Utils
 import bench.repBench
 import features.cyvlsift_official

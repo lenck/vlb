@@ -16,7 +16,7 @@
 # ===========================================================
 
 """
-This module describe benchmark for matching score. 
+This module describe benchmark for matching score.
 """
 
 import numpy as np
@@ -44,14 +44,14 @@ class MatchingScoreBench(Benchmark):
     def evaluate_unit(self, feature_1, feature_2, task):
         """
         Single evaluation unit. Given two features, return the repeatability.
-        
+
         :param feature_1: Feature and descriptor to run.
-        :type feature_1: list of array [feature, descriptor] 
-        :param feature_2: Feature and descriptor to run. 
+        :type feature_1: list of array [feature, descriptor]
+        :param feature_2: Feature and descriptor to run.
         :type feature_2: list of array [feature, descriptor]
         :param task: What to run
         :type task: dict
-        
+
         See Also
         --------
 
@@ -66,8 +66,6 @@ class MatchingScoreBench(Benchmark):
         num_cor = 0
         feature_1, descriptor_1 = feature_1
         feature_2, descriptor_2 = feature_2
-        # print(feature_1.shape)
-        # print(descriptor_1.shape)
 
         if feature_1 is None or feature_2 is None or feature_1.shape[0] == 0 or feature_2.shape[0] == 0\
                 or descriptor_1 is None or descriptor_2 is None\
@@ -126,6 +124,7 @@ class MatchingScoreBench(Benchmark):
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]
 
+                """How are these different calculations different?"""
                 if self.matchGeometry:
                     matches = descMatches
                     for idx, (match, geoMatch) in enumerate(
@@ -138,7 +137,7 @@ class MatchingScoreBench(Benchmark):
                     intersection = []
                     for descMatch in descMatchesEdgeList:
                         tmpMatch = [descMatch[1], descMatch[0]]
-                        if tmpMatch in geoMatch:
+                        if tmpMatch in geoMatches:
                             intersection.append(tmpMatch)
 
                     matches = np.zeros((descriptor_1.shape[0],)) - 1
@@ -146,22 +145,21 @@ class MatchingScoreBench(Benchmark):
                         matches[edge[0]] = edge[1]
 
                 num_matches = sum(matches[:] > -0.5)
-                # print(matches)
-                # print(num_matches)
+
                 if self.norm_factor == 'minab':
                     ms = num_matches / float(min(fa_num, fb_num))
                 elif self.norm_factor == 'a':
                     ms = num_matches / float(fa_num)
                 elif self.norm_factor == 'b':
                     ms = num_matches / float(fb_num)
-            #print((rep, num_cor, ms, num_matches))
+
         return rep, num_cor, ms, num_matches
 
     def evaluate(self, dataset, detector, use_cache=True,
                  save_result=True, norm_factor='minab'):
         """
         Main function to call the evaluation wrapper. It could be different for different evaluation
-        
+
         :param dataset: Dataset to extract the feature
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the feature
@@ -172,12 +170,12 @@ class MatchingScoreBench(Benchmark):
         :type save_result: boolean
         :param norm_factor: How to normalize the repeatability. Option: minab, a, b
         :type norm_factor: str
-        :returns: result 
+        :returns: result
         :rtype: dict
 
         See Also
         --------
-        
+
         bench.Benchmark
         bench.Benchmark.evaluate_warpper:
         """
@@ -192,8 +190,8 @@ class MatchingScoreBench(Benchmark):
     def detect_feature_custom(self, dataset, detector,
                               use_cache=False, save_feature=True):
         """
-        Customized feature extraction method. For special task. 
-        
+        Customized feature extraction method. For special task.
+
         :param dataset: Dataset to extract the feature
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the feature
@@ -202,7 +200,7 @@ class MatchingScoreBench(Benchmark):
         :type use_cache: boolean
         :param save_feature: Save computated feature or not
         :type save_feature: boolean
-        :returns: feature 
+        :returns: feature
         :rtype: dict
 
         """
@@ -212,8 +210,8 @@ class MatchingScoreBench(Benchmark):
     def extract_descriptor_custom(
             self, dataset, detector, use_cache=False, save_feature=True):
         """
-        Customized description extraction method. For special task. 
-        
+        Customized description extraction method. For special task.
+
         :param dataset: Dataset to extract the descriptor
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the descriptor
@@ -222,7 +220,7 @@ class MatchingScoreBench(Benchmark):
         :type use_cache: boolean
         :param save_feature: Save computated feature or not
         :type save_feature: boolean
-        :returns: feature 
+        :returns: feature
         :rtype: dict
 
         """
