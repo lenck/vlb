@@ -22,18 +22,12 @@ class TestMetrics(unittest.TestCase):
         # Define instance variable set by wrapper method
         ms_bench.norm_factor = 'minab'
 
-        feature_1 = np.array([[29, 31],[93, 26],[33, 52],[82, 73],[78, 62],[64, 97],[66, 90],[31, 37],[48, 20],[62, 33]])
+        feature_1 = np.array([[29, 31],[93, 26],[33, 52],[82, 73]])
 
         descriptor_1 = np.array([[3, 1, 0, 3, 0, 1, 3, 0, 1, 0],
                                  [2, 1, 0, 1, 1, 2, 2, 3, 0, 2],
                                  [2, 1, 0, 3, 2, 1, 1, 3, 3, 0],
-                                 [3, 3, 2, 3, 1, 3, 2, 3, 1, 2],
-                                 [2, 0, 3, 2, 0, 3, 1, 0, 1, 0],
-                                 [0, 3, 3, 1, 2, 2, 0, 0, 0, 0],
-                                 [3, 3, 0, 3, 1, 0, 1, 1, 2, 3],
-                                 [2, 2, 0, 1, 0, 0, 1, 1, 1, 3],
-                                 [2, 3, 0, 0, 0, 2, 3, 3, 2, 3],
-                                 [0, 1, 3, 0, 3, 0, 0, 1, 0, 2]])
+                                 [3, 3, 2, 3, 1, 3, 2, 3, 1, 2]])
 
 
         input_1 = [feature_1,descriptor_1]
@@ -49,7 +43,7 @@ class TestMetrics(unittest.TestCase):
         _, _, ms, num_matches = ms_bench.evaluate_unit(input_1,input_2, geom)
 
         self.assertEqual(ms, 1.0)
-        self.assertEqual(num_matches, 10.0)
+        self.assertEqual(num_matches, 4.0)
 
     def test_matching_100_perc_with_equal_features_descriptors_notGeoMatch(self):
         ms_bench = bench.MatchingScoreBench.MatchingScoreBench(matchGeometry=False)
