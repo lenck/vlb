@@ -9,7 +9,7 @@ def compute_precision(desc_im1, desc_im2, dist_threshold):
 	pass
 
 
-def compute_precision(desc_im1, desc_im2, dist_threshold):
+def compute_recall(desc_im1, desc_im2, dist_threshold):
 	"""
 	"""
 	pass
@@ -24,7 +24,7 @@ def get_xy_coords_from_angle(theta):
 	return np.array([x,y])
 
 
-class RetrievalUnitTests(unitest.TestCase):
+class RetrievalUnitTests(unittest.TestCase):
 	"""
 		Retrieval tests
 		Are they from the same image? Maybe the spatial (u,v) keypoint locations no longer matter
@@ -51,10 +51,10 @@ class RetrievalUnitTests(unitest.TestCase):
 		desc_1_dist = np.linalg.norm(desc_1_im1 - desc_1_im2)
 		desc_2_dist = np.linalg.norm(desc_2_im1 - desc_2_im2)
 
-		self.assertEqual(1., compute_precision(desc_im1, desc_im2, dist_threshold=0.1.42))
+		self.assertEqual(1., compute_precision(desc_im1, desc_im2, dist_threshold=1.42))
 		self.assertEqual(1., compute_recall(desc_im1, desc_im2, dist_threshold=1.42))
 
-		self.assertEqual(1/2., compute_precision(desc_im1, desc_im2, dist_threshold=0.1.41))
+		self.assertEqual(1/2., compute_precision(desc_im1, desc_im2, dist_threshold=1.41))
 		self.assertEqual(1., compute_recall(desc_im1, desc_im2, dist_threshold=1.41))
 
 		self.assertEqual(1., compute_precision(desc_im1, desc_im2, dist_threshold=0.77))
@@ -63,12 +63,12 @@ class RetrievalUnitTests(unitest.TestCase):
 		self.assertEqual(0., compute_precision(desc_im1, desc_im2, dist_threshold=0.76))
 		self.assertEqual(0., compute_recall(desc_im1, desc_im2, dist_threshold=0.76))
 
-	
+
 	def hamming_dist_prec_rec(self):
 		"""
-		Hamming distance between two strings of equal length is the number of positions 
-		at which the corresponding symbols are different. In other words, it measures 
-		the minimum number of substitutions required to change one string into the other, 
+		Hamming distance between two strings of equal length is the number of positions
+		at which the corresponding symbols are different. In other words, it measures
+		the minimum number of substitutions required to change one string into the other,
 		or the minimum number of errors that could have transformed one string into the oth
 		"""
 		np.array([0,1,0,1])
