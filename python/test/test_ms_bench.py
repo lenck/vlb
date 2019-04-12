@@ -34,6 +34,7 @@ import features.cv_akaze
 import features.cv_kaze
 import features.superpoint
 import dset.vgg_dataset
+import pickle as pkl
 
 
 if __name__ == "__main__":
@@ -69,13 +70,18 @@ if __name__ == "__main__":
     ms_result_cv_akaze = ms_bench.evaluate(
         vggh, cv_akaze, use_cache=True, save_result=True)
 
-    ms_result_superpoint = ms_bench.evaluate(
-        vggh, superpoint, use_cache=True, save_result=True)
+    # ms_result_superpoint = ms_bench.evaluate(
+    #     vggh, superpoint, use_cache=True, save_result=True)
 
     # Make the results from different detectors as a list.
     ms_result = [ms_result_vlsift, ms_result_cv_orb,
                  ms_result_cv_brisk, ms_result_cv_kaze,
-                 ms_result_cv_akaze, ms_result_superpoint]
+                 ms_result_cv_akaze]
+
+    # ms_result = [ms_result_superpoint]
+
+    with open('results.pkl', 'wb') as f:
+        pkl.dump(ms_result, f)
 
     # Show the result
     for result_term in ms_result[0]['result_term_list']:
