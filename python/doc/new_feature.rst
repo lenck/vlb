@@ -1,4 +1,4 @@
-How to create new feature
+How to Create New Feature
 =========================================================
 To test your own detector or descriptor, you need to create your own feature detector or descriptor. 
 
@@ -39,10 +39,44 @@ Here is an example (features/cyvlsift_official.py):
 .. code-block:: python
     DetectorDescriptorBundle(detector, descriptor):
 
-
-
 Full code:
 
 .. literalinclude:: ../features/cyvlsift_official.py
 
 
+Load Precomputed Feature
+--------------------------------------------------
+Similar to the previous example. Set csv_flag = True and don't need to implement any function here. 
+
+.. code-block:: python
+    class vlsift_load_matlab(DetectorAndDescriptor):
+    def __init__(self, csv_flag=True):
+        super(
+            vlsift_load_matlab,
+            self).__init__(
+            name='vlsift_load_matlab',
+            is_detector=True,
+            is_descriptor=True,
+            is_both=True,
+            csv_flag=csv_flag)
+
+    def detect_feature(self, image):
+        pass
+
+    def extract_descriptor(self, image, feature):
+        pass
+
+    def extract_all(self, image):
+        pass
+
+Store feature file and descriptor file to ./data/features/$dataset_name/$feature_name. The feature file is a csv file with name $sequence-$imageid.frames.csv. In the file, there are N features. Each in one line of d dims seperated by ";". 
+
+4.5111;501.33;1.768;-1.8145
+
+The descriptor csv file has a name of $sequence-$imageid.descs.csv. The file contains N lines, each line is a descripor cossponding to the feature seperated by ";".
+
+An example can be find `here <https://drive.google.com/open?id=1-D_v1LV64FPQf1Kb9RXQYa9zvYzHvtTu>`_ . Download the file and extract to ./data/features/vggh/. Then you can use the detector and descriptor "vlsift_load_matlab". 
+
+There is the full code:
+
+.. literalinclude:: ../features/vlsift_load_matlab.py
