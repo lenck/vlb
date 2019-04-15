@@ -4,7 +4,7 @@
 #  File Name: BenchmarkTemplate.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-26-2019
-#  Last Modified: Sun Mar  3 16:36:17 2019
+#  Last Modified: Tue Mar  5 21:45:20 2019
 #
 #  Description: Standard benchmark template
 #
@@ -91,7 +91,7 @@ class Benchmark():
 
                 if not get_feature_flag:
                     if detector.csv_flag:
-                        feature_csv_name = './data/{}/{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,
+                        feature_csv_name = '{}{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,
                                                                                      detector.name, sequence.name, image.idx)
                         feature = self.load_csv_feature(feature_csv_name)
                         # pdb.set_trace()
@@ -152,10 +152,10 @@ class Benchmark():
 
                 if not get_feature_flag:
                     if detector.csv_flag:
-                        feature_csv_name = './data/{}/{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,
+                        feature_csv_name = '{}{}/{}/{}-{}.frames.csv'.format(self.tmp_feature_dir, dataset.name,
                                                                                      detector.name, sequence.name, image.idx)
                         feature = self.load_csv_feature(feature_csv_name)
-                        descriptor_csv_name = './data/{}/{}/{}/{}-{}.descs.csv'.format(self.tmp_feature_dir, dataset.name,
+                        descriptor_csv_name = '{}{}/{}/{}-{}.descs.csv'.format(self.tmp_feature_dir, dataset.name,
                                                                                        detector.name, sequence.name, image.idx)
                         descriptor = self.load_csv_feature(descriptor_csv_name)
                     else:

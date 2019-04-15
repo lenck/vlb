@@ -64,7 +64,7 @@ Furthermore, you can extract the features outside of this framework in order to 
 
 ## Compile Conflicts
 `mex` command may be recognized as `mex` command in texlive. Make sure that the matlab/bin path is added to system PATH before the directory of mex in texlive.
-  
+
 
 ## Running the tests
 To run the tests, call:
@@ -72,13 +72,22 @@ To run the tests, call:
 
 ## Python Interface
 ### Requirement
-We recommend to use conda to install all the requirements all at once. 
+Make a complete clone operation to pull the submodule.
+
+```
+git clone --recursive git@github.com:lenck/vlb.git
+```
+
+
+We recommend to use conda to install all the requirements all at once.
 
 ```
 conda env create -f ./python/conda/environment.yml
+source activate vlb
+pip install nmslib
 ```
 
-###Test the code
+### Test the code
 
 Test repeatability benchmark
 
@@ -88,6 +97,8 @@ python ./python/test/test_rep_bench.py
 
 
 Test matching score benchmark
+
+Download [vlsift\_load\_matlab.zip](https://drive.google.com/open?id=1-D_v1LV64FPQf1Kb9RXQYa9zvYzHvtTu) and extract it to ./data/features/vggh/. Then run
 
 ```
 python ./python/test/test_ms_bench.py

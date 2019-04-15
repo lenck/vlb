@@ -4,7 +4,7 @@
 #  File Name: ellipse_overlap_H.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sat Mar  2 12:44:09 2019
+#  Last Modified: Tue Mar  5 00:02:37 2019
 #
 #  Usage: python ellipse_overlap_H.py
 #  Description:
@@ -57,6 +57,18 @@ def frame2ellipse(fa):
 
 
 def ellipse_warp(H, ell_o, method):
+    """
+    TODO: Xu, could you add a description here?
+        Can we also add inline comments?
+
+        Args:
+        -   H:
+        -   ell_o:
+        -   method:
+
+        Returns:
+        -   well
+    """
     ell = copy.copy(ell_o)
     ell[:, 0:2] = ell[:, 0:2] - 1
     well = np.zeros(ell.shape, dtype=np.double)
@@ -67,15 +79,7 @@ def ellipse_warp(H, ell_o, method):
                          ell[i, 3], ell[i, 4], 0], [0, 0, -1]])
             T = np.array([[1, 0, ell[i, 0]], [0, 1, ell[i, 1]], [0, 0, 1]])
 
-            M = np.matmul(
-                np.matmul(
-                    np.matmul(
-                        np.matmul(
-                            H,
-                            T),
-                        S),
-                    T.transpose()),
-                H.transpose())
+            M = H.dot(T).dot(S).dot(T.T).dot(H.T)
             M = -M / M[2, 2]
             t_ = -M[0:2, [2]]
             S_ = M[0:2, 0:2] + np.matmul(t_, t_.transpose())
@@ -244,7 +248,7 @@ def ellipse_overlap_fast(f1, f2, options):
         else:
             lhsEllipse = vggEll2[[i2]]
             rhsEllipse = vggEll1[pairs]
-        _, tw, _, _ = vgg_compute_ellipse_overlap.vgg_compute_ellipse_overlap(
+        _, tw, _, _ = bench.vgg_compute_ellipse_overlap.vgg_compute_ellipse_overlap(
             lhsEllipse, rhsEllipse, -1)
         scores.extend((1 - tw / 100).tolist()[0])
     return np.array(ellipsePairs), np.array(scores)
@@ -354,7 +358,7 @@ def match_greedy(data, qdata):
     dists = dists[perm_index]
     ind_matrix = ind_matrix[perm_index, :]
 
-    matches, _ = vlb_greedy_matching.vlb_greedy_matching(
+    matches, _ = bench.vlb_greedy_matching.vlb_greedy_matching(
         data.shape[0], qdata.shape[0], ind_matrix)
     matches = matches[:, 0]
     matches = matches.reshape((data.shape[0], 1))

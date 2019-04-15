@@ -4,7 +4,6 @@ Author: Xu Zhang
 """
 
 import numpy as np
-import cv2
 import features.feature_utils
 from features.DetectorDescriptorTemplate import DetectorAndDescriptor
 
