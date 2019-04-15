@@ -125,7 +125,8 @@ class MatchingScoreBench(Benchmark):
                     descriptor_2, descriptor_1)
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]
-
+                    
+                #both descriptor and feature have to be nearest neighbor
                 if self.matchGeometry:
                     matches = descMatches
                     for idx, (match, geoMatch) in enumerate(
@@ -133,6 +134,7 @@ class MatchingScoreBench(Benchmark):
                         if match != geoMatch:
                             matches[idx] = -1
                 else:
+                # only require nearest descriptors has "reasonable" overlap (defined by maxOverlapError) over features.
                     tcorr_set = set()
                     for i in range(tcorr.shape[0]):
                         tcorr_set.add((tcorr[i,0], tcorr[i,1]))
