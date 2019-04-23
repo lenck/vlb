@@ -1,5 +1,5 @@
 """
-Pretrained LF-Net Implementation (tensorflow)
+Pretrained Outdoot LF-Net Implementation (tensorflow)
 Author: Alex Butenko
 """
 
@@ -95,7 +95,7 @@ class LFNet(DetectorAndDescriptor):
         feed_dict = {
             self.photo_ph: img,
         }
-        
+
         #Dump keypoint locations and their features
         fetch_dict = {
             'kpts': self.ops['kpts'],
