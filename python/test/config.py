@@ -12,6 +12,7 @@ import features.cv_akaze
 import features.cv_kaze
 import features.superpoint
 import features.lf_net
+import features.transform_covariant
 from importlib import import_module
 
 
@@ -26,10 +27,10 @@ what_models_to_test = {
         'test':False},
     'cv_orb':{
         'class':'cv_orb',
-        'test':True},
+        'test':False},
     'cv_mser':{
         'class':'cv_mser',
-        'test':True},
+        'test':False},
     'cv_brisk':{
         'class':'cv_brisk',
         'test':False},
@@ -44,7 +45,10 @@ what_models_to_test = {
         'test':False},
     'lf_net':  {
         'class':'LFNet',
-        'test':False}}
+        'test':False},
+    'transform_covariant':  {
+        'class':'transform_covariant',
+        'test':True}}
 
 
 models_to_test = list()
