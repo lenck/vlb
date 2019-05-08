@@ -17,12 +17,12 @@ sequence_name_list = ['i_ajuntament', 'i_autannes', 'i_bologna', 'i_books', 'i_b
  'v_vitro','v_wall','v_wapping','v_war','v_weapons','v_woman','v_wormhole','v_wounded','v_yard','v_yuri']
 description_list = ['Decreasing Light']*57 + ['Viewpoint angle']*59
 
-label_list = ['ref','e1','e2','e3','e4','e5','h1','h2','h3','h4','h5','t1','t2','t3','t4','t5']
+label_list = ['1','2','3','4','5','6']
 
 json_data = {}
 json_data['Dataset Name'] = 'HPatches'
 json_data['Description'] = 'Standard Benchmark'
-json_data['url'] = 'http://icvl.ee.ic.ac.uk/vbalnt/hpatches/hpatches-release.tar.gz'
+json_data['url'] = 'http://icvl.ee.ic.ac.uk/vbalnt/hpatches/hpatches-sequences-release.tar.gz'
 json_data['Sequence Number'] = len(sequence_name_list)
 json_data['Sequence Name List'] = sequence_name_list
 json_data['Sequences'] = []

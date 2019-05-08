@@ -14,7 +14,7 @@ class HPatches_Dataset(SequenceDataset):
 
     def __init__(self,root_dir = './datasets/', download_flag = False):
         super(HPatches_Dataset,self).__init__(name = 'HPatches', root_dir = root_dir, download_flag = download_flag)
-
+        
     def download(self):
         try:
             os.stat(self.root_dir)
