@@ -6,3 +6,4 @@ datasets
 *.o
 .build
 vlfeat
+__pycache__
