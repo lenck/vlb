@@ -4,7 +4,7 @@
 import os
 import pickle
 import numpy as np
-from ..verifiers.geom import get_E_matrix, get_F_matrix, to_pixel_coords
+from bench.geom import get_E_matrix, get_F_matrix, to_pixel_coords, get_inliers_F
 dirname = os.path.dirname(os.path.abspath(__file__))
 
 class verification_dataset():
@@ -50,6 +50,8 @@ class verification_dataset():
                 "nn-1",
                 "nocrop",
             ])
+
+
             suffix = "{}-1000".format(var_mode)
 
             cur_folder = os.path.join(cur_data_folder, suffix)
@@ -88,6 +90,7 @@ class verification_dataset():
             K2s = list()
             Es = list()
             Fs = list()
+            inlier_mask = list()
 
             for idx in range(len(d['xs'])):
                 pt1s = d['xs'][idx][0,:,:2]
@@ -104,7 +107,7 @@ class verification_dataset():
 
                 if isinstance(f1, tuple):
                     K1 = np.diag(np.array([f1[0], f1[1], 1]))
-                    K1s.append(K2)
+                    K1s.append(K1)
                 else:
                     K1 = np.diag(np.array([f1, f1, 1]))
                     K1s.append(K1)
@@ -115,14 +118,22 @@ class verification_dataset():
                     K2 = np.diag(np.array([f2, f2, 1]))
                     K2s.append(K2)
 
-                px_coords1.append(to_pixel_coords(K1,pt1s)+cam_center1)
-                px_coords2.append(to_pixel_coords(K2,pt2s)+cam_center2)
+                px1 = to_pixel_coords(K1,pt1s)+cam_center1
+                px2 = to_pixel_coords(K2,pt2s)+cam_center2
+
+                px_coords1.append(px1)
+                px_coords2.append(px2)
 
                 R = d['Rs'][idx]
                 t = d['ts'][idx]
-                Es.append(get_E_matrix(R, t))
-                Fs.append(get_F_matrix(R, t, K1, K2))
+                F = get_F_matrix(R, t, K1, K2)
 
+                _, _, mask = get_inliers_F(px1, px2, F, thresh=1)
+                inlier_mask.append(mask)
+                Es.append(get_E_matrix(R, t))
+                Fs.append(F)
+
+            self.data[seq]['inlier_mask'] = inlier_mask
             self.data[seq]['norm_coords1'] = norm_coords1
             self.data[seq]['norm_coords2'] = norm_coords2
 
@@ -141,7 +152,8 @@ class verification_dataset():
                 'norm_coords2' : self.data[seq]['norm_coords2'][idx],
                 'px_coords1' : self.data[seq]['px_coords1'][idx],
                 'px_coords2' : self.data[seq]['px_coords2'][idx],
-                'K1s' : self.data[seq]['K1s'][idx],
-                'K2s' : self.data[seq]['K2s'][idx],
-                'Es' : self.data[seq]['Es'][idx],
-                'Fs' : self.data[seq]['Fs'][idx]}
+                'K1' : self.data[seq]['K1s'][idx],
+                'K2' : self.data[seq]['K2s'][idx],
+                'E' : self.data[seq]['Es'][idx],
+                'F' : self.data[seq]['Fs'][idx],
+                'inlier_mask': self.data[seq]['inlier_mask'][idx]}
