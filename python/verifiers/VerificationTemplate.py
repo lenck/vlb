@@ -22,9 +22,6 @@ class VerificationTemplate():
         self.estimates_essential = estimates_essential
         self.estimates_fundamental = estimates_fundamental
 
-    def evaluate_matches(self, pts1, pts2):
-        pass
-
     def estimate_essential_matrix(self, pts1, pts2):
         pass
 
