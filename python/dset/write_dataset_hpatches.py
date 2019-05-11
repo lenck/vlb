@@ -37,18 +37,18 @@ for idx, sequence_name in enumerate(sequence_name_list):
 
     for image_idx, image_label in enumerate(label_list):
         image = {}
-        image['file'] = '{}/{}.png'.format(sequence_name,image_label)
+        image['file'] = '{}/{}.ppm'.format(sequence_name,image_label)
         image['id'] = str(image_idx+1)
         image['label'] = str(image_label)
         sequence['Images'].append(image)
 
     sequence['Link Number'] = 5
     sequence['Links'] = []
-    for i in range(5):
+    for i in range(1,5):
         link = {}
         link['source'] = str(1)
         link['target'] = str(i+1)
-        link['file'] = '{}/H_ref_{}'.format(sequence_name, i+1)
+        link['file'] = '{}/H_1_{}'.format(sequence_name, i+1)
         sequence['Links'].append(link)
     json_data['Sequences'].append(sequence)
 
