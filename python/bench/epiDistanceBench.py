@@ -22,7 +22,7 @@ This module describe benchmark for repeatability.
 import numpy as np
 from bench.VerificationBenchmarkTemplate import VerificationBenchmark
 
-import dset.geom as geom
+import bench.geom as geom
 
 class epiDistanceBench(VerificationBenchmark):
     """
@@ -54,17 +54,17 @@ class epiDistanceBench(VerificationBenchmark):
         dset.dataset.Link: definition of task.
 
         """
-        if data_dict['est_F'] is not None:
-            estimatedMat = data_dict['est_F']
-            pts1 = data_dict['px_coords1']
-            pts2 = data_dict['px_coords1']
+        est_F = data_dict['est_F']
+        pts1 = data_dict['px_coords1']
+        pts2 = data_dict['px_coords1']
 
-        else:
-            estimatedMat = data_dict['est_E']
-            pts1 = data_dict['norm_coords1']
-            pts2 = data_dict['norm_coords2']
+        if est_F is None:
+            est_F = geom.get_F_matrix_from_E(data_dict['est_E'],
+                                             data_dict['K1'],
+                                             data_dict['K2'])
 
-        epiDists = geom.get_epidist_w_matrix(pts1, pts2, estimatedMat)
+
+        epiDists = geom.get_epidist_w_matrix(pts1, pts2, est_F)
 
         mean_d = np.mean(epiDists)
         median_d = np.median(epiDists)

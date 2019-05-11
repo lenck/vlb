@@ -20,9 +20,10 @@ This module describe benchmark for repeatability.
 """
 
 import numpy as np
+import math
 from bench.VerificationBenchmarkTemplate import VerificationBenchmark
 
-import dset.geom as geom
+import bench.geom as geom
 
 class inlierPrecisionBench(VerificationBenchmark):
     """
@@ -54,22 +55,25 @@ class inlierPrecisionBench(VerificationBenchmark):
         dset.dataset.Link: definition of task.
 
         """
-        if data_dict['est_F'] is not None:
-            estimatedMat = data_dict['est_F']
-            pts1 = data_dict['px_coords1']
-            pts2 = data_dict['px_coords1']
+        est_F = data_dict['est_F']
+        pts1 = data_dict['px_coords1']
+        pts2 = data_dict['px_coords1']
 
-        else:
-            estimatedMat = data_dict['est_E']
-            pts1 = data_dict['norm_coords1']
-            pts2 = data_dict['norm_coords2']
+        if est_F is None:
+            est_F = geom.get_F_matrix_from_E(data_dict['est_E'],
+                                             data_dict['K1'],
+                                             data_dict['K2'])
 
-        inlier_pts1, inlier_pts2 = geom.get_inliers_F(pts1, pts2, estimatedMat)
+
+        true_inliers = data_dict['inlier_mask']
+        inlier_pts1, _, inlier_mask  = geom.get_inliers_F(pts1, pts2, est_F)
+
+        prec, recall = self.get_pr_recall(true_inliers=true_inliers, est_inliers=inlier_mask)
 
         num_inliers = len(inlier_pts1)
-        inlierPrec = float(num_inliers)/len(pts1)
+        inlierPerc = float(num_inliers)/len(pts1)
 
-        return inlierPrec, num_inliers
+        return num_inliers, inlierPerc, prec, recall
 
     def evaluate(self, dataset, verifier, use_cache=True,
                  save_result=True):
@@ -96,8 +100,24 @@ class inlierPrecisionBench(VerificationBenchmark):
         bench.Benchmark.evaluate_warpper:
         """
 
-        result = self.evaluate_warpper(dataset, verifier, ['inlierPrec', 'num_inliers'],
+        result = self.evaluate_warpper(dataset, verifier, ['num_inliers', 'inlierPrec', 'precision','recall'],
                                        use_cache=use_cache, save_result=save_result)
 
         result['bench_name'] = self.bench_name
         return result
+
+    def get_pr_recall(self, true_inliers, est_inliers):
+
+        tp = np.sum(np.logical_and(true_inliers, est_inliers))
+        fp = np.sum(np.logical_and(true_inliers==0, est_inliers==1))
+        fn = np.sum(np.logical_and(true_inliers==1, est_inliers==0))
+        tn = np.sum(np.logical_and(true_inliers==0, est_inliers==0))
+
+        pr = tp/(tp+fp)
+        recall = tp/(tp+fn)
+
+        if math.isnan(pr):
+            pr = 0.0
+        if math.isnan(recall):
+            recall = 0.0
+        return pr, recall

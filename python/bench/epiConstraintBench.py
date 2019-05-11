@@ -22,7 +22,7 @@ This module describe benchmark for repeatability.
 import numpy as np
 from bench.VerificationBenchmarkTemplate import VerificationBenchmark
 
-import dset.geom as geom
+import bench.geom as geom
 
 class epiConstraintBench(VerificationBenchmark):
     """
@@ -54,19 +54,18 @@ class epiConstraintBench(VerificationBenchmark):
         dset.dataset.Link: definition of task.
 
         """
-        if data_dict['est_F'] is not None:
-            estimatedMat = data_dict['est_F']
-            pts1 = data_dict['px_coords1']
-            pts2 = data_dict['px_coords1']
+        est_F = data_dict['est_F']
+        pts1 = data_dict['px_coords1']
+        pts2 = data_dict['px_coords1']
 
-        else:
-            estimatedMat = data_dict['est_E']
-            pts1 = data_dict['norm_coords1']
-            pts2 = data_dict['norm_coords2']
+        if est_F is None:
+            est_F = geom.get_F_matrix_from_E(data_dict['est_E'],
+                                             data_dict['K1'],
+                                             data_dict['K2'])
 
-        inlier_pts1, inlier_pts2 = geom.get_inliers_F(pts1, pts2, estimatedMat)
+        inlier_pts1, inlier_pts2, mask = geom.get_inliers_F(pts1, pts2, est_F)
 
-        epiConst = geom.get_epi_constraint(inlier_pts1, inlier_pts2, estimatedMat)
+        epiConst = geom.get_epi_constraint(inlier_pts1, inlier_pts2, est_F)
         epiAbs = np.sum(np.abs(epiConst))
         epiSqr = np.sum(epiConst**2)
 
