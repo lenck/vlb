@@ -146,7 +146,6 @@ class VerificationBenchmark():
 
                 # for each pair
                 for pair_idx in range(len(data[sequence]['xs'])):
-                    print(pair_idx)
                     data_dict = dataset.get_data_sequence_pair(sequence, pair_idx)
                     est_E = None
                     est_F = None
@@ -163,8 +162,7 @@ class VerificationBenchmark():
 
                     result_number_list = self.evaluate_unit(
                         data_dict)
-                    sequence_result['result_link_id_list'].append(
-                        "{}".format('pair_'+str(pair_idx)))
+                    sequence_result['result_link_id_list'].append('pair_{}'.format(pair_idx))
                     sequence_result['result_label_list'].append(data[sequence]['img1s'][pair_idx])
 
                     for result_name, result_number in zip(
