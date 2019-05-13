@@ -4,7 +4,7 @@
 #  File Name: test_ms_bench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Sun Mar  3 18:09:44 2019
+#  Last Modified: Mon Apr 15 14:57:08 2019
 #
 #  Usage: python test_ms_bench.py
 #  Description:test matching score benchmark
@@ -41,7 +41,7 @@ from config import models_to_test
 if __name__ == "__main__":
 
     # Define matching score benchmark
-    ms_bench = bench.MatchingScoreBench.MatchingScoreBench()
+    ms_bench = bench.MatchingScoreBench.MatchingScoreBench(matchGeometry=False)
 
     # Define dataset
     vggh = dset.vgg_dataset.vggh_Dataset()

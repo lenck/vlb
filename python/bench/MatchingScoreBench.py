@@ -4,7 +4,7 @@
 #  File Name: MatchingScoreBench.py
 #  Author: Xu Zhang, Columbia University
 #  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 21:46:46 2019
+#  Last Modified: Mon Apr 15 15:19:28 2019
 #
 #  Description: Matching score benchmark
 #
@@ -124,7 +124,7 @@ class MatchingScoreBench(Benchmark):
                 for edge in descMatchEdges:
                     descMatches[edge[1]] = edge[0]
 
-                """How are these different calculations different?"""
+                #both descriptor and feature have to be nearest neighbor
                 if self.matchGeometry:
                     matches = descMatches
                     for idx, (match, geoMatch) in enumerate(
@@ -132,12 +132,15 @@ class MatchingScoreBench(Benchmark):
                         if match != geoMatch:
                             matches[idx] = -1
                 else:
-                    tcorr.tolist()
+                # only require nearest descriptors has "reasonable" overlap (defined by maxOverlapError) over features.
+                    tcorr_set = set()
+                    for i in range(tcorr.shape[0]):
+                        tcorr_set.add((tcorr[i,0], tcorr[i,1]))
                     descMatchesEdgeList = descMatchEdges.tolist()
                     intersection = []
                     for descMatch in descMatchesEdgeList:
-                        tmpMatch = [descMatch[1], descMatch[0]]
-                        if tmpMatch in geoMatches:
+                        tmpMatch = (descMatch[1], descMatch[0])
+                        if tmpMatch in tcorr_set:
                             intersection.append(tmpMatch)
 
                     matches = np.zeros((descriptor_1.shape[0],)) - 1

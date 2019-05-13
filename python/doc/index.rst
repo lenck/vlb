@@ -28,6 +28,7 @@ Welcome to VL Benchmark's documentation!
     :maxdepth: 1
     
     new_feature
+    new_dataset
 
  
 .. toctree::
