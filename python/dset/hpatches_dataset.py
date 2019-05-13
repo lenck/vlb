@@ -1,4 +1,4 @@
-from dataset import SequenceDataset
+from dset.dataset import SequenceDataset
 import urllib
 import tarfile
 import os
@@ -27,13 +27,17 @@ class HPatches_Dataset(SequenceDataset):
             os.mkdir('{}{}'.format(self.root_dir,self.name))
 
         download_url = "{}".format(self.url)
-        download_filename = "{}{}/{}.tar.gz".format(self.root_dir, self.name, self.name)
+        download_filename = "{}/{}.tar.gz".format(self.root_dir, self.name)
         try:
-            urlretrieve(download_url,download_filename)
+            print("Downloading HPatches from {}".format(download_url))
+            urlretrieve(download_url, download_filename)
             tar = tarfile.open(download_filename)
+            dd = tar.getnames()[0]
             tar.extractall('{}'.format(self.root_dir))
             tar.close()
             os.remove(download_filename)
+            os.rmdir("{}{}".format(self.root_dir, self.name))
+            os.rename("{}{}".format(self.root_dir, dd), "{}{}".format(self.root_dir, self.name))
         except Exception as e:
             print(str(e))
             print('Cannot download from {}.'.format(download_url))
