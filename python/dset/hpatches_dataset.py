@@ -32,10 +32,8 @@ class HPatches_Dataset(SequenceDataset):
             print("Downloading HPatches from {}".format(download_url))
             urlretrieve(download_url, download_filename)
             tar = tarfile.open(download_filename)
-            
-            print(dd)
+            dd = tar.getnames()[0]
             tar.extractall('{}'.format(self.root_dir))
-
             tar.close()
             os.remove(download_filename)
             os.rmdir("{}{}".format(self.root_dir, self.name))
