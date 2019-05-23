@@ -4,7 +4,7 @@
 #  File Name: VerificationBenchmarkTemplate.py
 #  Author: Alex Butenko, Georgia Institute of Technology
 #  Creation Date: 05-08-2019
-#  Last Modified: Wed May 08 21:45:20 2019
+#  Last Modified: Thu May 23 21:45:20 2019
 #
 #  Description: Standard geometric verification benchmark template
 #
@@ -17,7 +17,7 @@
 
 """
 This module describe a verification benchmark template.
-A benchmark is given a verification algorithm and a dataset, the way of performing the evluation.
+A benchmark is given a verification algorithm and a dataset
 """
 
 import numpy as np
@@ -29,15 +29,13 @@ import pickle as pkl
 class VerificationBenchmark():
     __metaclass__ = ABCMeta
 
-    """Benchmark Template
+    """Verification Benchmark Template
 
     Attributes
     ----------
 
     name: str
-        Name of the dataset
-    tmp_feature_dir: str
-        Directory for saving the feature
+        Name of the benchmark
     result_dir: str
         Directory for saving the final result
     """
@@ -50,15 +48,40 @@ class VerificationBenchmark():
 
 
     def find_F_matrix(self, verifier, data_dict):
+        """
+        Extract the Fundamental Matrix estimated by a verfier on
+        a set of pixel point correspondences
+
+        :param verifier: The verification algorithm
+        :type verifier: VerificationTemplate
+        :param data_dict: Dictonary containing the dataset information
+        :type data_dict: dict
+        :returns: est_F
+        :rtype: np.array (3x3)
+        """
         pts1 = data_dict['px_coords1']
         pts2 = data_dict['px_coords2']
-        return verifier.estimate_fundamental_matrix(pts1, pts2)
+        est_F = verifier.estimate_fundamental_matrix(pts1, pts2)
+        return est_F
 
 
     def find_E_matrix(self, verifier, data_dict):
+        """
+        Extract the Essentials Matrix estimated by a verfier on
+        a set of normalized point correspondences
+
+        :param verifier: The verification algorithm
+        :type verifier: VerificationTemplate
+        :param data_dict: Dictonary containing the dataset information
+        :type data_dict: dict
+        :returns: est_E
+        :rtype: np.array (3x3)
+        """
         pts1 = data_dict['norm_coords1']
         pts2 = data_dict['norm_coords2']
-        return verifier.estimate_essential_matrix(pts1, pts2)
+        est_E = verifier.estimate_essential_matrix(pts1, pts2)
+        return est_E
+
 
     # Evaluation warpper
     def evaluate_warpper(self, dataset, verifier, result_list, use_cache=True, save_result=True):
@@ -97,8 +120,6 @@ class VerificationBenchmark():
         :returns: result
         :rtype: dict
 
-        See Also
-        --------
         """
 
 
@@ -150,12 +171,14 @@ class VerificationBenchmark():
                     est_E = None
                     est_F = None
 
+                    #Check if verifier Estimated Fundamental Matrix
                     if verifier.estimates_fundamental:
                         est_F = self.find_F_matrix(verifier, data_dict)
+                    #Else check if it estimates teh Essential Matrix
                     elif verifier.estimates_essential:
                         est_E = self.find_E_matrix(verifier, data_dict)
                     else:
-                        print("check verifier, if doesn't estimat E or F")
+                        print("check verifier, if doesn't estimate E or F")
 
                     data_dict['est_E'] = est_E
                     data_dict['est_F'] = est_F
@@ -167,8 +190,6 @@ class VerificationBenchmark():
 
                     for result_name, result_number in zip(
                             result_list, result_number_list):
-                        # for debug
-                        #print('{}: {}'.format(result_name, result_number))
                         sequence_result[result_name].append(result_number)
 
                 for result_name in result_list:
@@ -182,8 +203,6 @@ class VerificationBenchmark():
             for result_name in result_list:
                 result['ave_{}'.format(result_name)] = result['ave_{}'.format(
                     result_name)] / len(result['sequence_result'])
-                # for debug
-                #print('ave {} {}'.format(result_name,result['ave_{}'.format(result_name)]))
 
             if save_result:
                 with open(result_file_name, "wb") as output_file:
@@ -206,9 +225,9 @@ class VerificationBenchmark():
         Main function to run the evaluation wrapper. It could be different for different evaluation
 
         :param dataset: Dataset to extract the feature
-        :type dataset: SequenceDataset
-        :param detector: Detector used to extract the feature
-        :type detector: DetectorAndDescriptor
+        :type dataset: verification_dataset
+        :param verifier: Detector used to extract the feature
+        :type detector: VerificationTemplate
 
         See Also
         --------
@@ -220,15 +239,33 @@ class VerificationBenchmark():
     @abstractmethod
     def evaluate_unit(self, data_dict):
         """
-        TODO
-        Single evaluation unit. Given a dictionary of data
+        Single evaluation unit. Given a dictionary of dataset information
 
-        :param feature_1: Feature to run. It can be feature or descriptor.
-        :type feature_1: array
-        :param feature_2: Feature to run. It can be feature or descriptor.
-        :type feature_2: array
-        :param task: What to run
-        :type task: dict
+        :param data_dict: Dictionary of data for an image pair.
+        :type data_dict: dict
+
+        **Structure of the data_dict:**
+        data_dict['norm_coords1']: List of normalized coordinates for
+                                    img1 of correspondence pair
+
+        data_dict['norm_coords2']: List of normalized coordinates for
+                                    img2 of correspondence pair
+
+        data_dict['px_coords1']: List of pixel coordinates for
+                                    img1 of correspondence pair
+
+        data_dict['px_coords2']: List of pixel coordinates for
+                                    img2 of correspondence pair
+
+        data_dict['K1']:  3x3 np.array; Camera calibration matrix of cam from img1
+
+        data_dict['K2']:  3x3 np.array; Camera calibration matrix of cam from img2
+
+        data_dict['E']:  3x3 np.array; Ground-truth Essential Matrix from img1 to img2
+
+        data_dict['F']:  3x3 np.array; Ground-truth Fundamental Matrix from img1 to img2
+
+        data_dict['inlier_mask']: Nx1 np.array; Binary array indicating true correspondences
 
         See Also
         --------
