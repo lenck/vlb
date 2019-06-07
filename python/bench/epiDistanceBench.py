@@ -64,7 +64,7 @@ class epiDistanceBench(VerificationBenchmark):
                                              data_dict['K2'])
 
 
-        epiDists = geom.get_epidist_w_matrix(pts1, pts2, est_F)
+        epiDists = geom.get_epidist_w_matrix(pts1, pts2, est_F, type='symmetric')
 
         mean_d = np.mean(epiDists)
         median_d = np.median(epiDists)
