@@ -28,8 +28,19 @@ import bench.geom as geom
 
 class allVerificationBenchs(VerificationBenchmark):
     """
-    EpiConstraint Template
-    Return repeatability score and number of correspondence
+    Benchmark used to run all Verification Benchmarks:
+
+    Benchmarks Tested
+    -----------------
+    - Mean Epipolar Distance
+    - Median Epipolar Distance
+    - Number of Inliers
+    - Inlier Percentage
+    - Precision
+    - Recall
+    - Absolute Epipolar Constraint
+    - Squared Epipolar Constraint
+    - Frobenius Norm of Difference from GT Fundamental matrix
     """
     def __init__(self, tmp_feature_dir='./data/features/',
                  result_dir='./python_scores/'):
@@ -39,17 +50,35 @@ class allVerificationBenchs(VerificationBenchmark):
 
     def evaluate_unit(self, data_dict):
         """
-        Single evaluation unit. Given two sets of points and an estimated Fundamental matrix
-        return the Epipolar-Constraint Errors
+        Single evaluation unit. Given a dictionary of correspondence informatino between
+        an image pair, run each verification on the image pair
 
-        :param pts1: points to run from img1
-        :type pts1: array
-        :param pts2: points to run from img2
-        :type pts2: array
-        :param task: What to run
-        :type task: dict
+        :param data_dict: Dictionary of data for an image pair.
+        :type data_dict: dict
 
-        See Also
+        **Structure of the data_dict:**
+        data_dict['norm_coords1']: List of normalized coordinates for
+                                    img1 of correspondence pair
+
+        data_dict['norm_coords2']: List of normalized coordinates for
+                                    img2 of correspondence pair
+
+        data_dict['px_coords1']: List of pixel coordinates for
+                                    img1 of correspondence pair
+
+        data_dict['px_coords2']: List of pixel coordinates for
+                                    img2 of correspondence pair
+
+        data_dict['K1']:  3x3 np.array; Camera calibration matrix of cam from img1
+
+        data_dict['K2']:  3x3 np.array; Camera calibration matrix of cam from img2
+
+        data_dict['E']:  3x3 np.array; Ground-truth Essential Matrix from img1 to img2
+
+        data_dict['F']:  3x3 np.array; Ground-truth Fundamental Matrix from img1 to img2
+
+        data_dict['inlier_mask']: Nx1 np.array; Binary array indicating true correspondences
+
         --------
 
         evaluate_warpper: How to run the unit.
@@ -67,21 +96,29 @@ class allVerificationBenchs(VerificationBenchmark):
                                              data_dict['K2'])
 
         #Run Processes
+
+        #Get Inliers from estimated Fundamental Matrix
         inlier_pts1, inlier_pts2, inlier_mask  = geom.get_inliers_F(pts1, pts2, est_F, dist_type='symmetric')
+
+        #Epipolar Distance
         epiDists = geom.get_epidist(pts1, pts2, est_F, type='symmetric')
 
-
+        #Frobenius Norm Distance
         frobNorm = np.linalg.norm(true_F - est_F)
 
+        #MEAN-D and MEDIAN-D
         mean_d = np.mean(epiDists)
         median_d = np.median(epiDists)
 
+        #Precision and Recall
         true_inliers = data_dict['inlier_mask']
-        prec, recall = self.get_pr_recall(true_inliers=true_inliers, est_inliers=inlier_mask)
+        prec, recall = geom.get_pr_recall(true_inliers=true_inliers, est_inliers=inlier_mask)
 
+        #Inlier Percentage
         num_inliers = len(inlier_pts1)
         inlierPerc = float(num_inliers)/len(pts1)
 
+        #Epipolar Constraint Metric
         epiConst = geom.get_epi_constraint(inlier_pts1, inlier_pts2, est_F)
         epiAbs = np.sum(np.abs(epiConst))
         epiSqr = np.sum(epiConst**2)
@@ -121,20 +158,3 @@ class allVerificationBenchs(VerificationBenchmark):
 
         result['bench_name'] = self.bench_name
         return result
-
-
-    def get_pr_recall(self, true_inliers, est_inliers):
-
-        tp = np.sum(np.logical_and(true_inliers, est_inliers))
-        fp = np.sum(np.logical_and(true_inliers==0, est_inliers==1))
-        fn = np.sum(np.logical_and(true_inliers==1, est_inliers==0))
-        tn = np.sum(np.logical_and(true_inliers==0, est_inliers==0))
-
-        pr = tp/(tp+fp)
-        recall = tp/(tp+fn)
-
-        if math.isnan(pr):
-            pr = 0.0
-        if math.isnan(recall):
-            recall = 0.0
-        return pr, recall
