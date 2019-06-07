@@ -16,7 +16,7 @@
 # ===========================================================
 
 """
-This module describe benchmark for repeatability. 
+This module describe benchmark for repeatability.
 """
 
 import numpy as np
@@ -46,14 +46,14 @@ class repBench(Benchmark):
     def evaluate_unit(self, feature_1, feature_2, task):
         """
         Single evaluation unit. Given two features, return the repeatability.
-        
-        :param feature_1: Feature to run. 
-        :type feature_1: array 
-        :param feature_2: Feature to run. 
+
+        :param feature_1: Feature to run.
+        :type feature_1: array
+        :param feature_2: Feature to run.
         :type feature_2: array
         :param task: What to run
         :type task: dict
-        
+
         See Also
         --------
 
@@ -75,7 +75,7 @@ class repBench(Benchmark):
             tcorr, corr_score, info = ellipse_overlap_H(
                 geo_info, feature_1, feature_2, option)
 
-            if corr_score.size == 0:
+            if len(corr_score) == 0 or corr_score.size == 0:
                 rep = 0.0
                 num_cor = 0
             else:
@@ -105,7 +105,7 @@ class repBench(Benchmark):
                  save_result=True, norm_factor='minab'):
         """
         Main function to call the evaluation wrapper. It could be different for different evaluation
-        
+
         :param dataset: Dataset to extract the feature
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the feature
@@ -116,12 +116,12 @@ class repBench(Benchmark):
         :type save_result: boolean
         :param norm_factor: How to normalize the repeatability. Option: minab, a, b
         :type norm_factor: str
-        :returns: result 
+        :returns: result
         :rtype: dict
 
         See Also
         --------
-        
+
         bench.Benchmark
         bench.Benchmark.evaluate_warpper:
         """
@@ -136,8 +136,8 @@ class repBench(Benchmark):
     def detect_feature_custom(self, dataset, detector,
                               use_cache=False, save_feature=True):
         """
-        Customized feature extraction method. For special task. 
-        
+        Customized feature extraction method. For special task.
+
         :param dataset: Dataset to extract the feature
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the feature
@@ -146,7 +146,7 @@ class repBench(Benchmark):
         :type use_cache: boolean
         :param save_feature: Save computated feature or not
         :type save_feature: boolean
-        :returns: feature 
+        :returns: feature
         :rtype: dict
 
         """
@@ -156,8 +156,8 @@ class repBench(Benchmark):
     def extract_descriptor_custom(
             self, dataset, detector, use_cache=False, save_feature=True):
         """
-        Customized description extraction method. For special task. 
-        
+        Customized description extraction method. For special task.
+
         :param dataset: Dataset to extract the descriptor
         :type dataset: SequenceDataset
         :param detector: Detector used to extract the descriptor
@@ -166,7 +166,7 @@ class repBench(Benchmark):
         :type use_cache: boolean
         :param save_feature: Save computated feature or not
         :type save_feature: boolean
-        :returns: feature 
+        :returns: feature
         :rtype: dict
 
         """
