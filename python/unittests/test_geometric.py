@@ -72,6 +72,22 @@ class EpipolarGeomTests(unittest.TestCase):
 
         self.assertTrue(np.isclose(actual_F, est_F).all())
 
+    def test_get_precision_recall(self):
+        true_class = np.array([1,0,0,1,1])
+        predicted_class = np.array([0,1,0,1,1])
+
+        tp = 2.0
+        tn = 1.0
+        fp = 1.0
+        fn = 1.0
+
+        true_precision = tp/(tp + fp)
+        true_recall = tp/(tp + fn)
+
+        precision, recall = geom.get_pr_recall(true_class, predicted_class)
+
+        self.assertAlmostEqual(true_precision, precision)
+        self.assertAlmostEqual(true_recall, recall)
 
 if __name__ == '__main__':
     unittest.main()
