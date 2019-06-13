@@ -68,7 +68,7 @@ class inlierPrecisionBench(VerificationBenchmark):
         true_inliers = data_dict['inlier_mask']
         inlier_pts1, _, inlier_mask  = geom.get_inliers_F(pts1, pts2, est_F)
 
-        prec, recall = self.get_pr_recall(true_inliers=true_inliers, est_inliers=inlier_mask)
+        prec, recall = geom.get_pr_recall(true_inliers=true_inliers, est_inliers=inlier_mask)
 
         num_inliers = len(inlier_pts1)
         inlierPerc = float(num_inliers)/len(pts1)
@@ -105,19 +105,3 @@ class inlierPrecisionBench(VerificationBenchmark):
 
         result['bench_name'] = self.bench_name
         return result
-
-    def get_pr_recall(self, true_inliers, est_inliers):
-
-        tp = np.sum(np.logical_and(true_inliers, est_inliers))
-        fp = np.sum(np.logical_and(true_inliers==0, est_inliers==1))
-        fn = np.sum(np.logical_and(true_inliers==1, est_inliers==0))
-        tn = np.sum(np.logical_and(true_inliers==0, est_inliers==0))
-
-        pr = tp/(tp+fp)
-        recall = tp/(tp+fn)
-
-        if math.isnan(pr):
-            pr = 0.0
-        if math.isnan(recall):
-            recall = 0.0
-        return pr, recall
