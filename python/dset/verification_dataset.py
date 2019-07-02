@@ -39,7 +39,7 @@ class verification_dataset():
         Attributes
         ----------
         var_mode: str
-            what split to us in the dataset. Default is 'test' but 'train' or val can be
+            what split to us in the dataset. Default is 'test' but 'train' or 'val' can be
             used as well.
         """
 
@@ -102,16 +102,11 @@ class verification_dataset():
             d = self.data[seq]
 
             #define new values
-            norm_coords1 = list()
-            norm_coords2 = list()
-            px_coords1 = list()
-            px_coords2 = list()
-            cam_centers1 = list()
-            cam_centers2 = list()
-            K1s = list()
-            K2s = list()
-            Es = list()
-            Fs = list()
+            norm_coords1, norm_coords2 = list(), list()
+            px_coords1, px_coords2 = list(), list()
+            cam_centers1, cam_centers2 = list(),  list()
+            K1s, K2s = list(), list()
+            Es, Fs = list(), list()
             inlier_mask = list()
 
             for idx in range(len(d['xs'])):
@@ -137,7 +132,7 @@ class verification_dataset():
 
                 K1s.append(K1)
                 K2s.append(K2)
-                
+
                 px1 = to_pixel_coords(K1,pt1s)
                 px2 = to_pixel_coords(K2,pt2s)
 
