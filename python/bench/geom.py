@@ -6,25 +6,6 @@
 # Adapter: Alex Butenko
 # Created: Thu Oct  5 14:53:24 2017 (+0200)
 # Updated: Fri Jun 6 2019
-# Version:
-# Package-Requires: ()
-# URL:
-# Doc URL:
-# Keywords:
-# Compatibility:
-#
-#
-
-# Commentary:
-#
-#
-#
-#
-
-# Change Log:
-#
-#
-#
 # Copyright (C)
 # Visual Computing Group @ University of Victoria
 # Computer Vision Lab @ EPFL
@@ -53,14 +34,12 @@ def np_skew_symmetric(v):
 
     return M
 
-
 def np_unskew_symmetric(M):
     """
     From: https://github.com/vcg-uvic/learned-correspondence-release
 
     Inverse cross product matrix to extract underlying vector v in R^3
     """
-
     v = np.concatenate([
         0.5 * (M[:, 7] - M[:, 5])[None],
         0.5 * (M[:, 2] - M[:, 6])[None],
@@ -68,7 +47,6 @@ def np_unskew_symmetric(M):
     ], axis=1)
 
     return v
-
 
 def get_episqr(x1, x2, dR, dt):
     """
@@ -117,7 +95,6 @@ def get_episqr(x1, x2, dR, dt):
 
     return ys.flatten()
 
-
 def get_episym(x1, x2, dR, dt):
     """
     From: https://github.com/vcg-uvic/learned-correspondence-release
@@ -141,7 +118,6 @@ def get_episym(x1, x2, dR, dt):
     ys: np.array (N,)
         ys[idx] is the epipolar symmetric distance of correspondence (x1[idx], x2[idx])
     """
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -170,7 +146,6 @@ def get_episym(x1, x2, dR, dt):
 
     return ys.flatten()
 
-
 def get_sampsons(x1, x2, dR, dt):
     """
     From: https://github.com/vcg-uvic/learned-correspondence-release
@@ -194,7 +169,6 @@ def get_sampsons(x1, x2, dR, dt):
     ys: np.array (N,)
         ys[idx] is the sampsons distance of correspondence (x1[idx], x2[idx])
     """
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -223,7 +197,6 @@ def get_sampsons(x1, x2, dR, dt):
 
     return ys.flatten()
 
-
 def get_episqr_w_matrix(x1, x2, M):
     """
     Adapted from https://github.com/vcg-uvic/learned-correspondence-release
@@ -245,7 +218,6 @@ def get_episqr_w_matrix(x1, x2, M):
     ys: np.array (N,)
         ys[idx] is the epipolar squared distance of correspondence (x1[idx], x2[idx])
     """
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -285,7 +257,6 @@ def get_epidist_w_matrix(x1, x2, M):
     ys: np.array (N,)
         ys[idx] is the epipolar distance of correspondence (x1[idx], x2[idx])
     """
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -305,7 +276,6 @@ def get_epidist_w_matrix(x1, x2, M):
     ys = x2Mx1 * (1.0 / np.sqrt((Mx1[..., 0]**2 + Mx1[..., 1]**2)))
 
     return np.abs(ys.flatten())
-
 
 def get_episym_w_matrix(x1, x2, M):
     """
@@ -328,8 +298,6 @@ def get_episym_w_matrix(x1, x2, M):
     ys: np.array (N,)
         ys[idx] is the epipolar symmetric distance of correspondence (x1[idx], x2[idx])
     """
-
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -348,8 +316,6 @@ def get_episym_w_matrix(x1, x2, M):
     Mtx2 = np.matmul(Mt, x2).reshape(-1, 3)
 
     x1Mtx2 = np.matmul(x1.transpose(0, 2, 1), np.matmul(Mt, x2)).flatten()
-
-
 
     ys = x2Mx1 * (
         1.0 / np.sqrt(Mx1[..., 0]**2 + Mx1[..., 1]**2)) + x1Mtx2 * (
@@ -385,13 +351,30 @@ def get_epidist(x1,x2, M, type='symmetric'):
         return get_episym_w_matrix(x1, x2, M)
     elif type == 'vanilla':
         return get_epidist_w_matrix(x1, x2, M)
-
     else:
         print('{} not supported'.format(type))
         return
 
 def get_sampsons_w_matrix(x1, x2, M):
+    """
+    Adapted from https://github.com/vcg-uvic/learned-correspondence-release
 
+    Get sampsons distance of keypoint correspondences between 2 images
+    using the correspondence matrix M.
+
+    Inputs
+    ------
+    x1: np.array (Nx2)
+        normalized camera coordinates of img1 keypoints corresponding to img2 keypoints
+    x2: np.array (Nx2)
+        normalized camera coordinates of img1 keypoints corresponding to img2 keypoints
+    M: np.array (3x3)
+        Matrix relating correspondence between img1 and img2
+
+    Output
+    ------
+    ys: np.array (N,)
+        ys[idx] is the epipolar distance of correspondence (x1[idx], x2[idx])"""
     num_pts = len(x1)
 
     # Make homogeneous coordinates
@@ -411,7 +394,6 @@ def get_sampsons_w_matrix(x1, x2, M):
     ys = x2Mx1**2 / (
         Mx1[..., 0]**2 + Mx1[..., 1]**2 + Mtx2[..., 0]**2 + Mtx2[..., 1]**2
     )
-
     return ys.flatten()
 
 def get_E_matrix(dR, dt):
@@ -607,7 +589,6 @@ def get_epi_constraint(x1, x2, F):
     ys: np.array (N,)
         ys[idx] is the epipolar constraint distance of correspondence (x1[idx], x2[idx])
     """
-
     num_pts = len(x1)
 
     # Make homogeneous coordinates

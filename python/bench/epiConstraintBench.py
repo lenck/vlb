@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: repBench.py
-#  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 21:46:25 2019
+#  File Name: epiConstraintBench.py
+#  Author: Alex Butenko, Georgia Institute of Technology
+#  Creation Date: 06-01-2019
+#  Last Modified: Sat Jun 1 21:46:25 2019
 #
-#  Description:repeatability benchmark
+#  Description: Epipolar constraint benchmarks
 #
-#  Copyright (C) 2018 Xu Zhang
+#  Copyright (C) 2019 Alex Butenko
 #  All rights reserved.
 #
 #  This file is made available under
@@ -49,7 +49,6 @@ class epiConstraintBench(VerificationBenchmark):
 
         See Also
         --------
-
         evaluate_warpper: How to run the unit.
         dset.dataset.Link: definition of task.
 
@@ -91,11 +90,9 @@ class epiConstraintBench(VerificationBenchmark):
 
         See Also
         --------
-
         bench.Benchmark
         bench.Benchmark.evaluate_warpper:
         """
-
         result = self.evaluate_warpper(dataset, verifier, ['epiAbs', 'epiSqr'],
                                        use_cache=use_cache, save_result=save_result)
 

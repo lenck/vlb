@@ -1,14 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: repBench.py
-#  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 21:46:25 2019
+#  File Name: epiDistanceBench.py
+#  Author: Alex Butenko, Georiga Institute of Technology
+#  Creation Date: 06-01-2019
+#  Last Modified: Sat Jun 1 21:46:25 2019
 #
-#  Description:repeatability benchmark
+#  Description: Epipolar distance benchmark
 #
-#  Copyright (C) 2018 Xu Zhang
+#  Copyright (C) 2019 Alex Butenko
 #  All rights reserved.
 #
 #  This file is made available under
@@ -49,7 +49,6 @@ class epiDistanceBench(VerificationBenchmark):
 
         See Also
         --------
-
         evaluate_warpper: How to run the unit.
         dset.dataset.Link: definition of task.
 
@@ -63,12 +62,10 @@ class epiDistanceBench(VerificationBenchmark):
                                              data_dict['K1'],
                                              data_dict['K2'])
 
-
         epiDists = geom.get_epidist_w_matrix(pts1, pts2, est_F, type='symmetric')
 
         mean_d = np.mean(epiDists)
         median_d = np.median(epiDists)
-
 
         return mean_d, median_d
 
@@ -92,11 +89,9 @@ class epiDistanceBench(VerificationBenchmark):
 
         See Also
         --------
-
         bench.Benchmark
         bench.Benchmark.evaluate_warpper:
         """
-
         result = self.evaluate_warpper(dataset, verifier, ['mean_d', 'median_d'],
                                        use_cache=use_cache, save_result=save_result)
 

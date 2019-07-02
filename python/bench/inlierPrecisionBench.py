@@ -1,19 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: repBench.py
-#  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 21:46:25 2019
+#  File Name: inlierPrecisionBench.py
+#  Author: Alex Butenko, Georiga Institute of Technology
+#  Creation Date: 06-01-2019
+#  Last Modified: Sat Jun 1 21:46:25 2019
 #
-#  Description:repeatability benchmark
+#  Description: Inlier Precision Benchmark distance benchmark
 #
-#  Copyright (C) 2018 Xu Zhang
+#  Copyright (C) 2019 Alex Butenko
 #  All rights reserved.
 #
 #  This file is made available under
 #  the terms of the BSD license (see the COPYING file).
 # ===========================================================
+
 
 """
 This module describe benchmark for repeatability.

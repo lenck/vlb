@@ -1,15 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: test_rep_bench.py
-#  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 00:03:28 2019
+#  File Name: test_inlierPrec_bench.py
+#  Author: Alex Butenko, Georgia Institute of Technology
+#  Creation Date: 06-01-2019
+#  Last Modified: Sat Jun 5 00:03:28 2019
 #
-#  Usage: python test_rep_bench.py
-#  Description:test repeatability benchmark
+#  Description:test inlier benchmarks for geometric verification
 #
-#  Copyright (C) 2018 Xu Zhang
+#  Copyright (C) 2018 Alex Butenko
 #  All rights reserved.
 #
 #  This file is made available under
@@ -48,10 +47,6 @@ if __name__ == "__main__":
     rep_result_r = inlierPrecisionBench.evaluate(
         dataset, mlesac, use_cache=False, save_result=True)
 
-    # rep_result_l = inlierPrecisionBench.evaluate(
-    #     dataset, lmeds, use_cache=False, save_result=True)
-
-    # rep_result = [rep_result_r, rep_result_l]
     rep_result = [rep_result_r]
     # Show the result
     for result_term in rep_result[0]['result_term_list']:

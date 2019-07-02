@@ -9,7 +9,11 @@ dirname = os.path.dirname(os.path.abspath(__file__))
 from verifiers.VerificationTemplate import VerificationTemplate
 
 class learnedCorres(VerificationTemplate):
-
+    """
+    Implementation of the Learned Correspondence verification network from
+    "Learning to Find Good Correspondences" (Yi et al.). Network code comes
+    https://github.com/vcg-uvic/learned-correspondence-release
+    """
     def __init__(self):
         super(
             learnedCorres,
@@ -21,9 +25,20 @@ class learnedCorres(VerificationTemplate):
         self.config = Config(net_depth=12, net_nchannel=128, net_act_pos="post",
                              net_batchnorm=True,net_gcnorm=True)
 
-        self.model = MyNetwork(self.config)
+        self.model = LearnedCorrespondencesNetwork(self.config)
 
-    def estimate_essential_matrix(self, pts1, pts2):
+    def estimate_essential_matrix(self, kpts1, kpts2):
+        """
+        Estimate the Essential matrix between 2 images from a set of putative keypoint matches
+        (kpt1s[i], kpts2[i]) are a corresponding matche from image 1 and 2 in normalized coordinates
+
+        :param kpts1: Keypoints for image 1
+        :type kpts1: np.array (Nx2)
+        :param kpts2: Keypoints from image 2
+        :type kpts2: np.array (Nx2)
+        :returns: E (the 3x3 Essential matrix)
+        :rtype: np.array(3x3)
+        """
 
         # Use minimum kp in batch to construct the batch
         _xs = np.concatenate([pts1, pts2], axis=1).reshape(1, 1, -1, 4)
@@ -52,7 +67,7 @@ class Config:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-class MyNetwork(object):
+class LearnedCorrespondencesNetwork(object):
     """Network class """
 
     def __init__(self, config):

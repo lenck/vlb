@@ -1,15 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ===========================================================
-#  File Name: test_rep_bench.py
-#  Author: Xu Zhang, Columbia University
-#  Creation Date: 01-25-2019
-#  Last Modified: Tue Mar  5 00:03:28 2019
+#  File Name: test_epiConstraint_bench.py
+#  Author: Alex Butenko, Georiga Institute of Technology
+#  Creation Date: 06-01-2019
+#  Last Modified: Sat Jun 5 21:46:25 2019
 #
-#  Usage: python test_rep_bench.py
-#  Description:test repeatability benchmark
+#  Description: Test epipolar constraint benchmark
 #
-#  Copyright (C) 2018 Xu Zhang
+#  Copyright (C) 2019 Alex Butenko
 #  All rights reserved.
 #
 #  This file is made available under
