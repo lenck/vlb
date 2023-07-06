@@ -1,5 +1,5 @@
 numpy==1.13.3
-scipy==0.19.1
+scipy==1.10.0
 Cython==0.26.1
 matplotlib==2.1.0
 cyvlfeat==0.4.6
